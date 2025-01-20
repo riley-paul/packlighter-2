@@ -1,5 +1,6 @@
 import React from "react";
 import {
+  Command,
   CommandDialog,
   CommandEmpty,
   CommandGroup,
@@ -10,14 +11,20 @@ import {
 } from "@/components/ui/command";
 import { useEventListener } from "usehooks-ts";
 import { useQuery } from "@tanstack/react-query";
-import { listsQueryOptions } from "@/lib/queries";
+import { itemsQueryOptions, listsQueryOptions } from "@/lib/queries";
 import { useNavigate } from "react-router-dom";
 import useMutations from "@/hooks/use-mutations";
 import { cn } from "@/lib/utils";
 import { ACCENT_COLOR } from "@/lib/constants";
+import { atom, useAtom } from "jotai";
+import useItemEditorStore from "./item-editor/store";
+
+export const commandBarOpenAtom = atom(false);
 
 const CommandBar: React.FC = () => {
-  const [open, setOpen] = React.useState(false);
+  const [open, setOpen] = useAtom(commandBarOpenAtom);
+  const { openEditor } = useItemEditorStore();
+
   const navigate = useNavigate();
 
   const { addList } = useMutations();
@@ -30,42 +37,73 @@ const CommandBar: React.FC = () => {
   });
 
   const { data: lists = [] } = useQuery(listsQueryOptions);
+  const { data: items = [] } = useQuery(itemsQueryOptions);
 
   return (
     <CommandDialog open={open} onOpenChange={setOpen}>
-      <CommandInput placeholder="Type a command or search..." />
-      <CommandList>
-        <CommandEmpty>No results found.</CommandEmpty>
-        <CommandGroup heading="Actions">
-          <CommandItem
-            onSelect={() => {
-              addList.mutate({});
-              setOpen(false);
-            }}
-          >
-            <div className="flex items-center gap-2">
-              <i
-                className={cn("fa-solid fa-plus", `text-${ACCENT_COLOR}-10`)}
-              />
-              Add List
-            </div>
-          </CommandItem>
-        </CommandGroup>
-        <CommandSeparator />
-        <CommandGroup heading="Lists">
-          {lists.map((list) => (
+      <Command loop>
+        <CommandInput placeholder="Type a command or search..." />
+        <CommandList>
+          <CommandEmpty>No results found.</CommandEmpty>
+          <CommandGroup heading="Actions">
             <CommandItem
-              key={list.id}
               onSelect={() => {
-                navigate(`/list/${list.id}`);
+                addList.mutate({});
                 setOpen(false);
               }}
             >
-              {list.name}
+              <div className="flex items-center gap-2">
+                <i
+                  className={cn("fa-solid fa-plus", `text-${ACCENT_COLOR}-10`)}
+                />
+                Add List
+              </div>
             </CommandItem>
-          ))}
-        </CommandGroup>
-      </CommandList>
+            <CommandItem
+              onSelect={() => {
+                openEditor();
+                setOpen(false);
+              }}
+            >
+              <div className="flex items-center gap-2">
+                <i
+                  className={cn("fa-solid fa-plus", `text-${ACCENT_COLOR}-10`)}
+                />
+                Add Gear
+              </div>
+            </CommandItem>
+          </CommandGroup>
+          <CommandSeparator />
+          <CommandGroup heading="Lists">
+            {lists.map((list) => (
+              <CommandItem
+                key={list.id}
+                onSelect={() => {
+                  navigate(`/list/${list.id}`);
+                  setOpen(false);
+                }}
+              >
+                {list.name}
+              </CommandItem>
+            ))}
+          </CommandGroup>
+
+          <CommandSeparator />
+          <CommandGroup heading="Gear">
+            {items.map((item) => (
+              <CommandItem
+                key={item.id}
+                onSelect={() => {
+                  setOpen(false);
+                  openEditor(item);
+                }}
+              >
+                {item.name}
+              </CommandItem>
+            ))}
+          </CommandGroup>
+        </CommandList>
+      </Command>
     </CommandDialog>
   );
 };

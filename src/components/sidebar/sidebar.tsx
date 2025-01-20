@@ -10,18 +10,20 @@ import { NAVBAR_HEIGHT } from "@/lib/constants";
 
 import UserAvatar from "../user-avatar";
 import Logo from "../logo";
-import { useAtom } from "jotai";
+import { useAtom, useSetAtom } from "jotai";
 import { desktopSidebarOpenAtom, mobileSidebarOpenAtom } from "./store";
 import { cn, getHasModifier, getIsTyping } from "@/lib/utils";
 import { useEventListener } from "usehooks-ts";
 import { useIsMobile } from "@/hooks/use-is-mobile";
-import { Button } from "@radix-ui/themes";
+import { Button, IconButton, Kbd, Tooltip } from "@radix-ui/themes";
+import { commandBarOpenAtom } from "../command-bar";
 
 const AppSideBar: React.FC = () => {
   const isMobile = useIsMobile();
   const [isOpen, setIsOpen] = useAtom(
     isMobile ? mobileSidebarOpenAtom : desktopSidebarOpenAtom,
   );
+  const setCommandBarOpen = useSetAtom(commandBarOpenAtom);
 
   useEventListener("keydown", (e) => {
     if (getIsTyping() || getHasModifier(e)) return;
@@ -61,7 +63,26 @@ const AppSideBar: React.FC = () => {
             style={{ height: NAVBAR_HEIGHT }}
           >
             <Logo />
-            <UserAvatar />
+            <div className="flex items-center gap-2">
+              <Tooltip
+                content={
+                  <>
+                    Search <Kbd>⌘ K</Kbd>
+                  </>
+                }
+                side="bottom"
+              >
+                <IconButton
+                  size="1"
+                  radius="full"
+                  variant="soft"
+                  onClick={() => setCommandBarOpen(true)}
+                >
+                  <i className="fa-solid fa-search text-1" />
+                </IconButton>
+              </Tooltip>
+              <UserAvatar />
+            </div>
           </header>
           <ResizablePanelGroup autoSaveId="sidebar-panels" direction="vertical">
             <ResizablePanel defaultSize={40}>
