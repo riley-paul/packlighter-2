@@ -3,11 +3,13 @@ import { Outlet } from "react-router-dom";
 import ItemEditor from "@/components/item-editor/item-editor";
 import SideBar from "@/components/sidebar/sidebar";
 import FeedbackButton from "@/components/feedback-button";
+import CommandBar from "@/components/command-bar";
 
 const Root: React.FC = () => {
   return (
     <main className="flex">
       <ItemEditor />
+      <CommandBar />
       <SideBar />
       <div className="h-[100svh] flex-1 overflow-hidden">
         <Outlet />
