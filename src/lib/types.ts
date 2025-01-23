@@ -1,4 +1,11 @@
-import type { Category, CategoryItem, Item, List, User } from "astro:db";
+import type {
+  Category,
+  CategoryItem,
+  Item,
+  List,
+  User,
+  UserSession,
+} from "astro:db";
 
 export type Unit = {
   symbol: string;
@@ -23,6 +30,7 @@ export const weightUnits: Unit[] = [
 export type ItemSelect = typeof Item.$inferSelect;
 export type ListSelect = typeof List.$inferSelect;
 export type UserSelect = typeof User.$inferSelect;
+export type UserSessionSelect = typeof UserSession.$inferSelect;
 
 export type ExpandedCategoryItem = typeof CategoryItem.$inferSelect & {
   itemData: typeof Item.$inferSelect;

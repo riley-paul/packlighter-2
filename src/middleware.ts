@@ -1,4 +1,4 @@
-import { lucia } from "@/lib/auth";
+import { lucia } from "@/lib/auth/adapters";
 import { defineMiddleware, sequence } from "astro:middleware";
 
 const userValidation = defineMiddleware(async (context, next) => {

@@ -14,13 +14,7 @@ export default defineConfig({
   security: {
     checkOrigin: true,
   },
-  integrations: [
-    tailwind({
-      applyBaseStyles: false,
-    }),
-    react(),
-    db(),
-  ],
+  integrations: [tailwind({ applyBaseStyles: false }), react(), db()],
   vite: {
     resolve: {
       alias: {

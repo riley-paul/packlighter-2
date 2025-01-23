@@ -1,4 +1,4 @@
-import { github } from "@/lib/auth";
+import { github } from "@/lib/auth/adapters";
 import { OAuth2RequestError } from "arctic";
 
 import type { APIContext } from "astro";
