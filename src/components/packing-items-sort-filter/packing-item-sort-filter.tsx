@@ -25,6 +25,8 @@ const PackingItemsSortFilter: React.FC = () => {
         type="search"
         placeholder="Search..."
         value={searchQuery}
+        variant="soft"
+        color="gray"
         onChange={(e) => setSearchQuery(e.target.value)}
       >
         {searchQuery.length > 0 && (
@@ -46,7 +48,7 @@ const PackingItemsSortFilter: React.FC = () => {
       </TextField.Root>
       <Popover.Root>
         <Popover.Trigger>
-          <IconButton variant="surface" color="gray">
+          <IconButton variant="soft" color="gray">
             <i className="fa-solid fa-ellipsis" />
           </IconButton>
         </Popover.Trigger>

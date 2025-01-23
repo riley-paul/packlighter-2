@@ -15,15 +15,13 @@ const HomePage: React.FC = () => {
           <Text size="2" color="gray">
             Select a list to get packing
           </Text>
-          <Separator className="relative my-4" size="4">
-            <Text
-              size="2"
-              weight="medium"
-              className="text-xs text-muted-foreground absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 transform bg-gray-1 px-2"
-            >
+          <div className="flex w-full items-center gap-2">
+            <Separator size="4" />
+            <Text size="2" weight="medium">
               OR
             </Text>
-          </Separator>
+            <Separator size="4" />
+          </div>
           <Button variant="soft" onClick={() => addList.mutate({})}>
             <i className="fa-solid fa-plus" />
             <span>Create a new list</span>

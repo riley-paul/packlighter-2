@@ -65,7 +65,7 @@ const UserAvatar: React.FC = () => {
           <ThemeToggle />
 
           <div className="grid w-full gap-2">
-            <Button asChild variant="surface" color="amber">
+            <Button asChild variant="soft" color="amber">
               <a href="/logout" className={cn("relative")}>
                 <i className="fa-solid fa-arrow-right-from-bracket absolute left-4 w-4" />
                 <span>Logout</span>
@@ -73,7 +73,7 @@ const UserAvatar: React.FC = () => {
             </Button>
             <Button
               color="red"
-              variant="surface"
+              variant="soft"
               onClick={async () => {
                 const ok = await confirmDeleteAccount();
                 if (ok) {
