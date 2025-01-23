@@ -38,7 +38,7 @@ const { noOverscoll } = Astro.props;
     <link href="/icons/css/solid.css" rel="stylesheet" />
   </head>
   <body
-    class={cn("min-h-[100svh] flex flex-col", noOverscoll && "overscroll-none")}
+    class={cn("min-h-screen", noOverscoll && "overscroll-none")}
   >
     <ThemeListener client:load />
     <slot />

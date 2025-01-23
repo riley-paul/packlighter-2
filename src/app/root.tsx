@@ -11,7 +11,7 @@ const Root: React.FC = () => {
       <ItemEditor />
       <CommandBar />
       <SideBar />
-      <div className="h-[100svh] flex-1 overflow-hidden">
+      <div className="min-h-screen flex-1 overflow-hidden">
         <Outlet />
       </div>
       <div className="fixed bottom-6 right-6 flex items-center gap-4">

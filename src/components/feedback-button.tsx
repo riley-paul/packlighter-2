@@ -26,7 +26,7 @@ const FeedbackButton: React.FC = () => {
         }}
       >
         <Popover.Trigger>
-          <IconButton variant="soft" radius="full" size="3">
+          <IconButton variant="soft" radius="full" size="3" className="backdrop-blur">
             <i className="fa-solid fa-message" />
           </IconButton>
         </Popover.Trigger>
