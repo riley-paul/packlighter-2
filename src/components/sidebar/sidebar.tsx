@@ -1,6 +1,4 @@
-import { cn } from "@/lib/utils";
 import React from "react";
-import Logo from "../logo";
 import PackingItems from "../packing-items/packing-items";
 import PackingLists from "../packing-lists/packing-lists";
 import {
@@ -8,64 +6,114 @@ import {
   ResizablePanel,
   ResizableHandle,
 } from "@/components/ui/resizable";
-import useSidebarStore from "./store";
-import { useMediaQuery } from "usehooks-ts";
-import { MOBILE_MEDIA_QUERY, NAVBAR_HEIGHT } from "@/lib/constants";
-import SidebarButton from "./sidebar-button";
+import { NAVBAR_HEIGHT } from "@/lib/constants";
 
-import { Sheet, SheetContent } from "@/components/ui/sheet";
+import UserAvatar from "../user-avatar";
+import Logo from "../logo";
+import { useAtom, useSetAtom } from "jotai";
+import { desktopSidebarOpenAtom, mobileSidebarOpenAtom } from "./store";
+import { cn, getHasModifier, getIsTyping } from "@/lib/utils";
+import { useEventListener } from "usehooks-ts";
+import { useIsMobile } from "@/hooks/use-is-mobile";
+import { Button, IconButton, Kbd, Tooltip } from "@radix-ui/themes";
+import { commandBarOpenAtom } from "../command-bar";
 
-type ContentProps = {
-  noButton?: boolean;
-};
+const AppSideBar: React.FC = () => {
+  const isMobile = useIsMobile();
+  const [isOpen, setIsOpen] = useAtom(
+    isMobile ? mobileSidebarOpenAtom : desktopSidebarOpenAtom,
+  );
+  const setCommandBarOpen = useSetAtom(commandBarOpenAtom);
 
-const SideBarContent: React.FC<ContentProps> = ({ noButton }) => (
-  <div className="flex h-full flex-col overflow-hidden">
-    <header
-      className={cn("flex items-center border-b", noButton && "pl-4")}
-      style={{ height: NAVBAR_HEIGHT }}
-    >
-      {!noButton && <SidebarButton />}
-      <Logo />
-    </header>
-    <ResizablePanelGroup autoSaveId="sidebar-panels" direction="vertical">
-      <ResizablePanel defaultSize={40}>
-        <PackingLists />
-      </ResizablePanel>
-      <ResizableHandle withHandle />
-      <ResizablePanel>
-        <PackingItems />
-      </ResizablePanel>
-    </ResizablePanelGroup>
-  </div>
-);
-
-const SideBar: React.FC = () => {
-  const { isMobileSidebarOpen, isDesktopSidebarOpen, toggleMobileSidebar } =
-    useSidebarStore();
-
-  const isMobile = useMediaQuery(MOBILE_MEDIA_QUERY);
-
-  if (isMobile) {
-    return (
-      <Sheet open={isMobileSidebarOpen} onOpenChange={toggleMobileSidebar}>
-        <SheetContent side="left" className="w-[280px] overflow-hidden p-0">
-          <SideBarContent noButton />
-        </SheetContent>
-      </Sheet>
-    );
-  }
+  useEventListener("keydown", (e) => {
+    if (getIsTyping() || getHasModifier(e)) return;
+    if (e.code === "KeyB") {
+      setIsOpen((prev) => !prev);
+    }
+    if (isMobile && e.code === "Escape") {
+      setIsOpen(false);
+    }
+  });
 
   return (
-    <aside
-      className={cn(
-        "flex w-[280px] border-r bg-card transition-all ease-out",
-        !isDesktopSidebarOpen && "w-0 border-none opacity-0",
+    <>
+      {!isMobile && (
+        <div
+          className={cn(
+            "transition-all duration-200 ease-in-out",
+            isOpen ? "w-[20rem]" : "w-0",
+          )}
+        />
       )}
-    >
-      <SideBarContent />
-    </aside>
+      {isMobile && isOpen && (
+        <div
+          className="fixed inset-0 z-10 bg-panel-translucent backdrop-blur"
+          onClick={() => setIsOpen(false)}
+        />
+      )}
+      <div
+        className={cn(
+          "fixed bottom-0 left-0 top-0 z-20 w-[20rem] p-2 pr-0 transition-transform duration-200 ease-in-out",
+          isOpen ? "translate-x-0" : "-translate-x-full",
+        )}
+      >
+        <div className="relative flex h-full w-full flex-col rounded-4 border bg-panel-solid">
+          <header
+            className="flex items-center justify-between border-b px-4"
+            style={{ height: NAVBAR_HEIGHT }}
+          >
+            <Logo />
+            <div className="flex items-center gap-2">
+              <Tooltip
+                content={
+                  <>
+                    Search <Kbd>⌘ K</Kbd>
+                  </>
+                }
+                side="bottom"
+              >
+                <IconButton
+                  size="1"
+                  radius="full"
+                  variant="soft"
+                  onClick={() => setCommandBarOpen(true)}
+                >
+                  <i className="fa-solid fa-search text-1" />
+                </IconButton>
+              </Tooltip>
+              <UserAvatar />
+            </div>
+          </header>
+          <ResizablePanelGroup autoSaveId="sidebar-panels" direction="vertical">
+            <ResizablePanel defaultSize={40}>
+              <PackingLists />
+            </ResizablePanel>
+            <ResizableHandle withHandle />
+            <ResizablePanel>
+              <PackingItems />
+            </ResizablePanel>
+          </ResizablePanelGroup>
+          <div className="absolute -right-4 bottom-0 top-0 flex flex-col justify-center">
+            <Button
+              onClick={() => setIsOpen((prev) => !prev)}
+              variant="ghost"
+              size="1"
+              color="gray"
+              className="m-0 my-auto h-full w-3 p-0"
+              radius="full"
+            >
+              <i
+                className={cn(
+                  "fa-solid fa-xs",
+                  isOpen ? "fa-chevron-left" : "fa-chevron-right",
+                )}
+              />
+            </Button>
+          </div>
+        </div>
+      </div>
+    </>
   );
 };
 
-export default SideBar;
+export default AppSideBar;

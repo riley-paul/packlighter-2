@@ -1,7 +1,6 @@
 import React from "react";
-import { Button } from "../ui/button";
-import { Check, X } from "lucide-react";
-import { useOnClickOutside } from "usehooks-ts";
+import useConfirmButton from "@/hooks/use-confirm-button";
+import { IconButton } from "@radix-ui/themes";
 
 interface Props {
   handleDelete: () => void;
@@ -11,34 +10,19 @@ interface Props {
 const DeleteButton: React.FC<Props> = (props) => {
   const { handleDelete, noConfirm } = props;
 
-  const ref = React.useRef<HTMLButtonElement>(null);
-  const [isConfirming, setIsConfirming] = React.useState(false);
-
-  useOnClickOutside(ref, () => setIsConfirming(false));
+  const { ref, isConfirming, buttonProps } = useConfirmButton({
+    noConfirm,
+    handleConfirm: handleDelete,
+  });
 
   return (
-    <Button
-      ref={ref}
-      size="icon"
-      variant={isConfirming ? "destructive" : "ghostMuted"}
-      className="h-6 w-6 shrink-0 rounded-full"
-      onClick={() => {
-        if (noConfirm) {
-          handleDelete();
-          return;
-        }
-
-        if (isConfirming) {
-          handleDelete();
-          setIsConfirming(false);
-          return;
-        }
-
-        setIsConfirming(true);
-      }}
-    >
-      {isConfirming ? <Check className="h-4 w-4" /> : <X className="h-4 w-4" />}
-    </Button>
+    <IconButton ref={ref} size="1" radius="full" type="button" {...buttonProps}>
+      {isConfirming ? (
+        <i className="fa-solid fa-check" />
+      ) : (
+        <i className="fa-solid fa-xmark" />
+      )}
+    </IconButton>
   );
 };
 

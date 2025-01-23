@@ -1,38 +1,10 @@
-import { create } from "zustand";
-import { persist } from "zustand/middleware";
+import { atomWithStorage } from "jotai/utils";
 
-interface State {
-  isMobileSidebarOpen: boolean;
-  isDesktopSidebarOpen: boolean;
-}
-
-const DEFAULT_STATE: State = {
-  isDesktopSidebarOpen: true,
-  isMobileSidebarOpen: false,
-};
-
-interface Actions {
-  toggleMobileSidebar: (open?: boolean) => void;
-  toggleDesktopSidebar: (open?: boolean) => void;
-  reset: () => void;
-}
-
-const useSidebarStore = create<State & Actions>()(
-  persist(
-    (set) => ({
-      ...DEFAULT_STATE,
-      toggleMobileSidebar: (open) =>
-        set((state) => ({
-          isMobileSidebarOpen: open ?? !state.isMobileSidebarOpen,
-        })),
-      toggleDesktopSidebar: (open) =>
-        set((state) => ({
-          isDesktopSidebarOpen: open ?? !state.isDesktopSidebarOpen,
-        })),
-      reset: () => set(DEFAULT_STATE),
-    }),
-    { name: "sidebar-store" },
-  ),
+export const mobileSidebarOpenAtom = atomWithStorage<boolean>(
+  "mobileSidebarOpen",
+  false,
 );
-
-export default useSidebarStore;
+export const desktopSidebarOpenAtom = atomWithStorage<boolean>(
+  "desktopSidebarOpen",
+  false,
+);

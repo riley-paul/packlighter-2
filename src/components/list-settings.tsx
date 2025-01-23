@@ -1,94 +1,111 @@
 import React from "react";
 
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
-
-import { Switch } from "@/components/ui/switch";
-import { Label } from "@/components/ui/label";
-import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
-
-import { Settings, Undo } from "lucide-react";
-import { Button } from "@/components/ui/button";
-
-import { weightUnits, type WeightUnit } from "@/lib/weight-units";
 import useMutations from "@/hooks/use-mutations";
-import { useMediaQuery } from "usehooks-ts";
-import { MOBILE_MEDIA_QUERY } from "@/lib/constants";
-import type { ListSelect } from "@/lib/types";
+import { weightUnits, type ExpandedList, type WeightUnit } from "@/lib/types";
+import { useEventListener } from "usehooks-ts";
+import { getHasModifier, getIsTyping } from "@/lib/utils";
+import {
+  Button,
+  Popover,
+  SegmentedControl,
+  Switch,
+  Text,
+} from "@radix-ui/themes";
 
 interface Props {
-  list: ListSelect;
+  list: ExpandedList;
 }
+
+type ListSetting = {
+  name: string;
+  shortcut: string;
+  key: "showPacked" | "showImages" | "showWeights";
+};
+
+const listSettings: ListSetting[] = [
+  {
+    name: "Show packed",
+    shortcut: "P",
+    key: "showPacked",
+  },
+  {
+    name: "Show images",
+    shortcut: "I",
+    key: "showImages",
+  },
+  {
+    name: "Show weights",
+    shortcut: "W",
+    key: "showWeights",
+  },
+];
 
 const ListSettings: React.FC<Props> = (props) => {
   const { list } = props;
   const listId = list.id;
 
   const { updateList, unpackList } = useMutations();
-  const isMobile = useMediaQuery(MOBILE_MEDIA_QUERY);
+
+  const isAnyPacked = list.categories.some((c) =>
+    c.items.some((i) => i.packed),
+  );
+
+  useEventListener("keydown", (e) => {
+    if (getIsTyping() || getHasModifier(e)) return;
+    listSettings.forEach(({ shortcut, key }) => {
+      if (e.code === `Key${shortcut}`) {
+        updateList.mutate({ listId, data: { [key]: !list[key] } });
+      }
+    });
+  });
 
   return (
-    <Popover>
-      <PopoverTrigger asChild title="List settings">
-        {isMobile ? (
-          <Button variant="ghost" size="icon">
-            <Settings className="h-4 w-4" />
-          </Button>
-        ) : (
-          <Button variant="ghost">
-            <Settings className="mr-2 h-4 w-4" />
-            Settings
-          </Button>
-        )}
-      </PopoverTrigger>
-      <PopoverContent className="grid w-52 gap-4">
+    <Popover.Root>
+      <Popover.Trigger title="List settings">
+        <Button variant="soft" color="gray">
+          <i className="fa-solid fa-gear" />
+          Settings
+        </Button>
+      </Popover.Trigger>
+      <Popover.Content className="grid w-60 gap-4">
         <div className="grid w-full">
           <Button
-            variant="secondary"
+            variant="soft"
             onClick={() => unpackList.mutate({ listId })}
+            disabled={!isAnyPacked || !list.showPacked}
           >
-            <Undo className="mr-2 size-4" />
+            <i className="fa-solid fa-undo" />
             Unpack List
           </Button>
         </div>
 
         <div className="grid gap-3">
-          <div className="flex items-center gap-2">
-            <Switch
-              checked={list.showPacked}
-              onCheckedChange={(checked) =>
-                updateList.mutate({ listId, data: { showPacked: checked } })
-              }
-            />
-            <Label>Show packed</Label>
-          </div>
-          <div className="flex items-center gap-2">
-            <Switch
-              checked={list.showImages}
-              onCheckedChange={(checked) =>
-                updateList.mutate({ listId, data: { showImages: checked } })
-              }
-            />
-            <Label>Show images</Label>
-          </div>
-          <div className="flex items-center gap-2">
-            <Switch
-              checked={list.showWeights}
-              onCheckedChange={(checked) =>
-                updateList.mutate({ listId, data: { showWeights: checked } })
-              }
-            />
-            <Label>Show weights</Label>
-          </div>
+          {listSettings.map(({ name, shortcut, key }) => (
+            <div key={key} className="flex items-center justify-between gap-2">
+              <Text
+                as="label"
+                size="2"
+                weight="medium"
+                className="flex items-center gap-2"
+              >
+                <Switch
+                  checked={list[key] as boolean}
+                  onCheckedChange={(checked) =>
+                    updateList.mutate({ listId, data: { [key]: checked } })
+                  }
+                />
+                {name}
+              </Text>
+              <Text color="gray" className="w-4" align="center">
+                {shortcut}
+              </Text>
+            </div>
+          ))}
         </div>
 
-        <ToggleGroup
+        <SegmentedControl.Root
           id="default-weight"
           className="grid grid-cols-4"
-          type="single"
           value={list.weightUnit}
           onValueChange={(value) => {
             if (!value) return;
@@ -98,18 +115,18 @@ const ListSettings: React.FC<Props> = (props) => {
             });
           }}
         >
-          {Object.values(weightUnits).map((unit) => (
-            <ToggleGroupItem
-              value={unit}
-              key={unit}
-              aria-label={`Toggle ${unit}`}
+          {Object.values(weightUnits).map(({ symbol, name }) => (
+            <SegmentedControl.Item
+              value={symbol}
+              key={symbol}
+              aria-label={`Toggle ${name}`}
             >
-              {unit}
-            </ToggleGroupItem>
+              {symbol}
+            </SegmentedControl.Item>
           ))}
-        </ToggleGroup>
-      </PopoverContent>
-    </Popover>
+        </SegmentedControl.Root>
+      </Popover.Content>
+    </Popover.Root>
   );
 };
 

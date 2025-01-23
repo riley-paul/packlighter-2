@@ -1,12 +1,5 @@
 import { cn } from "@/lib/utils";
 import React from "react";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
 import invariant from "tiny-invariant";
 
 import { combine } from "@atlaskit/pragmatic-drag-and-drop/combine";
@@ -22,19 +15,13 @@ import {
 } from "@atlaskit/pragmatic-drag-and-drop-hitbox/closest-edge";
 import { triggerPostMoveFlash } from "@atlaskit/pragmatic-drag-and-drop-flourish/trigger-post-move-flash";
 
-import { MoreHorizontal, Delete, Copy } from "lucide-react";
-import { Button } from "@/components/ui/button";
-
 import Gripper from "@/components/base/gripper";
-import useSidebarStore from "@/components/sidebar/store";
 import useMutations from "@/hooks/use-mutations";
 import type { ListSelect } from "@/lib/types";
-import ConfirmDeleteDialog from "../base/confirm-delete-dialog";
 import useDraggableState, {
   type DraggableStateClassnames,
 } from "@/hooks/use-draggable-state";
 import { DropIndicator } from "../ui/drop-indicator";
-import { createPortal } from "react-dom";
 import {
   DND_ENTITY_TYPE,
   DndEntityType,
@@ -42,6 +29,11 @@ import {
 } from "@/lib/constants";
 import { Link } from "react-router-dom";
 import useCurrentList from "@/hooks/use-current-list";
+import { DropdownMenu, IconButton, Portal, Text } from "@radix-ui/themes";
+import RadixProvider from "../base/radix-provider";
+import useConfirmDialog from "@/hooks/use-confirm-dialog";
+import { useSetAtom } from "jotai";
+import { mobileSidebarOpenAtom } from "../sidebar/store";
 
 interface Props {
   list: ListSelect;
@@ -56,14 +48,21 @@ const PackingList: React.FC<Props> = (props) => {
   const ref = React.useRef<HTMLDivElement>(null);
   const gripperRef = React.useRef<HTMLButtonElement>(null);
 
+  const setMobileSidebarOpen = useSetAtom(mobileSidebarOpenAtom);
+  const closeMobileSidebar = () => setMobileSidebarOpen(false);
+
+  const [ConfirmDeleteDialog, confirmDelete] = useConfirmDialog({
+    title: "Delete List",
+    description:
+      "Are you sure you want to delete this list? This cannot be undone.",
+  });
+
   const { list, isOverlay } = props;
   const { listId } = useCurrentList();
 
   const isActive = listId === list.id;
 
   const { deleteList, duplicateList } = useMutations();
-  const { toggleMobileSidebar } = useSidebarStore();
-  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = React.useState(false);
 
   const { draggableState, setDraggableState, setDraggableIdle } =
     useDraggableState();
@@ -154,72 +153,84 @@ const PackingList: React.FC<Props> = (props) => {
 
   return (
     <>
-      <ConfirmDeleteDialog
-        isOpen={isDeleteDialogOpen}
-        setIsOpen={setIsDeleteDialogOpen}
-        handleDelete={() => deleteList.mutate({ listId: list.id })}
-        entityName="packing list"
-      />
+      <ConfirmDeleteDialog />
       <div
         ref={ref}
         title={list.name || "Unnamed List"}
         className={cn(
-          "flex h-9 items-center gap-2 border-l-4 border-transparent py-0.5 pl-2 pr-2 hover:border-primary/50",
-          isOverlay && "w-64 rounded border border-l-4 border-border bg-card",
+          "flex h-9 items-center gap-2 border-l-4 border-transparent py-0.5 pl-2 pr-4 hover:border-accentA-6",
+          isOverlay &&
+            "border-border w-64 rounded-2 border border-l-4 bg-gray-2",
           isActive &&
-            "border-primary bg-secondary font-medium text-secondary-foreground hover:border-primary",
+            "text-secondary-foreground hover:border-primary border-accentA-10 bg-accentA-3",
           "relative transition-colors ease-in",
           draggableStyles[draggableState.type],
         )}
       >
         <Gripper ref={gripperRef} />
-        <Link
-          to={`/list/${list.id}`}
-          onClick={() => toggleMobileSidebar(false)}
-          className={cn(
-            "flex-1 truncate text-sm",
-            !list.name && "italic text-muted-foreground",
-          )}
+        <Text
+          asChild
+          size="2"
+          weight={isActive ? "bold" : "medium"}
+          truncate
+          color={list.name ? undefined : "gray"}
+          className={cn("w-full flex-1", !list.name && "italic")}
         >
-          {list.name || "Unnamed List"}
-        </Link>
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button
+          <Link to={`/list/${list.id}`} onClick={() => closeMobileSidebar()}>
+            {list.name || "Unnamed List"}
+          </Link>
+        </Text>
+        <DropdownMenu.Root>
+          <DropdownMenu.Trigger>
+            <IconButton
               variant="ghost"
-              className={cn("h-6 w-6 rounded-full p-0 hover:bg-muted")}
+              color="gray"
               title="List Actions"
+              size="1"
+              radius="full"
             >
               <span className="sr-only">Open menu</span>
-              <MoreHorizontal className="h-4 w-4 text-muted-foreground" />
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="start">
-            <DropdownMenuLabel>Actions</DropdownMenuLabel>
-            <DropdownMenuItem onClick={() => setIsDeleteDialogOpen(true)}>
-              <Delete size="1rem" className="mr-2 text-destructive" />
+              <i className="fa-solid fa-ellipsis" />
+            </IconButton>
+          </DropdownMenu.Trigger>
+          <DropdownMenu.Content align="start" className="z-30">
+            <DropdownMenu.Label>Actions</DropdownMenu.Label>
+            <DropdownMenu.Item
+              onClick={async () => {
+                const ok = await confirmDelete();
+                if (ok) {
+                  deleteList.mutate({ listId: list.id });
+                }
+              }}
+            >
+              <Text asChild color="gray">
+                <i className="fa-solid fa-backspace w-4 text-center" />
+              </Text>
               Delete
-            </DropdownMenuItem>
+            </DropdownMenu.Item>
 
-            <DropdownMenuItem
+            <DropdownMenu.Item
               onClick={() => duplicateList.mutate({ listId: list.id })}
             >
-              <Copy size="1rem" className="mr-2 text-primary" />
+              <Text asChild color="gray">
+                <i className="fa-solid fa-copy w-4 text-center" />
+              </Text>
               Duplicate
-            </DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
+            </DropdownMenu.Item>
+          </DropdownMenu.Content>
+        </DropdownMenu.Root>
         {draggableState.type === "is-dragging-over" &&
           draggableState.closestEdge && (
             <DropIndicator edge={draggableState.closestEdge} gap="0px" />
           )}
       </div>
-      {draggableState.type === "preview"
-        ? createPortal(
-            <PackingList list={list} isOverlay />,
-            draggableState.container,
-          )
-        : null}
+      {draggableState.type === "preview" ? (
+        <Portal container={draggableState.container}>
+          <RadixProvider>
+            <PackingList list={list} isOverlay />
+          </RadixProvider>
+        </Portal>
+      ) : null}
     </>
   );
 };

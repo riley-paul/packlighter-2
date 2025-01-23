@@ -1,12 +1,12 @@
-import { Toaster } from "sonner";
-import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 
-import Root from "./root";
-import HomePage from "./home-page";
-import ListPage from "./list-page";
 import ErrorDisplay from "@/components/base/error";
+import HomePage from "@/app/home-page";
+import ListPage from "@/app/list-page";
+import Root from "@/app/root";
+import RadixProvider from "@/components/base/radix-provider";
+import CustomToaster from "@/components/ui/custom-toaster";
 
 const queryClient = new QueryClient({
   defaultOptions: { queries: { staleTime: 1000 * 60 * 5 } },
@@ -31,13 +31,15 @@ const router = createBrowserRouter([
 ]);
 
 // Render the app
-const App: React.FC = () => (
-  <QueryClientProvider client={queryClient}>
-    <TooltipProvider>
-      <Toaster />
-      <RouterProvider router={router} />
-    </TooltipProvider>
-  </QueryClientProvider>
-);
+const App: React.FC = () => {
+  return (
+    <QueryClientProvider client={queryClient}>
+      <RadixProvider>
+        <CustomToaster />
+        <RouterProvider router={router} />
+      </RadixProvider>
+    </QueryClientProvider>
+  );
+};
 
 export default App;

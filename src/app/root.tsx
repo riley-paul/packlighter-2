@@ -3,19 +3,21 @@ import { Outlet } from "react-router-dom";
 import ItemEditor from "@/components/item-editor/item-editor";
 import SideBar from "@/components/sidebar/sidebar";
 import FeedbackButton from "@/components/feedback-button";
+import CommandBar from "@/components/command-bar";
 
 const Root: React.FC = () => {
   return (
-    <>
-      <main className="flex h-[100svh] overflow-hidden">
-        <ItemEditor />
-        <SideBar />
-        <div className="flex-1">
-          <Outlet />
-        </div>
-      </main>
-      <FeedbackButton />
-    </>
+    <main className="flex">
+      <ItemEditor />
+      <CommandBar />
+      <SideBar />
+      <div className="min-h-screen flex-1 overflow-hidden">
+        <Outlet />
+      </div>
+      <div className="fixed bottom-6 right-6 flex items-center gap-4">
+        <FeedbackButton />
+      </div>
+    </main>
   );
 };
 

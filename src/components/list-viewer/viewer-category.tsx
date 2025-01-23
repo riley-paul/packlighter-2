@@ -10,7 +10,7 @@ import {
 import useListTableState from "../../hooks/use-list-table-state";
 import useViewerColumns from "./use-viewer-columns";
 import Placeholder from "../base/placeholder";
-import { Separator } from "../ui/separator";
+import { Separator } from "@radix-ui/themes";
 
 interface Props {
   category: ExpandedCategory;
@@ -22,7 +22,7 @@ const ViewerCategory: React.FC<Props> = (props) => {
 
   const ref = React.useRef<HTMLDivElement>(null);
 
-  const columns = useViewerColumns(category);
+  const columns = useViewerColumns(category, list);
 
   const { columnVisibility } = useListTableState(list);
   columnVisibility.packed = true;
@@ -43,10 +43,10 @@ const ViewerCategory: React.FC<Props> = (props) => {
       data-category-id={category.id}
       className={cn("relative flex w-full flex-col")}
     >
-      <header className="w-full border-b text-sm font-semibold text-muted-foreground">
+      <header className="text-2 font-bold text-gray-11 w-full border-b">
         {table.getHeaderGroups().map((headerGroup) => (
           <div
-            className="flex h-10 min-h-12 w-full items-center gap-3 px-3 text-sm transition-colors hover:bg-muted/50"
+            className="hover:bg-gray-2 flex h-10 min-h-12 w-full items-center gap-3 px-3 transition-colors"
             key={headerGroup.id}
           >
             {headerGroup.headers.map((header) => (
@@ -69,7 +69,7 @@ const ViewerCategory: React.FC<Props> = (props) => {
               ref={ref}
               data-category-item-id={row.original.id}
               className={cn(
-                "relative flex h-fit min-h-10 items-center gap-3 px-3 py-1 text-sm transition-colors hover:bg-muted/50",
+                "text-2 hover:bg-gray-2 relative flex h-fit min-h-10 items-center gap-3 px-3 py-1 transition-colors",
               )}
             >
               {row.getVisibleCells().map((cell) => (
@@ -78,7 +78,7 @@ const ViewerCategory: React.FC<Props> = (props) => {
                 </React.Fragment>
               ))}
             </div>
-            <Separator />
+            <Separator size="4" />
           </React.Fragment>
         ))}
 

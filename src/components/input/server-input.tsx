@@ -1,17 +1,16 @@
 import React from "react";
-import { Input } from "../ui/input";
-import { cn } from "@/lib/utils";
 import { useUnmount } from "usehooks-ts";
+import { TextField } from "@radix-ui/themes";
+import { cn } from "@/lib/utils";
 
 type Props = {
   currentValue: string | undefined | null;
   onUpdate: (value: string | undefined) => void;
   selectOnFocus?: boolean;
-  inline?: boolean;
-} & React.ComponentProps<typeof Input>;
+} & React.ComponentProps<typeof TextField.Root>;
 
 const ServerInput = React.forwardRef<HTMLInputElement, Props>((props, ref) => {
-  const { currentValue, onUpdate, selectOnFocus, inline, ...rest } = props;
+  const { currentValue, onUpdate, selectOnFocus, ...rest } = props;
 
   const [value, setValue] = React.useState<string>(currentValue ?? "");
 
@@ -22,18 +21,19 @@ const ServerInput = React.forwardRef<HTMLInputElement, Props>((props, ref) => {
   useUnmount(update);
 
   return (
-    <Input
+    <TextField.Root
       {...rest}
-      className={cn(
-        props.className,
-        inline &&
-          "h-auto truncate border-none px-2 py-1 shadow-none transition-colors placeholder:italic hover:bg-input/50",
-      )}
+      variant="soft"
+      color="gray"
       ref={ref}
       value={value}
       onChange={(ev) => setValue(ev.target.value)}
-      onBlur={() => update()}
-      onFocus={(ev) => selectOnFocus && ev.target.select()}
+      onBlur={() => {
+        update();
+      }}
+      onFocus={(ev) => {
+        if (selectOnFocus) ev.target.select();
+      }}
       onKeyDown={(ev) => {
         const target = ev.target as HTMLInputElement;
         if (ev.key === "Enter" || ev.key === "Escape") {
@@ -43,6 +43,7 @@ const ServerInput = React.forwardRef<HTMLInputElement, Props>((props, ref) => {
         }
       }}
       autoComplete="off"
+      className={cn("w-full bg-transparent", props.className)}
     />
   );
 });

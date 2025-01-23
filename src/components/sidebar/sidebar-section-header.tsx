@@ -1,20 +1,24 @@
 import React from "react";
-import { Button, type ButtonProps } from "../ui/button";
+import { Button, Heading, Text, type ButtonProps } from "@radix-ui/themes";
 
 type Props = {
   title: string;
   action?: ButtonProps;
+  count?: number;
 };
 
 const SidebarSectionHeader: React.FC<Props> = (props) => {
-  const { title, action } = props;
+  const { title, action, count } = props;
 
   return (
     <header className="flex h-6 items-center justify-between gap-2">
-      <h2 className="upper text-sm font-medium text-secondary-foreground">
+      <Heading as="h2" size="1" weight="bold" className="uppercase">
         {title}
-      </h2>
-      {action && <Button size="sm" variant="linkMuted" {...action} />}
+        <Text color="gray" weight="bold" className="font-mono ml-2">
+          {count}
+        </Text>
+      </Heading>
+      {action && <Button size="1" variant="ghost" {...action} />}
     </header>
   );
 };

@@ -1,10 +1,9 @@
 import React from "react";
 import { useQuery } from "@tanstack/react-query";
-import { Plus } from "lucide-react";
 import PackingItem from "./packing-item";
 import { itemsQueryOptions } from "@/lib/queries";
 import ArrayQueryGuard from "../base/array-query-guard";
-import PackingItemsSortFilter from "../packing-items-sort-filter/component";
+import PackingItemsSortFilter from "../packing-items-sort-filter/packing-item-sort-filter";
 import { usePackingItemsSortFilter } from "../packing-items-sort-filter/hook";
 import SidebarSectionHeader from "../sidebar/sidebar-section-header";
 import useScrollShadow from "@/hooks/use-scroll-shadow";
@@ -12,6 +11,7 @@ import { cn } from "@/lib/utils";
 import { useVirtualizer } from "@tanstack/react-virtual";
 import useCurrentList from "@/hooks/use-current-list";
 import useItemEditorStore from "../item-editor/store";
+import { ScrollArea } from "@radix-ui/themes";
 
 const PackingItems: React.FC = () => {
   const itemsQuery = useQuery(itemsQueryOptions);
@@ -43,16 +43,18 @@ const PackingItems: React.FC = () => {
             onClick: () => openEditor(),
             children: (
               <>
-                <Plus size="1rem" className="mr-2" />
+                <i className="fa-solid fa-plus" />
                 <span>Add Gear</span>
               </>
             ),
           }}
+          count={items.length}
         />
         <PackingItemsSortFilter />
       </div>
-      <div
+      <ScrollArea
         ref={listRef}
+        type="hover"
         className="h-full flex-1 overflow-y-auto overflow-x-hidden"
       >
         <ArrayQueryGuard query={itemsQuery} placeholder="No gear yet">
@@ -86,7 +88,7 @@ const PackingItems: React.FC = () => {
             ))}
           </div>
         </ArrayQueryGuard>
-      </div>
+      </ScrollArea>
     </div>
   );
 };

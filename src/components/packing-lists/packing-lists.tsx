@@ -1,4 +1,3 @@
-import { Plus } from "lucide-react";
 import React from "react";
 import { useQuery } from "@tanstack/react-query";
 import PackingList from "./packing-list";
@@ -19,6 +18,7 @@ import SidebarSectionHeader from "../sidebar/sidebar-section-header";
 import useScrollShadow from "@/hooks/use-scroll-shadow";
 import { useVirtualizer } from "@tanstack/react-virtual";
 import useCurrentList from "@/hooks/use-current-list";
+import { ScrollArea } from "@radix-ui/themes";
 
 export default function PackingLists(): ReturnType<React.FC> {
   const listsQuery = useQuery(listsQueryOptions);
@@ -78,8 +78,8 @@ export default function PackingLists(): ReturnType<React.FC> {
     count: lists.length,
     getScrollElement: () => listRef.current,
     estimateSize: () => 36,
-    scrollPaddingEnd: 32,
-    scrollPaddingStart: 32,
+    scrollPaddingEnd: 8,
+    scrollPaddingStart: 8,
   });
 
   const { listId } = useCurrentList();
@@ -100,15 +100,17 @@ export default function PackingLists(): ReturnType<React.FC> {
           action={{
             children: (
               <>
-                <Plus size="1rem" className="mr-2" />
+                <i className="fa-solid fa-plus" />
                 <span>Add List</span>
               </>
             ),
             onClick: () => addList.mutate({}),
           }}
+          count={lists.length}
         />
       </div>
-      <div
+      <ScrollArea
+        type="hover"
         ref={listRef}
         className={cn("h-full overflow-y-auto overflow-x-hidden py-1")}
       >
@@ -124,7 +126,6 @@ export default function PackingLists(): ReturnType<React.FC> {
               <div
                 key={virtualItem.key}
                 data-index={virtualItem.index}
-                ref={rowVirtualizer.measureElement}
                 style={{
                   position: "absolute",
                   top: 0,
@@ -138,7 +139,7 @@ export default function PackingLists(): ReturnType<React.FC> {
             ))}
           </div>
         </ArrayQueryGuard>
-      </div>
+      </ScrollArea>
     </div>
   );
 }

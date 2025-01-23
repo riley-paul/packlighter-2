@@ -1,5 +1,7 @@
-export const MOBILE_MEDIA_QUERY = "(max-width: 768px)";
 export const NAVBAR_HEIGHT = "4rem";
+
+export const MOBILE_BREAKPOINT = 768;
+export const TABLET_BREAKPOINT = 1024;
 
 export const DND_ENTITY_TYPE = "__entityType";
 export enum DndEntityType {
@@ -16,3 +18,5 @@ export const isDndEntityType = (
 ): boolean => {
   return data[DND_ENTITY_TYPE] === type;
 };
+
+export const ACCENT_COLOR = "green" as const;

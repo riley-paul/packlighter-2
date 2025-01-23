@@ -13,7 +13,17 @@ export const formatWeight = (value: number): string => {
 };
 
 export const getCheckboxState = (values: boolean[]): CheckedState => {
+  if (values.length === 0) return false;
   if (values.every((v) => v)) return true;
   if (values.some((v) => v)) return "indeterminate";
   return false;
 };
+
+export const getIsTyping = () =>
+  document.activeElement?.tagName === "INPUT" ||
+  document.activeElement?.tagName === "TEXTAREA" ||
+  // @ts-expect-error
+  document.activeElement?.isContentEditable;
+
+export const getHasModifier = (event: KeyboardEvent) =>
+  event.ctrlKey || event.metaKey || event.altKey || event.shiftKey;

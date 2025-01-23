@@ -1,14 +1,22 @@
-import type { ExpandedCategory, ExpandedCategoryItem } from "@/lib/types";
+import type {
+  ExpandedCategory,
+  ExpandedCategoryItem,
+  ListSelect,
+} from "@/lib/types";
 import { createColumnHelper } from "@tanstack/react-table";
 import React from "react";
-import { Checkbox } from "../ui/checkbox";
 import { cn, formatWeight, getCheckboxState } from "@/lib/utils";
 import useViewerStore from "./store";
 import CellWrapper from "../base/cell-wrapper";
+import ItemImage from "../item-image";
+import { Checkbox } from "@radix-ui/themes";
 
 const columnHelper = createColumnHelper<ExpandedCategoryItem>();
 
-export default function useEditorColumns(category: ExpandedCategory) {
+export default function useViewerColumns(
+  category: ExpandedCategory,
+  list: ListSelect,
+) {
   const { togglePackedItem, isItemPacked } = useViewerStore();
   const { listId } = category;
 
@@ -19,6 +27,7 @@ export default function useEditorColumns(category: ExpandedCategory) {
         header: () => (
           <CellWrapper center>
             <Checkbox
+              size="3"
               checked={getCheckboxState(
                 category.items.map((item) =>
                   isItemPacked({ listId, itemId: item.id }),
@@ -39,6 +48,7 @@ export default function useEditorColumns(category: ExpandedCategory) {
         cell: (props) => (
           <CellWrapper center>
             <Checkbox
+              size="3"
               checked={isItemPacked({ listId, itemId: props.row.original.id })}
               onCheckedChange={(checked) =>
                 togglePackedItem({
@@ -58,20 +68,14 @@ export default function useEditorColumns(category: ExpandedCategory) {
         cell: ({ getValue }) => {
           const imageUrl = getValue();
           return (
-            <div
+            <ItemImage
+              url={imageUrl}
+              size="sm"
               className={cn(
-                "flex w-16 items-center justify-center rounded-sm p-0.5",
-                imageUrl ? "h-16 bg-white" : "h-full min-h-6 bg-muted/50",
+                "w-16",
+                imageUrl ? "h-16" : "bg-muted/50 h-full min-h-6",
               )}
-            >
-              {imageUrl && (
-                <img
-                  className="h-full w-full object-contain"
-                  src={imageUrl}
-                  alt="thumbnail"
-                />
-              )}
-            </div>
+            />
           );
         },
       }),
@@ -80,19 +84,25 @@ export default function useEditorColumns(category: ExpandedCategory) {
         (row) => ({
           name: row.itemData.name,
           description: row.itemData.description,
+          isPacked: row.packed,
         }),
         {
           id: "name-description",
           header: () => (
-            <h2 className="flex-1 py-0.5 text-lg font-semibold text-foreground">
+            <h2 className="text-4 text-gray-12 flex-1 py-0.5">
               {category.name || "Unnamed Category"}
             </h2>
           ),
           cell: (props) => (
             <div className="flex-1 @container">
-              <div className="grid @lg:grid-cols-[1fr_2fr] @lg:gap-1">
+              <div
+                className={cn(
+                  "grid @lg:grid-cols-[1fr_2fr] @lg:gap-1",
+                  props.getValue().isPacked && "line-through opacity-50",
+                )}
+              >
                 <div>{props.getValue().name}</div>
-                <div className="text-muted-foreground">
+                <div className="text-gray-11">
                   {props.getValue().description}
                 </div>
               </div>
@@ -147,6 +157,6 @@ export default function useEditorColumns(category: ExpandedCategory) {
         // ),
       }),
     ],
-    [category],
+    [category, list],
   );
 }

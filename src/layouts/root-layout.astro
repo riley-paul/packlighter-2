@@ -1,27 +1,45 @@
 ---
 import { ThemeListener } from "@/lib/theme/theme-listener";
 import { cn } from "@/lib/utils";
-import "@fontsource-variable/inter";
+
+import "@radix-ui/themes/styles.css";
 import "@/globals.css";
+import "@/theme.css";
+
+import "@fontsource-variable/inter";
+import "@fontsource-variable/reddit-sans";
+import "@fontsource-variable/radio-canada";
 
 const theme = Astro.cookies.get("theme")?.value;
+
+export interface Props {
+  noOverscoll?: boolean;
+}
+
+const { noOverscoll } = Astro.props;
 ---
 
 <html lang="en" class={cn(theme === "dark" && "dark")}>
   <head>
     <meta charset="UTF-8" />
-    <link rel="icon" href="earth.svg" />
     <meta name="generator" content={Astro.generator} />
     <meta
       name="viewport"
       content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
     />
 
-    <link rel="manifest" href="manifest.json" />
+    <link rel="icon" href="/earth.svg" />
+    <link rel="manifest" href="/manifest.json" />
     <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
     <title>LighterTravel</title>
+
+    <link href="/icons/css/fontawesome.css" rel="stylesheet" />
+    <link href="/icons/css/brands.css" rel="stylesheet" />
+    <link href="/icons/css/solid.css" rel="stylesheet" />
   </head>
-  <body class="min-h-[100svh] flex flex-col">
+  <body
+    class={cn("min-h-screen", noOverscoll && "overscroll-none")}
+  >
     <ThemeListener client:load />
     <slot />
   </body>

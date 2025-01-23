@@ -1,26 +1,20 @@
 import type { ListSelect } from "@/lib/types";
 import React from "react";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
-import { Switch } from "@/components/ui/switch";
 
-import { Button, buttonVariants } from "./ui/button";
-import { ArrowRight, Check, Copy, Share } from "lucide-react";
-import { Label } from "./ui/label";
 import useMutations from "@/hooks/use-mutations";
-import { Input } from "./ui/input";
 import { useCopyToClipboard } from "usehooks-ts";
 import { toast } from "sonner";
-import { cn } from "@/lib/utils";
 
 import {
+  Button,
+  IconButton,
+  Link,
+  Popover,
+  Switch,
+  Text,
+  TextField,
   Tooltip,
-  TooltipContent,
-  TooltipTrigger,
-} from "@/components/ui/tooltip";
+} from "@radix-ui/themes";
 
 type Props = {
   list: ListSelect;
@@ -39,16 +33,16 @@ const ListSharing: React.FC<Props> = (props) => {
       .catch(() => toast.error("Failed to copy link"));
 
   return (
-    <Popover>
-      <PopoverTrigger asChild>
-        <Button variant="ghost">
-          <Share className="mr-2 h-4 w-4" />
+    <Popover.Root>
+      <Popover.Trigger>
+        <Button variant="soft" color="gray">
+          <i className="fa-solid fa-share" />
           <span>Share</span>
         </Button>
-      </PopoverTrigger>
-      <PopoverContent>
-        <div className="grid gap-2">
-          <div className="flex items-center gap-2">
+      </Popover.Trigger>
+      <Popover.Content className="w-72">
+        <div className="grid gap-4">
+          <Text as="label" weight="medium" className="flex items-center gap-2">
             <Switch
               checked={list.isPublic}
               onCheckedChange={(checked) =>
@@ -58,57 +52,43 @@ const ListSharing: React.FC<Props> = (props) => {
                 })
               }
             />
-            <Label>Make list public</Label>
-          </div>
+            Make list public
+          </Text>
           {list.isPublic && (
-            <>
-              <div className="text-sm text-muted-foreground">
+            <div className="grid gap-2">
+              <Text size="2" color="gray">
                 Anyone with the link can view this list
-              </div>
+              </Text>
               <div className="flex items-center gap-2">
-                <Input
+                <TextField.Root
                   onFocus={(e) => e.target.select()}
-                  className="w-full truncate rounded border p-2"
                   type="text"
                   value={publicUrl}
                   readOnly
+                  className="min-w-0 flex-1 truncate"
                 />
-                <Tooltip>
-                  <TooltipTrigger>
-                    <Button
-                      size="icon"
-                      variant="secondary"
-                      onClick={handleCopy}
-                      className="shrink-0"
-                    >
-                      {hasBeenCopied ? (
-                        <Check className="size-4 text-green-500" />
-                      ) : (
-                        <Copy className="size-4" />
-                      )}
-                    </Button>
-                  </TooltipTrigger>
-                  <TooltipContent side="right">
-                    {hasBeenCopied ? "Copied!" : "Copy link"}
-                  </TooltipContent>
+                <Tooltip
+                  side="right"
+                  content={hasBeenCopied ? "Copied!" : "Copy link"}
+                >
+                  <IconButton variant="soft" onClick={handleCopy}>
+                    {hasBeenCopied ? (
+                      <i className="fa-solid fa-check" />
+                    ) : (
+                      <i className="fa-solid fa-check" />
+                    )}
+                  </IconButton>
                 </Tooltip>
               </div>
-              <a
-                className={cn(
-                  buttonVariants({ variant: "linkMuted", size: "sm" }),
-                  "mt-1 h-auto justify-start",
-                )}
-                href={publicUrl}
-                target="_blank"
-              >
-                <span>Preview your list</span>
-                <ArrowRight className="ml-1 h-4 w-4" />
-              </a>
-            </>
+              <Link size="2" className="mt-1" href={publicUrl} target="_blank">
+                Preview your list
+                <i className="fa-solid fa-arrow-right ml-1" />
+              </Link>
+            </div>
           )}
         </div>
-      </PopoverContent>
-    </Popover>
+      </Popover.Content>
+    </Popover.Root>
   );
 };
 

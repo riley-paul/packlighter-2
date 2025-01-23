@@ -17,7 +17,6 @@ import { pointerOutsideOfPreview } from "@atlaskit/pragmatic-drag-and-drop/eleme
 import { setCustomNativeDragPreview } from "@atlaskit/pragmatic-drag-and-drop/element/set-custom-native-drag-preview";
 import { combine } from "@atlaskit/pragmatic-drag-and-drop/combine";
 import invariant from "tiny-invariant";
-import { createPortal } from "react-dom";
 import {
   DND_ENTITY_TYPE,
   DndEntityType,
@@ -27,7 +26,8 @@ import useCurrentList from "@/hooks/use-current-list";
 import { flexRender, type Row } from "@tanstack/react-table";
 import { DropIndicator } from "../ui/drop-indicator";
 import Gripper from "../base/gripper";
-import { Separator } from "../ui/separator";
+import { Portal, Separator } from "@radix-ui/themes";
+import RadixProvider from "../base/radix-provider";
 
 interface Props {
   row: Row<ExpandedCategoryItem>;
@@ -54,7 +54,7 @@ const isPermitted = (
 
 const EditorCategoryItem: React.FC<Props> = (props) => {
   const { row, isOverlay } = props;
-  const { list, listItemIds } = useCurrentList();
+  const { list, listItemIds, duplicateListItemIds } = useCurrentList();
 
   const ref = React.useRef<HTMLTableRowElement>(null);
   const gripperRef = React.useRef<HTMLButtonElement>(null);
@@ -144,6 +144,8 @@ const EditorCategoryItem: React.FC<Props> = (props) => {
     );
   }, [row.original]);
 
+  const isDuplicate = duplicateListItemIds.has(row.original.itemId);
+
   if (!list) return null;
 
   return (
@@ -152,16 +154,15 @@ const EditorCategoryItem: React.FC<Props> = (props) => {
         ref={ref}
         data-category-item-id={row.original.id}
         className={cn(
-          "relative flex h-fit items-center gap-1 px-2 py-1 text-sm transition-colors hover:bg-muted/50",
-          isOverlay && "w-[800px] rounded border bg-card",
+          "text-sm relative flex h-fit items-center gap-2 p-1 transition-colors hover:bg-gray-3",
+          isOverlay && "w-[800px] rounded-2 border bg-gray-2",
           draggableStyles[draggableState.type],
+          isDuplicate && "bg-red-2 hover:bg-red-3",
         )}
       >
+        <Gripper ref={gripperRef} />
         {row.getVisibleCells().map((cell) => (
           <React.Fragment key={cell.id}>
-            {cell.column.columnDef.meta?.isGripper && (
-              <Gripper ref={gripperRef} />
-            )}
             {flexRender(cell.column.columnDef.cell, cell.getContext())}
           </React.Fragment>
         ))}
@@ -170,13 +171,14 @@ const EditorCategoryItem: React.FC<Props> = (props) => {
           <DropIndicator edge={draggableState.closestEdge} gap="1px" />
         ) : null}
       </div>
-      {draggableState.type === "preview"
-        ? createPortal(
-            <EditorCategoryItem row={row} isOverlay />,
-            draggableState.container,
-          )
-        : null}
-      <Separator />
+      {draggableState.type === "preview" ? (
+        <Portal container={draggableState.container}>
+          <RadixProvider>
+            <EditorCategoryItem row={row} isOverlay />
+          </RadixProvider>
+        </Portal>
+      ) : null}
+      {!isOverlay && <Separator size="4" />}
     </>
   );
 };

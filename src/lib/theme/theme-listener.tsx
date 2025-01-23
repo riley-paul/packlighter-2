@@ -1,7 +1,8 @@
+import { useAtomValue } from "jotai/react";
 import React from "react";
-import useThemeStore from "./store.ts";
 import { useCookies } from "react-cookie";
 import { useMediaQuery } from "usehooks-ts";
+import { themeAtom } from "./store";
 
 const MEDIA_QUERY_STR = "(prefers-color-scheme: dark)";
 
@@ -12,14 +13,14 @@ const setAppTheme = (theme: "light" | "dark") => {
 };
 
 export function ThemeListener() {
-  const { theme } = useThemeStore();
-  const [_, setCookie, removeCookie] = useCookies(["theme"]);
+  const theme = useAtomValue(themeAtom);
+  const [_, setCookie] = useCookies(["theme"]);
 
   const isDark = useMediaQuery(MEDIA_QUERY_STR);
 
   React.useEffect(() => {
     if (theme === "system") {
-      removeCookie("theme", { path: "/" });
+      setCookie("theme", isDark ? "dark" : "light", { path: "/" });
       setAppTheme(isDark ? "dark" : "light");
       return;
     }
