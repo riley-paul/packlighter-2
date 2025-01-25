@@ -13,10 +13,11 @@ import useDraggableState, {
   type DraggableStateClassnames,
 } from "@/hooks/use-draggable-state";
 import { DND_ENTITY_TYPE, DndEntityType } from "@/lib/constants";
-import useItemEditorStore from "../item-editor/store";
 import { DropdownMenu, IconButton, Portal, Text } from "@radix-ui/themes";
 import RadixProvider from "../base/radix-provider";
 import useConfirmDialog from "@/hooks/use-confirm-dialog";
+import { useSetAtom } from "jotai";
+import { openEditorAtom } from "../item-editor/store";
 
 interface Props {
   item: ItemSelect;
@@ -38,7 +39,7 @@ const PackingItem: React.FC<Props> = (props) => {
       "Are you sure you want to delete this gear? This cannot be undone.",
   });
 
-  const { openEditor } = useItemEditorStore();
+  const openEditor = useSetAtom(openEditorAtom);
 
   const ref = React.useRef<HTMLDivElement>(null);
   const gripperRef = React.useRef<HTMLButtonElement>(null);

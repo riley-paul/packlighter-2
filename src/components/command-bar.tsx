@@ -16,14 +16,14 @@ import { useNavigate } from "react-router-dom";
 import useMutations from "@/hooks/use-mutations";
 import { cn } from "@/lib/utils";
 import { ACCENT_COLOR } from "@/lib/constants";
-import { atom, useAtom } from "jotai";
-import useItemEditorStore from "./item-editor/store";
+import { atom, useAtom, useSetAtom } from "jotai";
+import { openEditorAtom } from "./item-editor/store";
 
 export const commandBarOpenAtom = atom(false);
 
 const CommandBar: React.FC = () => {
   const [open, setOpen] = useAtom(commandBarOpenAtom);
-  const { openEditor } = useItemEditorStore();
+  const openEditor = useSetAtom(openEditorAtom);
 
   const navigate = useNavigate();
 

@@ -10,14 +10,15 @@ import useScrollShadow from "@/hooks/use-scroll-shadow";
 import { cn } from "@/lib/utils";
 import { useVirtualizer } from "@tanstack/react-virtual";
 import useCurrentList from "@/hooks/use-current-list";
-import useItemEditorStore from "../item-editor/store";
 import { ScrollArea } from "@radix-ui/themes";
+import { useSetAtom } from "jotai";
+import { openEditorAtom } from "../item-editor/store";
 
 const PackingItems: React.FC = () => {
   const itemsQuery = useQuery(itemsQueryOptions);
   const items = usePackingItemsSortFilter(itemsQuery.data ?? []);
 
-  const { openEditor } = useItemEditorStore();
+  const openEditor = useSetAtom(openEditorAtom);
 
   const { listRef, isScrolled } = useScrollShadow();
 

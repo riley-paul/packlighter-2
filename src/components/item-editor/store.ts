@@ -1,25 +1,15 @@
 import type { ItemSelect } from "@/lib/types";
-import { create } from "zustand";
+import { atom } from "jotai";
 
-type State = {
-  item: ItemSelect | undefined;
-  isEditorOpen: boolean;
-};
+export const editorItemAtom = atom<ItemSelect | undefined>(undefined);
+export const editorOpenAtom = atom(false);
 
-const initialState: State = {
-  item: undefined,
-  isEditorOpen: false,
-};
+export const openEditorAtom = atom(null, (_get, set, item?: ItemSelect) => {
+  set(editorItemAtom, item);
+  set(editorOpenAtom, true);
+});
 
-type Actions = {
-  openEditor: (item?: ItemSelect) => void;
-  closeEditor: () => void;
-};
-
-const useItemEditorStore = create<State & Actions>()((set) => ({
-  ...initialState,
-  openEditor: (item) => set({ item, isEditorOpen: true }),
-  closeEditor: () => set({ item: undefined, isEditorOpen: false }),
-}));
-
-export default useItemEditorStore;
+export const closeEditorAtom = atom(null, (_get, set) => {
+  set(editorItemAtom, undefined);
+  set(editorOpenAtom, false);
+});
