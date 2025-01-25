@@ -14,7 +14,14 @@ import AddItemPopover from "./add-item-popover";
 import useCurrentList from "@/hooks/use-current-list";
 import CellWrapper from "../base/cell-wrapper";
 import { WeightConvertible } from "@/lib/convertible";
-import { TextField, Select, Checkbox, Heading, Text } from "@radix-ui/themes";
+import {
+  TextField,
+  Select,
+  Checkbox,
+  Heading,
+  Text,
+  Button,
+} from "@radix-ui/themes";
 import ConditionalForm from "../base/conditional-form";
 import { z } from "zod";
 
@@ -24,6 +31,9 @@ type UseColumnsProps = {
   category: ExpandedCategory;
   addItemRef: React.RefObject<HTMLButtonElement>;
 };
+
+const QTY_WIDTH = "3.5rem";
+const WEIGHT_WIDTH = "5rem";
 
 export default function useEditorColumns({
   category,
@@ -181,14 +191,14 @@ export default function useEditorColumns({
         {
           id: "weight",
           header: () => (
-            <CellWrapper width="5rem">
+            <CellWrapper width={WEIGHT_WIDTH}>
               <Heading as="h3" size="2" color="gray">
                 Weight
               </Heading>
             </CellWrapper>
           ),
           cell: (props) => (
-            <CellWrapper width="5rem">
+            <CellWrapper width={WEIGHT_WIDTH}>
               <ServerInput
                 type="number"
                 currentValue={String(props.getValue().weight)}
@@ -235,7 +245,7 @@ export default function useEditorColumns({
               0,
             );
             return (
-              <CellWrapper width="5rem">
+              <CellWrapper width={WEIGHT_WIDTH}>
                 <Text size="2" weight="medium">
                   {formatWeight(totalWeight)}
                   <span>{list.weightUnit}</span>
@@ -248,14 +258,14 @@ export default function useEditorColumns({
       columnHelper.accessor("quantity", {
         id: "qty",
         header: () => (
-          <CellWrapper width={50}>
+          <CellWrapper width={QTY_WIDTH}>
             <Heading as="h3" size="2" color="gray">
               Qty
             </Heading>
           </CellWrapper>
         ),
         cell: (props) => (
-          <CellWrapper width={50}>
+          <CellWrapper width={QTY_WIDTH}>
             <ServerInput
               type="number"
               placeholder="Qty"
@@ -267,11 +277,44 @@ export default function useEditorColumns({
                   data: { quantity: Number(quantity) },
                 })
               }
-            />
+            >
+              <TextField.Slot side="right">
+                <div className="grid gap-0.5">
+                  <Button
+                    size="1"
+                    variant="ghost"
+                    className="text-[0.5rem]"
+                    onClick={() =>
+                      updateCategoryItem.mutate({
+                        categoryItemId: props.row.original.id,
+                        data: { quantity: props.getValue() + 1 },
+                      })
+                    }
+                  >
+                    <i className="fa-solid fa-chevron-up" />
+                  </Button>
+                  <Button
+                    size="1"
+                    variant="ghost"
+                    className="text-[0.5rem]"
+                    onClick={() => {
+                      const quantity = props.getValue() - 1;
+                      if (quantity < 1) return;
+                      updateCategoryItem.mutate({
+                        categoryItemId: props.row.original.id,
+                        data: { quantity },
+                      });
+                    }}
+                  >
+                    <i className="fa-solid fa-chevron-down" />
+                  </Button>
+                </div>
+              </TextField.Slot>
+            </ServerInput>
           </CellWrapper>
         ),
         footer: () => (
-          <CellWrapper width={50}>
+          <CellWrapper width={QTY_WIDTH}>
             <Text size="2" weight="medium">
               {category.items.reduce((acc, val) => acc + val.quantity, 0)}
             </Text>
