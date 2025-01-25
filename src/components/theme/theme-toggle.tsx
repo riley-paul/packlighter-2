@@ -1,7 +1,8 @@
 import React from "react";
-import { themeAtom, type Theme } from "./store";
+import { themeAtom } from "./store";
 import { useAtom } from "jotai/react";
 import { SegmentedControl } from "@radix-ui/themes";
+import type { Theme } from "./types";
 
 const themeOptions: {
   value: string;

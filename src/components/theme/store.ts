@@ -1,10 +1,4 @@
 import { atomWithStorage } from "jotai/utils";
-
-export type Theme = "dark" | "light" | "system";
-export const themeLabels: Record<Theme, string> = {
-  system: "System",
-  light: "Light",
-  dark: "Dark",
-};
+import type { Theme } from "./types";
 
 export const themeAtom = atomWithStorage<Theme>("theme", "system");
