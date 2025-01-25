@@ -14,7 +14,7 @@ import { v4 as uuidv4 } from "uuid";
 import { useQuery } from "@tanstack/react-query";
 import { otherListCategoriesQueryOptions } from "@/lib/queries";
 import useCurrentList from "@/hooks/use-current-list";
-import { Badge, Button, Popover } from "@radix-ui/themes";
+import { Button, Popover, Text } from "@radix-ui/themes";
 
 const NEW_CATEGORY_VALUE = "create-new-category-" + uuidv4();
 
@@ -92,7 +92,7 @@ const AddCategoryPopover: React.FC = () => {
                     <CommandItem
                       key={category.id}
                       value={`${category.name}-${category.listId}-${category.id}`}
-                      className="flex justify-between gap-1"
+                      className="flex gap-1"
                       onSelect={() => {
                         copyCategoryToList.mutate({
                           categoryId: category.id,
@@ -102,14 +102,9 @@ const AddCategoryPopover: React.FC = () => {
                         buttonRef.current?.focus();
                       }}
                     >
-                      <span>{category.name}</span>
-                      <Badge
-                        title={category.listName}
-                        variant="soft"
-                        className="bg-secondary max-w-[8rem]"
-                      >
-                        <span className="truncate">{category.listName}</span>
-                      </Badge>
+                      <Text color="gray">{category.listName}</Text>
+                      <Text color="gray">/</Text>
+                      <Text weight="medium">{category.name}</Text>
                     </CommandItem>
                   ))}
                 </CommandGroup>

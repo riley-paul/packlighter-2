@@ -18,7 +18,7 @@ import { initCategoryItem } from "@/lib/init";
 import useCurrentList from "@/hooks/use-current-list";
 import { usePackingItemsSortFilter } from "../packing-items-sort-filter/hook";
 import { v4 as uuidv4 } from "uuid";
-import { Button, Popover } from "@radix-ui/themes";
+import { Button, Popover, Spinner } from "@radix-ui/themes";
 
 type Props = {
   category: ExpandedCategory;
@@ -72,7 +72,11 @@ const AddItemPopover = React.forwardRef<HTMLButtonElement, Props>(
               onValueChange={setValue}
             />
             <CommandList>
-              {isLoading && <CommandLoading>Loading...</CommandLoading>}
+              {isLoading && (
+                <CommandLoading>
+                  <Spinner />
+                </CommandLoading>
+              )}
               <CommandEmpty> No suggestions </CommandEmpty>
               {value && (
                 <CommandGroup>
