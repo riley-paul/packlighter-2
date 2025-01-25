@@ -6,10 +6,11 @@ import type {
 import { createColumnHelper } from "@tanstack/react-table";
 import React from "react";
 import { cn, formatWeight, getCheckboxState } from "@/lib/utils";
-import useViewerStore from "./store";
 import CellWrapper from "../base/cell-wrapper";
 import ItemImage from "../item-image";
 import { Checkbox } from "@radix-ui/themes";
+import { useAtomValue, useSetAtom } from "jotai";
+import { isItemPackedAtom, togglePackedItemAtom } from "./store";
 
 const columnHelper = createColumnHelper<ExpandedCategoryItem>();
 
@@ -17,7 +18,8 @@ export default function useViewerColumns(
   category: ExpandedCategory,
   list: ListSelect,
 ) {
-  const { togglePackedItem, isItemPacked } = useViewerStore();
+  const togglePackedItem = useSetAtom(togglePackedItemAtom);
+  const isItemPacked = useAtomValue(isItemPackedAtom);
   const { listId } = category;
 
   return React.useMemo(
@@ -89,7 +91,7 @@ export default function useViewerColumns(
         {
           id: "name-description",
           header: () => (
-            <h2 className="text-4 text-gray-12 flex-1 py-0.5">
+            <h2 className="flex-1 py-0.5 text-4 text-gray-12">
               {category.name || "Unnamed Category"}
             </h2>
           ),

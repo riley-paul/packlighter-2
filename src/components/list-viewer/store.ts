@@ -1,47 +1,43 @@
-import { create } from "zustand";
-import { persist } from "zustand/middleware";
+import { atom } from "jotai";
+import { atomWithStorage } from "jotai/utils";
 
-type State = {
-  packedItems: Record<string, string[]>;
-};
-
-const initialState: State = {
-  packedItems: {},
-};
-
-type Actions = {
-  togglePackedItem: (props: {
-    packed: boolean;
-    listId: string;
-    itemId: string;
-  }) => void;
-  isItemPacked: (props: { listId: string; itemId: string }) => boolean;
-};
-
-const useViewerStore = create<State & Actions>()(
-  persist(
-    (set, get) => ({
-      ...initialState,
-      togglePackedItem: ({ packed, listId, itemId }) =>
-        set((state) => {
-          let packedItems = state.packedItems[listId] || [];
-          if (packed) {
-            packedItems = [...packedItems, itemId];
-          } else {
-            console.log("remove item");
-            packedItems = packedItems.filter((i) => i !== itemId);
-          }
-          return {
-            packedItems: { ...state.packedItems, [listId]: packedItems },
-          };
-        }),
-      isItemPacked: ({ listId, itemId }) => {
-        const packedItems = get().packedItems[listId] || [];
-        return packedItems.includes(itemId);
-      },
-    }),
-    { name: "viewer-store" },
-  ),
+const packedItemsAtom = atomWithStorage<Record<string, string[]>>(
+  "viewer-store",
+  {},
 );
 
-export default useViewerStore;
+type TogglePackedItemsProps = {
+  packed: boolean;
+  listId: string;
+  itemId: string;
+};
+
+export const togglePackedItemAtom = atom(
+  null, // This atom doesn't hold a value
+  (get, set, { packed, listId, itemId }: TogglePackedItemsProps) => {
+    const packedItems = get(packedItemsAtom);
+    const listPackedItems = packedItems[listId] || [];
+
+    // Update the packed items based on the toggle action
+    const updatedPackedItems = packed
+      ? [...listPackedItems, itemId] // Add item
+      : listPackedItems.filter((i) => i !== itemId); // Remove item
+
+    // Save the updated state
+    set(packedItemsAtom, { ...packedItems, [listId]: updatedPackedItems });
+  },
+);
+
+type IsItemPackedProps = {
+  listId: string;
+  itemId: string;
+};
+
+export const isItemPackedAtom = atom(
+  (get) =>
+    ({ listId, itemId }: IsItemPackedProps) => {
+      const packedItems = get(packedItemsAtom);
+      const listPackedItems = packedItems[listId] || [];
+      return listPackedItems.includes(itemId);
+    },
+);
