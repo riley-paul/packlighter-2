@@ -107,7 +107,25 @@ export default function useMutations() {
         itemsQueryOptions.queryKey,
       ]);
     },
-    onError,
+    onMutate: ({ itemId, data }) => {
+      const { queryKey } = listQueryOptions(listId);
+      return optimisticUpdate<ExpandedList>(queryKey, (prev) => ({
+        ...prev,
+        categories: prev.categories.map((category) => ({
+          ...category,
+          items: category.items.map((item) =>
+            item.itemId === itemId
+              ? { ...item, itemData: { ...item.itemData, ...data } }
+              : item,
+          ),
+        })),
+      }));
+    },
+    onError: (error, __, context) => {
+      const { queryKey } = listQueryOptions(listId);
+      onErrorOptimistic(queryKey, context);
+      onError(error);
+    },
   });
 
   const updateCategoryItem = useMutation({
