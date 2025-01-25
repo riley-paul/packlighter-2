@@ -3,7 +3,7 @@ import React from "react";
 import { useQuery } from "@tanstack/react-query";
 import { userQueryOptions } from "@/lib/queries";
 import { cn } from "@/lib/utils";
-import ThemeToggle from "@/lib/theme/theme-toggle";
+import ThemeToggle from "@/components/theme/theme-toggle";
 import useMutations from "@/hooks/use-mutations";
 import useConfirmDialog from "@/hooks/use-confirm-dialog";
 import { Avatar, Button, Link, Popover, Text } from "@radix-ui/themes";

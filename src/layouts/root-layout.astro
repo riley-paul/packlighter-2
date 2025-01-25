@@ -1,5 +1,5 @@
 ---
-import { ThemeListener } from "@/lib/theme/theme-listener";
+import { ThemeListener } from "@/components/theme/theme-listener";
 import { cn } from "@/lib/utils";
 
 import "@radix-ui/themes/styles.css";
@@ -37,9 +37,7 @@ const { noOverscoll } = Astro.props;
     <link href="/icons/css/brands.css" rel="stylesheet" />
     <link href="/icons/css/solid.css" rel="stylesheet" />
   </head>
-  <body
-    class={cn("min-h-screen", noOverscoll && "overscroll-none")}
-  >
+  <body class={cn("min-h-screen", noOverscoll && "overscroll-none")}>
     <ThemeListener client:load />
     <slot />
   </body>
