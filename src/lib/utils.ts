@@ -27,3 +27,16 @@ export const getIsTyping = () =>
 
 export const getHasModifier = (event: KeyboardEvent) =>
   event.ctrlKey || event.metaKey || event.altKey || event.shiftKey;
+
+export const triggerElementFlash = (element: HTMLElement) => {
+  element.animate([{ backgroundColor: "var(--accent-11)" }, {}], {
+    duration: 1000,
+    easing: "cubic-bezier(0.25, 0.1, 0.25, 1.0)",
+    iterations: 1,
+  });
+};
+
+export const triggerElementFlashByDragId = (dragId: string) => {
+  const element = document.querySelector(`[data-drag-id="${dragId}"]`);
+  if (element instanceof HTMLElement) triggerElementFlash(element);
+};

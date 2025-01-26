@@ -1,4 +1,4 @@
-import { cn } from "@/lib/utils";
+import { cn, triggerElementFlash } from "@/lib/utils";
 import React from "react";
 import invariant from "tiny-invariant";
 
@@ -7,13 +7,11 @@ import {
   draggable,
   dropTargetForElements,
 } from "@atlaskit/pragmatic-drag-and-drop/element/adapter";
-import { pointerOutsideOfPreview } from "@atlaskit/pragmatic-drag-and-drop/element/pointer-outside-of-preview";
 import { setCustomNativeDragPreview } from "@atlaskit/pragmatic-drag-and-drop/element/set-custom-native-drag-preview";
 import {
   attachClosestEdge,
   extractClosestEdge,
 } from "@atlaskit/pragmatic-drag-and-drop-hitbox/closest-edge";
-import { triggerPostMoveFlash } from "@atlaskit/pragmatic-drag-and-drop-flourish/trigger-post-move-flash";
 
 import Gripper from "@/components/base/gripper";
 import useMutations from "@/hooks/use-mutations";
@@ -75,7 +73,8 @@ const PackingList: React.FC<Props> = (props) => {
 
     return combine(
       draggable({
-        element: gripper,
+        element,
+        dragHandle: gripper,
         getInitialData: () => ({
           [DND_ENTITY_TYPE]: DndEntityType.List,
           ...list,
@@ -83,10 +82,10 @@ const PackingList: React.FC<Props> = (props) => {
         onGenerateDragPreview({ nativeSetDragImage }) {
           setCustomNativeDragPreview({
             nativeSetDragImage,
-            getOffset: pointerOutsideOfPreview({
-              x: "16px",
-              y: "8px",
-            }),
+            getOffset: ({ container }) => {
+              const { top, left } = container.getBoundingClientRect();
+              return { x: left + 20, y: top + 18 };
+            },
             render({ container }) {
               setDraggableState({ type: "preview", container });
             },
@@ -145,7 +144,7 @@ const PackingList: React.FC<Props> = (props) => {
         },
         onDrop() {
           setDraggableIdle();
-          triggerPostMoveFlash(element);
+          triggerElementFlash(element);
         },
       }),
     );
@@ -157,6 +156,7 @@ const PackingList: React.FC<Props> = (props) => {
       <div
         ref={ref}
         title={list.name || "Unnamed List"}
+        data-drag-id={list.id}
         className={cn(
           "flex h-9 items-center gap-2 border-l-4 border-transparent py-0.5 pl-2 pr-4 hover:border-accentA-6",
           isOverlay &&
