@@ -29,7 +29,7 @@ export const getHasModifier = (event: KeyboardEvent) =>
   event.ctrlKey || event.metaKey || event.altKey || event.shiftKey;
 
 export const triggerElementFlash = (element: HTMLElement) => {
-  element.animate([{ backgroundColor: "var(--accent-11)" }, {}], {
+  element.animate([{ backgroundColor: "rgba(120,120,120,0.5)" }, {}], {
     duration: 1000,
     easing: "cubic-bezier(0.25, 0.1, 0.25, 1.0)",
     iterations: 1,
