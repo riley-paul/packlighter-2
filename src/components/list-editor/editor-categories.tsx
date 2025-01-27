@@ -9,13 +9,13 @@ import { monitorForElements } from "@atlaskit/pragmatic-drag-and-drop/element/ad
 import { DndEntityType, isDndEntityType } from "@/lib/constants";
 import { extractClosestEdge } from "@atlaskit/pragmatic-drag-and-drop-hitbox/closest-edge";
 import { reorderWithEdge } from "@atlaskit/pragmatic-drag-and-drop-hitbox/util/reorder-with-edge";
-import { triggerPostMoveFlash } from "@atlaskit/pragmatic-drag-and-drop-flourish/trigger-post-move-flash";
 import { z } from "zod";
 import { flushSync } from "react-dom";
 import useMutations from "@/hooks/use-mutations";
 import { initCategoryItem } from "@/lib/init";
 import EditorCategory from "./editor-category";
 import AddCategoryPopover from "./add-category-popover";
+import { triggerElementFlash } from "@/lib/utils";
 
 type Props = {
   categories: ExpandedCategory[];
@@ -84,7 +84,7 @@ const EditorCategories: React.FC<Props> = (props) => {
             `[data-category-id="${sourceData.data.id}"]`,
           );
           if (element instanceof HTMLElement) {
-            triggerPostMoveFlash(element);
+            triggerElementFlash(element);
           }
           return;
         }
@@ -141,7 +141,7 @@ const EditorCategories: React.FC<Props> = (props) => {
             `[data-category-item-id="${sourceData.data.id}"]`,
           );
           if (element instanceof HTMLElement) {
-            triggerPostMoveFlash(element);
+            triggerElementFlash(element);
           }
 
           return;
@@ -200,7 +200,7 @@ const EditorCategories: React.FC<Props> = (props) => {
             `[data-category-item-id="${targetData.data.id}"]`,
           );
           if (element instanceof HTMLElement) {
-            triggerPostMoveFlash(element);
+            triggerElementFlash(element);
           }
           return;
         }
