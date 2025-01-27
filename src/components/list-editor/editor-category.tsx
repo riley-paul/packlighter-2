@@ -1,6 +1,6 @@
 import React from "react";
 
-import { cn } from "@/lib/utils";
+import { centerDragPreviewOnMouse, cn } from "@/lib/utils";
 import type { ExpandedCategory } from "@/lib/types";
 import useDraggableState, {
   type DraggableStateClassnames,
@@ -13,7 +13,6 @@ import {
   draggable,
   dropTargetForElements,
 } from "@atlaskit/pragmatic-drag-and-drop/element/adapter";
-import { pointerOutsideOfPreview } from "@atlaskit/pragmatic-drag-and-drop/element/pointer-outside-of-preview";
 import { setCustomNativeDragPreview } from "@atlaskit/pragmatic-drag-and-drop/element/set-custom-native-drag-preview";
 import { combine } from "@atlaskit/pragmatic-drag-and-drop/combine";
 import invariant from "tiny-invariant";
@@ -69,13 +68,10 @@ const EditorCategory: React.FC<Props> = (props) => {
           [DND_ENTITY_TYPE]: DndEntityType.Category,
           ...category,
         }),
-        onGenerateDragPreview({ nativeSetDragImage }) {
+        onGenerateDragPreview({ location, nativeSetDragImage }) {
           setCustomNativeDragPreview({
             nativeSetDragImage,
-            getOffset: pointerOutsideOfPreview({
-              x: "16px",
-              y: "8px",
-            }),
+            getOffset: centerDragPreviewOnMouse(location, element),
             render({ container }) {
               setDraggableState({ type: "preview", container });
             },

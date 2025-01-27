@@ -1,3 +1,4 @@
+import type { DragLocationHistory } from "@atlaskit/pragmatic-drag-and-drop/dist/types/internal-types";
 import type { CheckedState } from "@radix-ui/react-checkbox";
 import { type ClassValue, clsx } from "clsx";
 import { twMerge } from "tailwind-merge";
@@ -39,4 +40,17 @@ export const triggerElementFlash = (element: HTMLElement) => {
 export const triggerElementFlashByDragId = (dragId: string) => {
   const element = document.querySelector(`[data-drag-id="${dragId}"]`);
   if (element instanceof HTMLElement) triggerElementFlash(element);
+};
+
+export const centerDragPreviewOnMouse = (
+  location: DragLocationHistory,
+  element: HTMLElement,
+) => {
+  const { clientX, clientY } = location.initial.input;
+  const { top, left } = element.getBoundingClientRect();
+
+  const topOffset = clientY - top;
+  const leftOffset = clientX - left;
+
+  return () => ({ x: leftOffset, y: topOffset });
 };

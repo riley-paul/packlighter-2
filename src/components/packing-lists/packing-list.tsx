@@ -1,4 +1,4 @@
-import { cn, triggerElementFlash } from "@/lib/utils";
+import { centerDragPreviewOnMouse, cn, triggerElementFlash } from "@/lib/utils";
 import React from "react";
 import invariant from "tiny-invariant";
 
@@ -79,13 +79,10 @@ const PackingList: React.FC<Props> = (props) => {
           [DND_ENTITY_TYPE]: DndEntityType.List,
           ...list,
         }),
-        onGenerateDragPreview({ nativeSetDragImage }) {
+        onGenerateDragPreview({ location, nativeSetDragImage }) {
           setCustomNativeDragPreview({
             nativeSetDragImage,
-            getOffset: ({ container }) => {
-              const { top, left } = container.getBoundingClientRect();
-              return { x: left + 20, y: top + 18 };
-            },
+            getOffset: centerDragPreviewOnMouse(location, element),
             render({ container }) {
               setDraggableState({ type: "preview", container });
             },
