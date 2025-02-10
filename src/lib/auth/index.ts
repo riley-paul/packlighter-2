@@ -36,12 +36,8 @@ type DatabaseUserAttributes = Omit<typeof User.$inferSelect, "id">;
 
 export const github = new GitHub(GITHUB_CLIENT_ID, GITHUB_CLIENT_SECRET);
 
-const url = import.meta.env.PROD
-  ? import.meta.env.COOLIFY_FQDN
-  : "http://localhost:4321";
-
 export const google = new Google(
   GOOGLE_CLIENT_ID,
   GOOGLE_CLIENT_SECRET,
-  url + "/login/google/callback",
+  import.meta.env.SITE + "/login/google/callback",
 );

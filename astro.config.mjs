@@ -1,12 +1,8 @@
-import path from "node:path";
-import url from "node:url";
 import react from "@astrojs/react";
+import db from "@astrojs/db";
 import { defineConfig, envField } from "astro/config";
 import tailwind from "@astrojs/tailwind";
 import { TanStackRouterVite } from "@tanstack/router-vite-plugin";
-import db from "@astrojs/db";
-import node from "@astrojs/node";
-const __dirname = path.dirname(url.fileURLToPath(import.meta.url));
 
 // https://astro.build/config
 export default defineConfig({
@@ -14,44 +10,30 @@ export default defineConfig({
   security: {
     checkOrigin: true,
   },
-  integrations: [
-    tailwind({
-      applyBaseStyles: false,
-    }),
-    react(),
-    db(),
-  ],
-  vite: {
-    resolve: {
-      alias: {
-        "@": path.resolve(__dirname, "./src"),
-      },
-    },
-  },
+  integrations: [tailwind({ applyBaseStyles: false }), react(), db()],
   output: "server",
-  adapter: node({
-    mode: "standalone",
-  }),
-  experimental: {
-    env: {
-      schema: {
-        // GITHUB_CLIENT_ID: envField.string({
-        //   context: "server",
-        //   access: "secret",
-        // }),
-        // GITHUB_CLIENT_SECRET: envField.string({
-        //   context: "server",
-        //   access: "secret",
-        // }),
-        // GOOGLE_CLIENT_ID: envField.string({
-        //   context: "server",
-        //   access: "secret",
-        // }),
-        // GOOGLE_CLIENT_SECRET: envField.string({
-        //   context: "server",
-        //   access: "secret",
-        // }),
-      },
-    },
-  },
+  site: import.meta.env.COOLIFY_FQDN ?? "http://localhost:4321",
 });
+
+// experimental: {
+//   env: {
+//     schema: {
+//       // GITHUB_CLIENT_ID: envField.string({
+//       //   context: "server",
+//       //   access: "secret",
+//       // }),
+//       // GITHUB_CLIENT_SECRET: envField.string({
+//       //   context: "server",
+//       //   access: "secret",
+//       // }),
+//       // GOOGLE_CLIENT_ID: envField.string({
+//       //   context: "server",
+//       //   access: "secret",
+//       // }),
+//       // GOOGLE_CLIENT_SECRET: envField.string({
+//       //   context: "server",
+//       //   access: "secret",
+//       // }),
+//     },
+//   },
+// },
