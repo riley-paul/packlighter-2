@@ -1,18 +1,19 @@
 import react from "@astrojs/react";
 import db from "@astrojs/db";
-import { defineConfig, envField } from "astro/config";
+import cloudflare from "@astrojs/cloudflare";
 import tailwind from "@astrojs/tailwind";
+
+import { defineConfig, envField } from "astro/config";
 import { TanStackRouterVite } from "@tanstack/router-vite-plugin";
 
 // https://astro.build/config
 export default defineConfig({
   prefetch: true,
-  security: {
-    checkOrigin: true,
-  },
+  security: { checkOrigin: true },
   integrations: [tailwind({ applyBaseStyles: false }), react(), db()],
   output: "server",
   site: import.meta.env.COOLIFY_FQDN ?? "http://localhost:4321",
+  adapter: cloudflare(),
 });
 
 // experimental: {
