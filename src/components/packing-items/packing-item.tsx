@@ -94,11 +94,7 @@ const PackingItem: React.FC<Props> = (props) => {
         )}
       >
         <Gripper ref={gripperRef} />
-        <div
-          role="button"
-          className="flex flex-1 flex-col"
-          onClick={() => openEditor(item)}
-        >
+        <div className="flex flex-1 flex-col">
           <Text
             size="2"
             weight="medium"
@@ -129,30 +125,34 @@ const PackingItem: React.FC<Props> = (props) => {
           </DropdownMenu.Trigger>
           <DropdownMenu.Content align="start" className="z-30">
             <DropdownMenu.Label>Actions</DropdownMenu.Label>
+
             <DropdownMenu.Item
-              onClick={async () => {
-                const ok = await confirmDelete();
-                if (ok) {
-                  deleteItem.mutate({ itemId: item.id });
-                }
+              onClick={() => {
+                openEditor(item);
               }}
             >
-              <Text asChild color="gray">
-                <i className="fa-solid fa-backspace w-4 text-center" />
-              </Text>
-              Delete
+              <i className="fa-solid fa-pen w-4 text-center opacity-70" />
+              Edit
             </DropdownMenu.Item>
 
             <DropdownMenu.Item
               onClick={(e) => {
-                e.stopPropagation();
                 duplicateItem.mutate({ itemId: item.id });
               }}
             >
-              <Text asChild color="gray">
-                <i className="fa-solid fa-copy w-4 text-center" />
-              </Text>
+              <i className="fa-solid fa-copy w-4 text-center opacity-70" />
               Duplicate
+            </DropdownMenu.Item>
+
+            <DropdownMenu.Item
+              color="red"
+              onClick={async () => {
+                const ok = await confirmDelete();
+                if (ok) deleteItem.mutate({ itemId: item.id });
+              }}
+            >
+              <i className="fa-solid fa-backspace w-4 text-center opacity-70" />
+              Delete
             </DropdownMenu.Item>
           </DropdownMenu.Content>
         </DropdownMenu.Root>

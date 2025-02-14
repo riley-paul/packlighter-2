@@ -16,7 +16,7 @@ import useMutations from "@/hooks/use-mutations";
 import type { ExpandedCategory } from "@/lib/types";
 import { initCategoryItem } from "@/lib/init";
 import useCurrentList from "@/hooks/use-current-list";
-import { usePackingItemsSortFilter } from "../packing-items-sort-filter/hook";
+import { usePackingItemsSortFilter } from "../packing-items-sort-filter/use-packing-item-sort-filter";
 import { v4 as uuidv4 } from "uuid";
 import { Button, Popover, Spinner } from "@radix-ui/themes";
 

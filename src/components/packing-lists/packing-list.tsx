@@ -192,7 +192,16 @@ const PackingList: React.FC<Props> = (props) => {
           </DropdownMenu.Trigger>
           <DropdownMenu.Content align="start" className="z-30">
             <DropdownMenu.Label>Actions</DropdownMenu.Label>
+
             <DropdownMenu.Item
+              onClick={() => duplicateList.mutate({ listId: list.id })}
+            >
+              <i className="fa-solid fa-copy w-4 text-center opacity-70" />
+              Duplicate
+            </DropdownMenu.Item>
+
+            <DropdownMenu.Item
+              color="red"
               onClick={async () => {
                 const ok = await confirmDelete();
                 if (ok) {
@@ -200,19 +209,8 @@ const PackingList: React.FC<Props> = (props) => {
                 }
               }}
             >
-              <Text asChild color="gray">
-                <i className="fa-solid fa-backspace w-4 text-center" />
-              </Text>
+              <i className="fa-solid fa-backspace w-4 text-center opacity-70" />
               Delete
-            </DropdownMenu.Item>
-
-            <DropdownMenu.Item
-              onClick={() => duplicateList.mutate({ listId: list.id })}
-            >
-              <Text asChild color="gray">
-                <i className="fa-solid fa-copy w-4 text-center" />
-              </Text>
-              Duplicate
             </DropdownMenu.Item>
           </DropdownMenu.Content>
         </DropdownMenu.Root>
