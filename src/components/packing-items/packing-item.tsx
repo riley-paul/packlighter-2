@@ -124,8 +124,6 @@ const PackingItem: React.FC<Props> = (props) => {
             </IconButton>
           </DropdownMenu.Trigger>
           <DropdownMenu.Content align="start" className="z-30">
-            <DropdownMenu.Label>Actions</DropdownMenu.Label>
-
             <DropdownMenu.Item
               onClick={() => {
                 openEditor(item);
