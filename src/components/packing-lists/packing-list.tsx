@@ -16,10 +16,7 @@ import {
 import Gripper from "@/components/base/gripper";
 import useMutations from "@/hooks/use-mutations";
 import type { ListSelect } from "@/lib/types";
-import useDraggableState, {
-  type DraggableStateClassnames,
-} from "@/hooks/use-draggable-state";
-import { DropIndicator } from "../ui/drop-indicator";
+import useDraggableState from "@/hooks/use-draggable-state";
 import {
   DND_ENTITY_TYPE,
   DndEntityType,
@@ -32,15 +29,12 @@ import RadixProvider from "../base/radix-provider";
 import useConfirmDialog from "@/hooks/use-confirm-dialog";
 import { useSetAtom } from "jotai";
 import { mobileSidebarOpenAtom } from "../sidebar/store";
+import DropIndicatorWrapper from "../ui/drop-indicator-wrapper";
 
 interface Props {
   list: ListSelect;
   isOverlay?: boolean;
 }
-
-const draggableStyles: DraggableStateClassnames = {
-  "is-dragging": "opacity-50",
-};
 
 const PackingList: React.FC<Props> = (props) => {
   const ref = React.useRef<HTMLDivElement>(null);
@@ -150,75 +144,73 @@ const PackingList: React.FC<Props> = (props) => {
   return (
     <>
       <ConfirmDeleteDialog />
-      <div
-        ref={ref}
-        title={list.name || "Unnamed List"}
-        data-drag-id={list.id}
-        className={cn(
-          "flex h-9 items-center gap-2 border-l-4 border-transparent py-0.5 pl-2 pr-4 hover:border-accentA-6",
-          isOverlay &&
-            "border-border w-64 rounded-2 border border-l-4 bg-gray-2",
-          isActive &&
-            "text-secondary-foreground hover:border-primary border-accentA-10 bg-accentA-3",
-          "relative transition-colors ease-in",
-          draggableStyles[draggableState.type],
-        )}
-      >
-        <Gripper ref={gripperRef} />
-        <Text
-          asChild
-          size="2"
-          weight={isActive ? "bold" : "medium"}
-          truncate
-          color={list.name ? undefined : "gray"}
-          className={cn("w-full flex-1", !list.name && "italic")}
-        >
-          <Link to={`/list/${list.id}`} onClick={() => closeMobileSidebar()}>
-            {list.name || "Unnamed List"}
-          </Link>
-        </Text>
-        <DropdownMenu.Root>
-          <DropdownMenu.Trigger>
-            <IconButton
-              variant="ghost"
-              color="gray"
-              title="List Actions"
-              size="1"
-              radius="full"
-            >
-              <span className="sr-only">Open menu</span>
-              <i className="fa-solid fa-ellipsis" />
-            </IconButton>
-          </DropdownMenu.Trigger>
-          <DropdownMenu.Content align="start" className="z-30">
-            <DropdownMenu.Label>Actions</DropdownMenu.Label>
-
-            <DropdownMenu.Item
-              onClick={() => duplicateList.mutate({ listId: list.id })}
-            >
-              <i className="fa-solid fa-copy w-4 text-center opacity-70" />
-              Duplicate
-            </DropdownMenu.Item>
-
-            <DropdownMenu.Item
-              color="red"
-              onClick={async () => {
-                const ok = await confirmDelete();
-                if (ok) {
-                  deleteList.mutate({ listId: list.id });
-                }
-              }}
-            >
-              <i className="fa-solid fa-backspace w-4 text-center opacity-70" />
-              Delete
-            </DropdownMenu.Item>
-          </DropdownMenu.Content>
-        </DropdownMenu.Root>
-        {draggableState.type === "is-dragging-over" &&
-          draggableState.closestEdge && (
-            <DropIndicator edge={draggableState.closestEdge} gap="0px" />
+      <DropIndicatorWrapper draggableState={draggableState}>
+        <div
+          ref={ref}
+          title={list.name || "Unnamed List"}
+          data-drag-id={list.id}
+          className={cn(
+            "flex h-9 items-center gap-2 border-l-4 border-transparent py-0.5 pl-2 pr-4 hover:border-accentA-6",
+            isOverlay &&
+              "border-border w-64 rounded-2 border border-l-4 bg-gray-2",
+            isActive &&
+              "text-secondary-foreground hover:border-primary border-accentA-10 bg-accentA-3",
+            "transition-colors ease-in",
           )}
-      </div>
+        >
+          <Gripper ref={gripperRef} />
+          <Text
+            asChild
+            size="2"
+            weight={isActive ? "bold" : "medium"}
+            truncate
+            color={list.name ? undefined : "gray"}
+            className={cn("w-full flex-1", !list.name && "italic")}
+          >
+            <Link to={`/list/${list.id}`} onClick={() => closeMobileSidebar()}>
+              {list.name || "Unnamed List"}
+            </Link>
+          </Text>
+          <DropdownMenu.Root>
+            <DropdownMenu.Trigger>
+              <IconButton
+                variant="ghost"
+                color="gray"
+                title="List Actions"
+                size="1"
+                radius="full"
+              >
+                <span className="sr-only">Open menu</span>
+                <i className="fa-solid fa-ellipsis" />
+              </IconButton>
+            </DropdownMenu.Trigger>
+            <DropdownMenu.Content align="start" className="z-30">
+              <DropdownMenu.Label>Actions</DropdownMenu.Label>
+
+              <DropdownMenu.Item
+                onClick={() => duplicateList.mutate({ listId: list.id })}
+              >
+                <i className="fa-solid fa-copy w-4 text-center opacity-70" />
+                Duplicate
+              </DropdownMenu.Item>
+
+              <DropdownMenu.Item
+                color="red"
+                onClick={async () => {
+                  const ok = await confirmDelete();
+                  if (ok) {
+                    deleteList.mutate({ listId: list.id });
+                  }
+                }}
+              >
+                <i className="fa-solid fa-backspace w-4 text-center opacity-70" />
+                Delete
+              </DropdownMenu.Item>
+            </DropdownMenu.Content>
+          </DropdownMenu.Root>
+        </div>
+      </DropIndicatorWrapper>
+
       {draggableState.type === "preview" ? (
         <Portal container={draggableState.container}>
           <RadixProvider>

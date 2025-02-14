@@ -2,9 +2,7 @@ import React from "react";
 
 import { centerDragPreviewOnMouse, cn } from "@/lib/utils";
 import type { ExpandedCategory } from "@/lib/types";
-import useDraggableState, {
-  type DraggableStateClassnames,
-} from "@/hooks/use-draggable-state";
+import useDraggableState from "@/hooks/use-draggable-state";
 import {
   attachClosestEdge,
   extractClosestEdge,
@@ -16,7 +14,6 @@ import {
 import { setCustomNativeDragPreview } from "@atlaskit/pragmatic-drag-and-drop/element/set-custom-native-drag-preview";
 import { combine } from "@atlaskit/pragmatic-drag-and-drop/combine";
 import invariant from "tiny-invariant";
-import { DropIndicator } from "../ui/drop-indicator";
 import {
   DND_ENTITY_TYPE,
   DndEntityType,
@@ -35,15 +32,12 @@ import useCurrentList from "@/hooks/use-current-list";
 import { Portal } from "@radix-ui/themes";
 import RadixProvider from "../base/radix-provider";
 import Gripper from "../base/gripper";
+import DropIndicatorWrapper from "../ui/drop-indicator-wrapper";
 
 interface Props {
   category: ExpandedCategory;
   isOverlay?: boolean;
 }
-
-const draggableStyles: DraggableStateClassnames = {
-  "is-dragging": "opacity-50",
-};
 
 const EditorCategory: React.FC<Props> = (props) => {
   const { category, isOverlay } = props;
@@ -151,69 +145,67 @@ const EditorCategory: React.FC<Props> = (props) => {
 
   return (
     <>
-      <div
-        ref={ref}
-        key={category.id}
-        data-category-id={category.id}
-        className={cn(
-          "relative flex w-full flex-col rounded-3",
-          isOverlay && "w-[800px] border bg-gray-2",
-          draggableStyles[draggableState.type],
-        )}
-      >
-        <header className="text-sm font-semibold text-muted-foreground w-full border-b">
-          {table.getHeaderGroups().map((headerGroup) => (
-            <div
-              className="text-sm hover:bg-muted/50 flex h-12 w-full items-center gap-2 px-1 transition-colors"
-              key={headerGroup.id}
-            >
-              <Gripper ref={gripperRef} />
-              {headerGroup.headers.map((header) => (
-                <React.Fragment key={header.id}>
-                  {header.isPlaceholder
-                    ? null
-                    : flexRender(
-                        header.column.columnDef.header,
-                        header.getContext(),
-                      )}
-                </React.Fragment>
-              ))}
-            </div>
-          ))}
-        </header>
-        <section>
-          {table.getRowModel().rows.map((row) => (
-            <EditorCategoryItem key={row.id} row={row} />
-          ))}
-
-          {table.getRowCount() === 0 && (
-            <EditorCategoryPlaceholder categoryId={category.id} />
+      <DropIndicatorWrapper draggableState={draggableState} gap="1rem">
+        <div
+          ref={ref}
+          key={category.id}
+          data-category-id={category.id}
+          className={cn(
+            "relative flex w-full flex-col rounded-3",
+            isOverlay && "w-[800px] border bg-gray-2",
           )}
-        </section>
-        <footer>
-          {table.getFooterGroups().map((footerGroup) => (
-            <div
-              key={footerGroup.id}
-              className="text-sm hover:bg-muted/50 flex h-12 w-full items-center gap-1 px-2 transition-colors"
-            >
-              {footerGroup.headers.map((header) => (
-                <React.Fragment key={header.id}>
-                  {header.isPlaceholder
-                    ? null
-                    : flexRender(
-                        header.column.columnDef.footer,
-                        header.getContext(),
-                      )}
-                </React.Fragment>
-              ))}
-            </div>
-          ))}
-        </footer>
-        {draggableState.type === "is-dragging-over" &&
-        draggableState.closestEdge ? (
-          <DropIndicator edge={draggableState.closestEdge} gap={"1rem"} />
-        ) : null}
-      </div>
+        >
+          <header className="text-sm font-semibold text-muted-foreground w-full border-b">
+            {table.getHeaderGroups().map((headerGroup) => (
+              <div
+                className="text-sm hover:bg-muted/50 flex h-12 w-full items-center gap-2 px-1 transition-colors"
+                key={headerGroup.id}
+              >
+                <Gripper ref={gripperRef} />
+                {headerGroup.headers.map((header) => (
+                  <React.Fragment key={header.id}>
+                    {header.isPlaceholder
+                      ? null
+                      : flexRender(
+                          header.column.columnDef.header,
+                          header.getContext(),
+                        )}
+                  </React.Fragment>
+                ))}
+              </div>
+            ))}
+          </header>
+          <section>
+            {table.getRowModel().rows.map((row) => (
+              <EditorCategoryItem key={row.id} row={row} />
+            ))}
+
+            {table.getRowCount() === 0 && (
+              <EditorCategoryPlaceholder categoryId={category.id} />
+            )}
+          </section>
+          <footer>
+            {table.getFooterGroups().map((footerGroup) => (
+              <div
+                key={footerGroup.id}
+                className="text-sm hover:bg-muted/50 flex h-12 w-full items-center gap-1 px-2 transition-colors"
+              >
+                {footerGroup.headers.map((header) => (
+                  <React.Fragment key={header.id}>
+                    {header.isPlaceholder
+                      ? null
+                      : flexRender(
+                          header.column.columnDef.footer,
+                          header.getContext(),
+                        )}
+                  </React.Fragment>
+                ))}
+              </div>
+            ))}
+          </footer>
+        </div>
+      </DropIndicatorWrapper>
+
       {draggableState.type === "preview" ? (
         <Portal container={draggableState.container}>
           <RadixProvider>

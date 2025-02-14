@@ -2,9 +2,7 @@ import React from "react";
 import { centerDragPreviewOnMouse, cn } from "@/lib/utils";
 
 import type { ExpandedCategoryItem } from "@/lib/types";
-import useDraggableState, {
-  type DraggableStateClassnames,
-} from "@/hooks/use-draggable-state";
+import useDraggableState from "@/hooks/use-draggable-state";
 import {
   attachClosestEdge,
   extractClosestEdge,
@@ -23,19 +21,15 @@ import {
 } from "@/lib/constants";
 import useCurrentList from "@/hooks/use-current-list";
 import { flexRender, type Row } from "@tanstack/react-table";
-import { DropIndicator } from "../ui/drop-indicator";
 import Gripper from "../base/gripper";
 import { Portal, Separator } from "@radix-ui/themes";
 import RadixProvider from "../base/radix-provider";
+import DropIndicatorWrapper from "../ui/drop-indicator-wrapper";
 
 interface Props {
   row: Row<ExpandedCategoryItem>;
   isOverlay?: boolean;
 }
-
-const draggableStyles: DraggableStateClassnames = {
-  "is-dragging": "opacity-50",
-};
 
 const isPermitted = (
   data: Record<string, unknown>,
@@ -146,27 +140,25 @@ const EditorCategoryItem: React.FC<Props> = (props) => {
 
   return (
     <>
-      <div
-        ref={ref}
-        data-category-item-id={row.original.id}
-        className={cn(
-          "text-sm relative flex h-fit items-center gap-2 p-1 transition-colors hover:bg-gray-3",
-          isOverlay && "w-[800px] rounded-2 border bg-gray-2",
-          draggableStyles[draggableState.type],
-          isDuplicate && "bg-red-2 hover:bg-red-3",
-        )}
-      >
-        <Gripper ref={gripperRef} />
-        {row.getVisibleCells().map((cell) => (
-          <React.Fragment key={cell.id}>
-            {flexRender(cell.column.columnDef.cell, cell.getContext())}
-          </React.Fragment>
-        ))}
-        {draggableState.type === "is-dragging-over" &&
-        draggableState.closestEdge ? (
-          <DropIndicator edge={draggableState.closestEdge} gap="1px" />
-        ) : null}
-      </div>
+      <DropIndicatorWrapper draggableState={draggableState} gap="1px">
+        <div
+          ref={ref}
+          data-category-item-id={row.original.id}
+          className={cn(
+            "text-sm flex h-fit items-center gap-2 p-1 transition-colors hover:bg-gray-3",
+            isOverlay && "w-[800px] rounded-2 border bg-gray-2",
+            isDuplicate && "bg-red-2 hover:bg-red-3",
+          )}
+        >
+          <Gripper ref={gripperRef} />
+          {row.getVisibleCells().map((cell) => (
+            <React.Fragment key={cell.id}>
+              {flexRender(cell.column.columnDef.cell, cell.getContext())}
+            </React.Fragment>
+          ))}
+        </div>
+      </DropIndicatorWrapper>
+
       {draggableState.type === "preview" ? (
         <Portal container={draggableState.container}>
           <RadixProvider>
