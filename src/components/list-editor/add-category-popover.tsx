@@ -51,7 +51,7 @@ const AddCategoryPopover: React.FC = () => {
         </Button>
       </Popover.Trigger>
       <Popover.Content
-        className="z-30 w-[300px] p-0"
+        className="z-30 w-[400px] p-0"
         align="start"
         side="bottom"
       >
