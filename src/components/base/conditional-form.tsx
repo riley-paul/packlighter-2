@@ -145,6 +145,10 @@ const ConditionalForm: React.FC<ConditionalFormProps> = ({
 
   useOnClickOutside(formRef, () => setIsEditing(false));
 
+  React.useEffect(() => {
+    setDisplayValue(value);
+  }, [value]);
+
   if (isEditing) {
     return (
       <Form
