@@ -10,7 +10,7 @@ const categoryItemUpdateSchema =
   z.custom<Partial<typeof CategoryItem.$inferInsert>>();
 const itemUpdateSchema = z.custom<Partial<typeof Item.$inferInsert>>();
 
-export const addItemToCategory = defineAction({
+export const create = defineAction({
   input: z.object({
     itemId: z.string(),
     categoryId: z.string(),
@@ -76,7 +76,7 @@ export const addItemToCategory = defineAction({
   },
 });
 
-export const createNewItemAndAddToCategory = defineAction({
+export const createAndAddToCategory = defineAction({
   input: z.object({
     categoryId: z.string(),
     itemData: itemUpdateSchema.optional(),
@@ -114,7 +114,7 @@ export const createNewItemAndAddToCategory = defineAction({
   },
 });
 
-export const reorderCategoryItems = defineAction({
+export const reorder = defineAction({
   input: z.object({ ids: z.string().array(), categoryId: z.string() }),
   handler: async ({ ids, categoryId }, c) => {
     const userId = isAuthorized(c).id;
@@ -130,7 +130,7 @@ export const reorderCategoryItems = defineAction({
   },
 });
 
-export const updateCategoryItem = defineAction({
+export const update = defineAction({
   input: z.object({
     categoryItemId: z.string(),
     data: categoryItemUpdateSchema,
@@ -147,7 +147,7 @@ export const updateCategoryItem = defineAction({
   },
 });
 
-export const deleteCategoryItem = defineAction({
+export const remove = defineAction({
   input: z.object({ categoryItemId: z.string() }),
   handler: async ({ categoryItemId }, c) => {
     const userId = isAuthorized(c).id;

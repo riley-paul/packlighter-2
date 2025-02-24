@@ -33,7 +33,7 @@ export default function useMutations() {
   } = useMutationHelpers();
 
   const deleteCategoryItem = useMutation({
-    mutationFn: actions.deleteCategoryItem.orThrow,
+    mutationFn: actions.categoryItems.remove.orThrow,
     onMutate: ({ categoryItemId }) => {
       const { queryKey } = listQueryOptions(listId);
       return optimisticUpdate<ExpandedList>(queryKey, (prev) =>
@@ -129,7 +129,7 @@ export default function useMutations() {
   });
 
   const updateCategoryItem = useMutation({
-    mutationFn: actions.updateCategoryItem.orThrow,
+    mutationFn: actions.categoryItems.update.orThrow,
     onSuccess: () => {
       invalidateQueries([listQueryOptions(listId).queryKey]);
     },
@@ -164,7 +164,7 @@ export default function useMutations() {
   });
 
   const addCategoryItem = useMutation({
-    mutationFn: actions.createNewItemAndAddToCategory.orThrow,
+    mutationFn: actions.categoryItems.createAndAddToCategory.orThrow,
     onMutate: async ({ categoryId, itemData, data }) => {
       const { queryKey } = listQueryOptions(listId);
       return optimisticUpdate<ExpandedList>(queryKey, (prev) =>
@@ -204,7 +204,7 @@ export default function useMutations() {
       data?: Partial<ExpandedCategoryItem>;
       categoryItems: ExpandedCategoryItem[];
     }) =>
-      actions.addItemToCategory.orThrow({
+      actions.categoryItems.create.orThrow({
         ...props,
         reorderIds: props.categoryItems.map((i) => i.id),
       }),
@@ -409,7 +409,7 @@ export default function useMutations() {
       categoryId: string;
       categoryItems: ExpandedCategoryItem[];
     }) =>
-      actions.reorderCategoryItems.orThrow({
+      actions.categoryItems.reorder.orThrow({
         ...props,
         ids: props.categoryItems.map((i) => i.id),
       }),
@@ -449,7 +449,7 @@ export default function useMutations() {
   });
 
   const addFeedback = useMutation({
-    mutationFn: actions.addFeedback.orThrow,
+    mutationFn: actions.feedback.create.orThrow,
     onSuccess: () => {
       toastSuccess("Feedback submitted");
     },
@@ -457,7 +457,7 @@ export default function useMutations() {
   });
 
   const deleteUser = useMutation({
-    mutationFn: actions.deleteUser.orThrow,
+    mutationFn: actions.users.remove.orThrow,
     onSuccess: () => {
       window.location.reload();
     },

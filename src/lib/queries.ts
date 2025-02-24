@@ -23,7 +23,7 @@ export const userQueryOptions = queryOptions({
   queryKey: ["profile"],
   retry: false,
   staleTime: 1000 * 60 * 5,
-  queryFn: () => actions.getMe.orThrow(),
+  queryFn: () => actions.users.getMe.orThrow(),
 });
 
 export const itemsQueryOptions = queryOptions({

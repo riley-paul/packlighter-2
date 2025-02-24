@@ -19,7 +19,7 @@ export const getMe = defineAction({
   },
 });
 
-export const deleteUser = defineAction({
+export const remove = defineAction({
   handler: async (_, c) => {
     const userId = isAuthorized(c).id;
     await db.delete(CategoryItem).where(eq(CategoryItem.userId, userId));

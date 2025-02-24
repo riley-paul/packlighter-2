@@ -4,7 +4,7 @@ import { AppFeedback, db } from "astro:db";
 import { z } from "zod";
 import { v4 as uuid } from "uuid";
 
-export const addFeedback = defineAction({
+export const create = defineAction({
   input: z.object({
     feedback: z.string(),
   }),

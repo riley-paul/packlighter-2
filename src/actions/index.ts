@@ -9,7 +9,7 @@ export const server = {
   items,
   lists,
   categories,
-  ...categoryItems,
-  ...users,
-  ...feedback,
+  categoryItems,
+  users,
+  feedback,
 };
