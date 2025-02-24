@@ -16,7 +16,7 @@ export const listQueryOptions = (listId: string) =>
 export const otherListCategoriesQueryOptions = (listId: string) =>
   queryOptions({
     queryKey: ["other-categories", listId],
-    queryFn: () => actions.getOtherListCategories.orThrow({ listId }),
+    queryFn: () => actions.categories.getFromOtherLists.orThrow({ listId }),
   });
 
 export const userQueryOptions = queryOptions({

@@ -134,7 +134,7 @@ const PackingItem: React.FC<Props> = (props) => {
             </DropdownMenu.Item>
 
             <DropdownMenu.Item
-              onClick={(e) => {
+              onClick={() => {
                 duplicateItem.mutate({ itemId: item.id });
               }}
             >

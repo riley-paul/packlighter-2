@@ -19,7 +19,7 @@ import { v4 as uuid } from "uuid";
 
 const categoryUpdateSchema = z.custom<Partial<typeof Category.$inferInsert>>();
 
-export const getOtherListCategories = defineAction({
+export const getFromOtherLists = defineAction({
   input: z.object({ listId: z.string() }),
   handler: async ({ listId }, c) => {
     const userId = isAuthorized(c).id;
@@ -38,7 +38,7 @@ export const getOtherListCategories = defineAction({
   },
 });
 
-export const copyCategoryToList = defineAction({
+export const copyToList = defineAction({
   input: z.object({
     categoryId: z.string(),
     listId: z.string(),
@@ -121,7 +121,7 @@ export const copyCategoryToList = defineAction({
   },
 });
 
-export const createCategory = defineAction({
+export const create = defineAction({
   input: z.object({
     listId: z.string(),
     data: categoryUpdateSchema.optional(),
@@ -149,7 +149,7 @@ export const createCategory = defineAction({
   },
 });
 
-export const reorderCategories = defineAction({
+export const reorder = defineAction({
   input: z.object({
     listId: z.string(),
     ids: z.array(z.string()),
@@ -168,7 +168,7 @@ export const reorderCategories = defineAction({
   },
 });
 
-export const deleteCategory = defineAction({
+export const remove = defineAction({
   input: z.object({ categoryId: z.string() }),
   handler: async ({ categoryId }, c) => {
     const userId = isAuthorized(c).id;
@@ -182,7 +182,7 @@ export const deleteCategory = defineAction({
   },
 });
 
-export const updateCategory = defineAction({
+export const update = defineAction({
   input: z.object({
     categoryId: z.string(),
     data: categoryUpdateSchema,
@@ -199,7 +199,7 @@ export const updateCategory = defineAction({
   },
 });
 
-export const toggleCategoryPacked = defineAction({
+export const togglePacked = defineAction({
   input: z.object({ categoryId: z.string() }),
   handler: async ({ categoryId }, c) => {
     const userId = isAuthorized(c).id;

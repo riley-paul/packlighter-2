@@ -8,7 +8,7 @@ import * as feedback from "./feedback";
 export const server = {
   ...items,
   ...lists,
-  ...categories,
+  categories,
   ...categoryItems,
   ...users,
   ...feedback,
