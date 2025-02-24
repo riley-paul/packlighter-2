@@ -100,7 +100,7 @@ export default function useMutations() {
   });
 
   const updateItem = useMutation({
-    mutationFn: actions.updateItem.orThrow,
+    mutationFn: actions.items.update.orThrow,
     onSuccess: () => {
       invalidateQueries([
         listQueryOptions(listId).queryKey,
@@ -239,7 +239,7 @@ export default function useMutations() {
   });
 
   const addItem = useMutation({
-    mutationFn: actions.createItem.orThrow,
+    mutationFn: actions.items.create.orThrow,
     onSuccess: () => {
       invalidateQueries([itemsQueryOptions.queryKey]);
     },
@@ -290,7 +290,7 @@ export default function useMutations() {
   });
 
   const deleteItem = useMutation({
-    mutationFn: actions.deleteItem.orThrow,
+    mutationFn: actions.items.remove.orThrow,
     onSuccess: () => {
       invalidateQueries([
         itemsQueryOptions.queryKey,
@@ -351,7 +351,7 @@ export default function useMutations() {
   });
 
   const duplicateItem = useMutation({
-    mutationFn: actions.duplicateItem.orThrow,
+    mutationFn: actions.items.duplicate.orThrow,
     onSuccess: () => {
       const { queryKey } = itemsQueryOptions;
       queryClient.invalidateQueries({ queryKey });

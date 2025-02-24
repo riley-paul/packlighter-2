@@ -28,5 +28,5 @@ export const userQueryOptions = queryOptions({
 
 export const itemsQueryOptions = queryOptions({
   queryKey: ["items"],
-  queryFn: () => actions.getItems.orThrow(),
+  queryFn: () => actions.items.get.orThrow(),
 });

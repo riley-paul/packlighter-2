@@ -8,7 +8,7 @@ import { z } from "zod";
 
 const itemUpdateSchema = z.custom<Partial<typeof Item.$inferInsert>>();
 
-export const getItems = defineAction({
+export const get = defineAction({
   handler: async (_, c) => {
     const userId = isAuthorized(c).id;
     const items = await db.select().from(Item).where(eq(Item.userId, userId));
@@ -16,7 +16,7 @@ export const getItems = defineAction({
   },
 });
 
-export const createItem = defineAction({
+export const create = defineAction({
   input: z.object({
     data: itemUpdateSchema.optional(),
   }),
@@ -31,7 +31,7 @@ export const createItem = defineAction({
   },
 });
 
-export const duplicateItem = defineAction({
+export const duplicate = defineAction({
   input: z.object({ itemId: z.string() }),
   handler: async ({ itemId }, c) => {
     const userId = isAuthorized(c).id;
@@ -58,7 +58,7 @@ export const duplicateItem = defineAction({
   },
 });
 
-export const deleteItem = defineAction({
+export const remove = defineAction({
   input: z.object({ itemId: z.string() }),
   handler: async ({ itemId }, c) => {
     const userId = isAuthorized(c).id;
@@ -70,7 +70,7 @@ export const deleteItem = defineAction({
   },
 });
 
-export const updateItem = defineAction({
+export const update = defineAction({
   input: z.object({
     itemId: z.string(),
     data: itemUpdateSchema,
