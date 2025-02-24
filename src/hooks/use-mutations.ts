@@ -84,7 +84,7 @@ export default function useMutations() {
   });
 
   const deleteList = useMutation({
-    mutationFn: actions.deleteList.orThrow,
+    mutationFn: actions.lists.remove.orThrow,
     onSuccess: (_, props) => {
       invalidateQueries([
         listsQueryOptions.queryKey,
@@ -304,7 +304,7 @@ export default function useMutations() {
   });
 
   const updateList = useMutation({
-    mutationFn: actions.updateList.orThrow,
+    mutationFn: actions.lists.update.orThrow,
     onMutate: ({ data }) => {
       const { queryKey } = listQueryOptions(listId);
       return optimisticUpdate<ExpandedList>(queryKey, (prev) => ({
@@ -327,7 +327,7 @@ export default function useMutations() {
   });
 
   const addList = useMutation({
-    mutationFn: actions.createList.orThrow,
+    mutationFn: actions.lists.create.orThrow,
     onSuccess: (data) => {
       invalidateQueries([
         listsQueryOptions.queryKey,
@@ -339,7 +339,7 @@ export default function useMutations() {
   });
 
   const duplicateList = useMutation({
-    mutationFn: actions.duplicateList.orThrow,
+    mutationFn: actions.lists.duplicate.orThrow,
     onSuccess: (data) => {
       invalidateQueries([
         listsQueryOptions.queryKey,
@@ -361,7 +361,7 @@ export default function useMutations() {
 
   const reorderLists = useMutation({
     mutationFn: (lists: ListSelect[]) =>
-      actions.reorderLists.orThrow(lists.map((i) => i.id)),
+      actions.lists.reorder.orThrow(lists.map((i) => i.id)),
     onMutate: async (newLists) => {
       return optimisticUpdate(listsQueryOptions.queryKey, newLists);
     },
@@ -441,7 +441,7 @@ export default function useMutations() {
   });
 
   const unpackList = useMutation({
-    mutationFn: actions.unpackList.orThrow,
+    mutationFn: actions.lists.unpack.orThrow,
     onSuccess: () => {
       invalidateQueries([listQueryOptions(listId).queryKey]);
     },

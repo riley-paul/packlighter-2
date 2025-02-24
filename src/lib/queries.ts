@@ -3,13 +3,13 @@ import { actions } from "astro:actions";
 
 export const listsQueryOptions = queryOptions({
   queryKey: ["lists"],
-  queryFn: () => actions.getLists.orThrow(),
+  queryFn: () => actions.lists.get.orThrow(),
 });
 
 export const listQueryOptions = (listId: string) =>
   queryOptions({
     queryKey: ["lists", listId],
-    queryFn: () => actions.getList.orThrow({ listId }),
+    queryFn: () => actions.lists.getOne.orThrow({ listId }),
     enabled: listId.length > 0,
   });
 

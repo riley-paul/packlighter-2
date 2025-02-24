@@ -17,7 +17,7 @@ import { v4 as uuid } from "uuid";
 
 const listUpdateSchema = z.custom<Partial<typeof List.$inferInsert>>();
 
-export const getLists = defineAction({
+export const get = defineAction({
   handler: async (_, c) => {
     const userId = isAuthorized(c).id;
     const lists = await db
@@ -29,7 +29,7 @@ export const getLists = defineAction({
   },
 });
 
-export const getList = defineAction({
+export const getOne = defineAction({
   input: z.object({
     listId: z.string(),
   }),
@@ -53,7 +53,7 @@ export const getList = defineAction({
   },
 });
 
-export const createList = defineAction({
+export const create = defineAction({
   input: z.object({
     data: listUpdateSchema.optional(),
   }),
@@ -80,7 +80,7 @@ export const createList = defineAction({
   },
 });
 
-export const reorderLists = defineAction({
+export const reorder = defineAction({
   input: z.array(z.string()),
   handler: async (ids, c) => {
     const userId = isAuthorized(c).id;
@@ -96,7 +96,7 @@ export const reorderLists = defineAction({
   },
 });
 
-export const updateList = defineAction({
+export const update = defineAction({
   input: z.object({
     listId: z.string(),
     data: listUpdateSchema,
@@ -113,7 +113,7 @@ export const updateList = defineAction({
   },
 });
 
-export const deleteList = defineAction({
+export const remove = defineAction({
   input: z.object({ listId: z.string() }),
   handler: async ({ listId }, c) => {
     const userId = isAuthorized(c).id;
@@ -140,7 +140,7 @@ export const deleteList = defineAction({
   },
 });
 
-export const unpackList = defineAction({
+export const unpack = defineAction({
   input: z.object({ listId: z.string() }),
   handler: async ({ listId }, c) => {
     const userId = isAuthorized(c).id;
@@ -158,7 +158,7 @@ export const unpackList = defineAction({
   },
 });
 
-export const duplicateList = defineAction({
+export const duplicate = defineAction({
   input: z.object({ listId: z.string() }),
   handler: async ({ listId }, c) => {
     const userId = isAuthorized(c).id;
