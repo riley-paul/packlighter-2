@@ -2,8 +2,12 @@ import React from "react";
 
 import type { ItemSelect } from "@/lib/types";
 import useCurrentList from "@/hooks/use-current-list";
-import { filterOptionsAtom, searchStringAtom, sortOptionAtom } from "./store";
-import { FilterOptions, SortOptions } from "./types";
+import {
+  filterOptionsAtom,
+  searchStringAtom,
+  sortOptionAtom,
+} from "@/modules/sidebar/store";
+import { FilterOptions, SortOptions } from "@/modules/sidebar/types";
 import { useAtomValue } from "jotai";
 
 type FilteringFn = (item: ItemSelect) => boolean;

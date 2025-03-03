@@ -1,7 +1,7 @@
 import { DropdownMenu, IconButton, Spinner, Text } from "@radix-ui/themes";
 import { useSetAtom } from "jotai";
 import React from "react";
-import { openEditorAtom } from "../item-editor/store";
+import { openEditorAtom } from "@/components/item-editor/store";
 import type { ItemSelect } from "@/lib/types";
 import useConfirmDialog from "@/hooks/use-confirm-dialog";
 import useMutations from "@/hooks/use-mutations";

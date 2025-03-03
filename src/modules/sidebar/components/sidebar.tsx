@@ -1,6 +1,6 @@
 import React from "react";
-import PackingItems from "@/components/packing-items/packing-items";
-import PackingLists from "@/components/packing-lists/packing-lists";
+import PackingItems from "./packing-items/packing-items";
+import PackingLists from "@/modules/sidebar/components/packing-lists/packing-lists";
 import {
   ResizablePanelGroup,
   ResizablePanel,

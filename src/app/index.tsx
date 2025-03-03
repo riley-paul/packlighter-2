@@ -9,13 +9,16 @@ import {
 } from "@tanstack/react-query";
 import RadixProvider from "@/components/base/radix-provider";
 import CustomToaster from "@/components/ui/custom-toaster";
-import useMutationHelpers from "@/hooks/use-mutation-helpers";
-
-const { onError } = useMutationHelpers();
+import { toast } from "sonner";
 
 const queryClient = new QueryClient({
   defaultOptions: { queries: { staleTime: 1000 * 60 * 5 } },
-  mutationCache: new MutationCache({ onError }),
+  mutationCache: new MutationCache({
+    onError: (error) => {
+      console.error(error);
+      toast.error(error.message ?? "Server Error");
+    },
+  }),
 });
 
 const router = createRouter({

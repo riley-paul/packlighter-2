@@ -1,8 +1,8 @@
 import React from "react";
 
-import { FilterOptions, SortOptions } from "./types";
+import { FilterOptions, SortOptions } from "../../types";
 import { useAtom } from "jotai";
-import { filterOptionsAtom, searchStringAtom, sortOptionAtom } from "./store";
+import { filterOptionsAtom, searchStringAtom, sortOptionAtom } from "@/modules/sidebar/store";
 import {
   Button,
   Checkbox,

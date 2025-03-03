@@ -12,8 +12,8 @@ import useDraggableState, {
 } from "@/hooks/use-draggable-state";
 import { DND_ENTITY_TYPE, DndEntityType } from "@/lib/constants";
 import { Portal, Text } from "@radix-ui/themes";
-import RadixProvider from "../base/radix-provider";
-import PackingItemMenu from "./packing-item.menu";
+import RadixProvider from "@/components/base/radix-provider";
+import PackingItemMenu from "./packing-item-menu";
 
 interface Props {
   item: ItemSelect;

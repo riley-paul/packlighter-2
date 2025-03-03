@@ -5,7 +5,7 @@ import { cn } from "@/lib/utils";
 import { listsQueryOptions } from "@/lib/queries";
 import useMutations from "@/hooks/use-mutations";
 
-import ArrayQueryGuard from "../base/array-query-guard";
+import ArrayQueryGuard from "../../../../components/base/array-query-guard";
 
 import { monitorForElements } from "@atlaskit/pragmatic-drag-and-drop/element/adapter";
 import type { ListSelect } from "@/lib/types";

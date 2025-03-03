@@ -2,17 +2,17 @@ import React from "react";
 import { useQuery } from "@tanstack/react-query";
 import PackingItem from "./packing-item";
 import { itemsQueryOptions } from "@/lib/queries";
-import ArrayQueryGuard from "../base/array-query-guard";
+import ArrayQueryGuard from "@/components/base/array-query-guard";
 import PackingItemsSortFilter from "../packing-items-sort-filter/packing-item-sort-filter";
 import { usePackingItemsSortFilter } from "../packing-items-sort-filter/use-packing-item-sort-filter";
-import SidebarSectionHeader from "@/modules/sidebar/components/sidebar-section-header";
+import SidebarSectionHeader from "../sidebar-section-header";
 import useScrollShadow from "@/hooks/use-scroll-shadow";
 import { cn } from "@/lib/utils";
 import { useVirtualizer } from "@tanstack/react-virtual";
 import useCurrentList from "@/hooks/use-current-list";
 import { ScrollArea } from "@radix-ui/themes";
 import { useSetAtom } from "jotai";
-import { openEditorAtom } from "../item-editor/store";
+import { openEditorAtom } from "@/components/item-editor/store";
 
 const PackingItems: React.FC = () => {
   const itemsQuery = useQuery(itemsQueryOptions);
