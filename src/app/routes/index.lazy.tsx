@@ -1,8 +1,8 @@
 import useMutations from '@/hooks/use-mutations'
 import { Button, Heading, Separator, Text } from '@radix-ui/themes'
-import { createFileRoute } from '@tanstack/react-router'
+import { createLazyFileRoute } from '@tanstack/react-router'
 
-export const Route = createFileRoute('/')({ component: RouteComponent })
+export const Route = createLazyFileRoute('/')({ component: RouteComponent })
 
 function RouteComponent() {
   const { addList } = useMutations()

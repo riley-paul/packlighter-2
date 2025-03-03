@@ -9,9 +9,9 @@ import Loader from '@/components/base/loader'
 import useCurrentList from '@/hooks/use-current-list'
 import ListSharing from '@/components/list-sharing'
 import ListName from '@/components/list-name'
-import { createFileRoute } from '@tanstack/react-router'
+import { createLazyFileRoute } from '@tanstack/react-router'
 
-export const Route = createFileRoute('/list/$listId')({
+export const Route = createLazyFileRoute('/list/$listId')({
   component: RouteComponent,
 })
 
