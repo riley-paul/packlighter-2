@@ -1,13 +1,11 @@
-import useMutations from "@/hooks/use-mutations";
-import { Button, Heading, Separator, Text } from "@radix-ui/themes";
-import { createFileRoute } from "@tanstack/react-router";
+import useMutations from '@/hooks/use-mutations'
+import { Button, Heading, Separator, Text } from '@radix-ui/themes'
+import { createFileRoute } from '@tanstack/react-router'
 
-export const Route = createFileRoute("/_app-layout/")({
-  component: RouteComponent,
-});
+export const Route = createFileRoute('/')({ component: RouteComponent })
 
 function RouteComponent() {
-  const { addList } = useMutations();
+  const { addList } = useMutations()
   return (
     <div className="h-full">
       <div className="container2 flex h-full items-center justify-center">
@@ -33,5 +31,5 @@ function RouteComponent() {
         </div>
       </div>
     </div>
-  );
+  )
 }

@@ -1,37 +1,25 @@
-import { RouterProvider, createRouter } from "@tanstack/react-router";
+import CommandBar from "@/components/command-bar";
+import FeedbackButton from "@/components/feedback-button";
+import ItemEditor from "@/components/item-editor/item-editor";
+import AppSideBar from "@/components/sidebar/sidebar";
+import { createRootRoute, Outlet } from "@tanstack/react-router";
 
-// Import the generated route tree
-import { routeTree } from "../routeTree.gen";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import RadixProvider from "@/components/base/radix-provider";
-import CustomToaster from "@/components/ui/custom-toaster";
-
-const queryClient = new QueryClient({
-  defaultOptions: { queries: { staleTime: 1000 * 60 * 5 } },
-});
-const router = createRouter({
-  routeTree,
-  context: {
-    queryClient,
-  },
-  defaultPreload: "intent",
-  defaultPreloadStaleTime: 0,
-  scrollRestoration: true,
+export const Route = createRootRoute({
+  component: Component,
 });
 
-declare module "@tanstack/react-router" {
-  interface Register {
-    router: typeof router;
-  }
+function Component() {
+  return (
+    <main className="flex">
+      <ItemEditor />
+      <CommandBar />
+      <AppSideBar />
+      <div className="min-h-screen flex-1 overflow-hidden">
+        <Outlet />
+      </div>
+      <div className="fixed bottom-6 right-6 flex items-center gap-4">
+        <FeedbackButton />
+      </div>
+    </main>
+  );
 }
-
-const App: React.FC = () => (
-  <QueryClientProvider client={queryClient}>
-    <RadixProvider>
-      <CustomToaster />
-      <RouterProvider router={router} />
-    </RadixProvider>
-  </QueryClientProvider>
-);
-
-export default App;

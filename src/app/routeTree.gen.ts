@@ -11,106 +11,79 @@
 // Import Routes
 
 import { Route as rootRoute } from './routes/__root'
-import { Route as AppLayoutImport } from './routes/_app-layout'
-import { Route as AppLayoutIndexImport } from './routes/_app-layout.index'
-import { Route as AppLayoutListIdImport } from './routes/_app-layout.$listId'
+import { Route as IndexImport } from './routes/index'
+import { Route as ListListIdImport } from './routes/list.$listId'
 
 // Create/Update Routes
 
-const AppLayoutRoute = AppLayoutImport.update({
-  id: '/_app-layout',
+const IndexRoute = IndexImport.update({
+  id: '/',
+  path: '/',
   getParentRoute: () => rootRoute,
 } as any)
 
-const AppLayoutIndexRoute = AppLayoutIndexImport.update({
-  id: '/',
-  path: '/',
-  getParentRoute: () => AppLayoutRoute,
-} as any)
-
-const AppLayoutListIdRoute = AppLayoutListIdImport.update({
-  id: '/$listId',
-  path: '/$listId',
-  getParentRoute: () => AppLayoutRoute,
+const ListListIdRoute = ListListIdImport.update({
+  id: '/list/$listId',
+  path: '/list/$listId',
+  getParentRoute: () => rootRoute,
 } as any)
 
 // Populate the FileRoutesByPath interface
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/_app-layout': {
-      id: '/_app-layout'
-      path: ''
-      fullPath: ''
-      preLoaderRoute: typeof AppLayoutImport
-      parentRoute: typeof rootRoute
-    }
-    '/_app-layout/$listId': {
-      id: '/_app-layout/$listId'
-      path: '/$listId'
-      fullPath: '/$listId'
-      preLoaderRoute: typeof AppLayoutListIdImport
-      parentRoute: typeof AppLayoutImport
-    }
-    '/_app-layout/': {
-      id: '/_app-layout/'
+    '/': {
+      id: '/'
       path: '/'
       fullPath: '/'
-      preLoaderRoute: typeof AppLayoutIndexImport
-      parentRoute: typeof AppLayoutImport
+      preLoaderRoute: typeof IndexImport
+      parentRoute: typeof rootRoute
+    }
+    '/list/$listId': {
+      id: '/list/$listId'
+      path: '/list/$listId'
+      fullPath: '/list/$listId'
+      preLoaderRoute: typeof ListListIdImport
+      parentRoute: typeof rootRoute
     }
   }
 }
 
 // Create and export the route tree
 
-interface AppLayoutRouteChildren {
-  AppLayoutListIdRoute: typeof AppLayoutListIdRoute
-  AppLayoutIndexRoute: typeof AppLayoutIndexRoute
-}
-
-const AppLayoutRouteChildren: AppLayoutRouteChildren = {
-  AppLayoutListIdRoute: AppLayoutListIdRoute,
-  AppLayoutIndexRoute: AppLayoutIndexRoute,
-}
-
-const AppLayoutRouteWithChildren = AppLayoutRoute._addFileChildren(
-  AppLayoutRouteChildren,
-)
-
 export interface FileRoutesByFullPath {
-  '': typeof AppLayoutRouteWithChildren
-  '/$listId': typeof AppLayoutListIdRoute
-  '/': typeof AppLayoutIndexRoute
+  '/': typeof IndexRoute
+  '/list/$listId': typeof ListListIdRoute
 }
 
 export interface FileRoutesByTo {
-  '/$listId': typeof AppLayoutListIdRoute
-  '/': typeof AppLayoutIndexRoute
+  '/': typeof IndexRoute
+  '/list/$listId': typeof ListListIdRoute
 }
 
 export interface FileRoutesById {
   __root__: typeof rootRoute
-  '/_app-layout': typeof AppLayoutRouteWithChildren
-  '/_app-layout/$listId': typeof AppLayoutListIdRoute
-  '/_app-layout/': typeof AppLayoutIndexRoute
+  '/': typeof IndexRoute
+  '/list/$listId': typeof ListListIdRoute
 }
 
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '' | '/$listId' | '/'
+  fullPaths: '/' | '/list/$listId'
   fileRoutesByTo: FileRoutesByTo
-  to: '/$listId' | '/'
-  id: '__root__' | '/_app-layout' | '/_app-layout/$listId' | '/_app-layout/'
+  to: '/' | '/list/$listId'
+  id: '__root__' | '/' | '/list/$listId'
   fileRoutesById: FileRoutesById
 }
 
 export interface RootRouteChildren {
-  AppLayoutRoute: typeof AppLayoutRouteWithChildren
+  IndexRoute: typeof IndexRoute
+  ListListIdRoute: typeof ListListIdRoute
 }
 
 const rootRouteChildren: RootRouteChildren = {
-  AppLayoutRoute: AppLayoutRouteWithChildren,
+  IndexRoute: IndexRoute,
+  ListListIdRoute: ListListIdRoute,
 }
 
 export const routeTree = rootRoute
@@ -123,23 +96,15 @@ export const routeTree = rootRoute
     "__root__": {
       "filePath": "__root.tsx",
       "children": [
-        "/_app-layout"
+        "/",
+        "/list/$listId"
       ]
     },
-    "/_app-layout": {
-      "filePath": "_app-layout.tsx",
-      "children": [
-        "/_app-layout/$listId",
-        "/_app-layout/"
-      ]
+    "/": {
+      "filePath": "index.tsx"
     },
-    "/_app-layout/$listId": {
-      "filePath": "_app-layout.$listId.tsx",
-      "parent": "/_app-layout"
-    },
-    "/_app-layout/": {
-      "filePath": "_app-layout.index.tsx",
-      "parent": "/_app-layout"
+    "/list/$listId": {
+      "filePath": "list.$listId.tsx"
     }
   }
 }

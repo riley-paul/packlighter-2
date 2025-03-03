@@ -1,44 +1,44 @@
-import { useQuery } from "@tanstack/react-query";
-import React from "react";
-import EditorCategories from "@/components/list-editor/editor-categories";
-import ListDescription from "@/components/list-description";
-import ListSettings from "@/components/list-settings";
-import { listQueryOptions } from "@/lib/queries";
-import ErrorDisplay from "@/components/base/error";
-import Loader from "@/components/base/loader";
-import useCurrentList from "@/hooks/use-current-list";
-import ListSharing from "@/components/list-sharing";
-import ListName from "@/components/list-name";
-import { createFileRoute } from "@tanstack/react-router";
+import { useQuery } from '@tanstack/react-query'
+import React from 'react'
+import EditorCategories from '@/components/list-editor/editor-categories'
+import ListDescription from '@/components/list-description'
+import ListSettings from '@/components/list-settings'
+import { listQueryOptions } from '@/lib/queries'
+import ErrorDisplay from '@/components/base/error'
+import Loader from '@/components/base/loader'
+import useCurrentList from '@/hooks/use-current-list'
+import ListSharing from '@/components/list-sharing'
+import ListName from '@/components/list-name'
+import { createFileRoute } from '@tanstack/react-router'
 
-export const Route = createFileRoute("/_app-layout/$listId")({
+export const Route = createFileRoute('/list/$listId')({
   component: RouteComponent,
-});
+})
 
 function RouteComponent() {
-  const { listId } = useCurrentList();
-  const listQuery = useQuery(listQueryOptions(listId));
+  const { listId } = useCurrentList()
+  const listQuery = useQuery(listQueryOptions(listId))
 
-  const listNameInputRef = React.useRef<HTMLInputElement>(null);
+  const listNameInputRef = React.useRef<HTMLInputElement>(null)
   React.useEffect(() => {
     if (!listQuery.data?.name) {
-      listNameInputRef.current?.focus();
+      listNameInputRef.current?.focus()
     }
-  }, [listQuery.data?.name]);
+  }, [listQuery.data?.name])
 
   if (listQuery.isLoading)
     return (
       <div className="h-full">
         <Loader />
       </div>
-    );
+    )
 
   if (listQuery.isError || !listQuery.data)
     return (
       <div className="h-full">
         <ErrorDisplay error={listQuery.error} showGoHome />
       </div>
-    );
+    )
 
   return (
     <div className="flex h-full flex-col overflow-auto">
@@ -54,5 +54,5 @@ function RouteComponent() {
         <EditorCategories categories={listQuery.data.categories} />
       </div>
     </div>
-  );
+  )
 }
