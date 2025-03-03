@@ -1,6 +1,5 @@
 import React from "react";
 
-import useMutations from "@/hooks/use-mutations";
 import {
   Button,
   Heading,
@@ -10,11 +9,12 @@ import {
   TextArea,
   Tooltip,
 } from "@radix-ui/themes";
+import useFeedbackMutations from "./mutations";
 
 const FeedbackButton: React.FC = () => {
   const [value, setValue] = React.useState("");
   const [open, setOpen] = React.useState(false);
-  const { addFeedback } = useMutations();
+  const { addFeedback } = useFeedbackMutations();
 
   return (
     <Tooltip side="left" content="Leave feedback">
@@ -26,7 +26,12 @@ const FeedbackButton: React.FC = () => {
         }}
       >
         <Popover.Trigger>
-          <IconButton variant="soft" radius="full" size="3" className="backdrop-blur">
+          <IconButton
+            variant="soft"
+            radius="full"
+            size="3"
+            className="backdrop-blur"
+          >
             <i className="fa-solid fa-message" />
           </IconButton>
         </Popover.Trigger>
