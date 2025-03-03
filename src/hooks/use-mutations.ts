@@ -1,8 +1,6 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import {
-  itemsQueryOptions,
   listQueryOptions,
-  listsQueryOptions,
   otherListCategoriesQueryOptions,
 } from "@/lib/queries";
 import {
@@ -18,6 +16,10 @@ import useCurrentList from "./use-current-list";
 import useMutationHelpers from "./use-mutation-helpers";
 import { useNavigate } from "@tanstack/react-router";
 import { listLinkOptions } from "@/lib/links";
+import {
+  itemsQueryOptions,
+  listsQueryOptions,
+} from "@/modules/sidebar/queries";
 
 export default function useMutations() {
   const { listId } = useCurrentList();

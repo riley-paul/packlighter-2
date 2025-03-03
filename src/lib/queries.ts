@@ -1,11 +1,6 @@
 import { queryOptions } from "@tanstack/react-query";
 import { actions } from "astro:actions";
 
-export const listsQueryOptions = queryOptions({
-  queryKey: ["lists"],
-  queryFn: () => actions.lists.get.orThrow(),
-});
-
 export const listQueryOptions = (listId: string) =>
   queryOptions({
     queryKey: ["lists", listId],
@@ -18,11 +13,6 @@ export const otherListCategoriesQueryOptions = (listId: string) =>
     queryKey: ["other-categories", listId],
     queryFn: () => actions.categories.getFromOtherLists.orThrow({ listId }),
   });
-
-export const itemsQueryOptions = queryOptions({
-  queryKey: ["items"],
-  queryFn: actions.items.get.orThrow,
-});
 
 export const itemListsIncludedOptions = (itemId: string) =>
   queryOptions({

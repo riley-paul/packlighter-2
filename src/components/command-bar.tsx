@@ -11,7 +11,6 @@ import {
 } from "@/components/ui/command";
 import { useEventListener } from "usehooks-ts";
 import { useQuery } from "@tanstack/react-query";
-import { itemsQueryOptions, listsQueryOptions } from "@/lib/queries";
 import useMutations from "@/hooks/use-mutations";
 import { cn } from "@/lib/utils";
 import { ACCENT_COLOR } from "@/lib/constants";
@@ -19,6 +18,10 @@ import { atom, useAtom, useSetAtom } from "jotai";
 import { openEditorAtom } from "@/modules/items/store";
 import { useNavigate } from "@tanstack/react-router";
 import { listLinkOptions } from "@/lib/links";
+import {
+  listsQueryOptions,
+  itemsQueryOptions,
+} from "@/modules/sidebar/queries";
 
 export const commandBarOpenAtom = atom(false);
 

@@ -8,14 +8,6 @@ import { z } from "zod";
 
 const itemUpdateSchema = z.custom<Partial<typeof Item.$inferInsert>>();
 
-export const get = defineAction({
-  handler: async (_, c) => {
-    const userId = isAuthorized(c).id;
-    const items = await db.select().from(Item).where(eq(Item.userId, userId));
-    return items;
-  },
-});
-
 export const create = defineAction({
   input: z.object({
     data: itemUpdateSchema.optional(),
