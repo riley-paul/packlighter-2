@@ -3,22 +3,19 @@ import { Link } from "@tanstack/react-router";
 import React from "react";
 
 interface Props {
-  error?: Error | null;
+  status?: number;
+  message?: string;
   showGoHome?: boolean;
   retry?: () => void;
 }
 
 const ErrorDisplay: React.FC<Props> = (props) => {
-  const { showGoHome, retry, error } = props;
-
-  console.error(error);
-
-  let status = 500;
-  let message = "An unknown error occurred. Please try again later.";
-
-  if (error instanceof Error) {
-    message = error.message;
-  }
+  const {
+    showGoHome,
+    retry,
+    status = 500,
+    message = "An unknown error occurred. Please try again later.",
+  } = props;
 
   return (
     <div className="flex h-full flex-1 items-center justify-center">
@@ -35,7 +32,7 @@ const ErrorDisplay: React.FC<Props> = (props) => {
         <div className="flex flex-col gap-2">
           {retry && <Button onClick={() => retry()}>Retry</Button>}
           {showGoHome && (
-            <Button asChild>
+            <Button asChild variant="soft">
               <Link to="/">Go Home</Link>
             </Button>
           )}
