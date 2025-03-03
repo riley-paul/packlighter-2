@@ -5,7 +5,7 @@ import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import useMutations from "@/hooks/use-mutations";
 import { initItem } from "@/lib/init";
-import ItemImage from "@/components/item-image";
+import ItemImage from "@/modules/item-editor/item-image";
 import { Button, IconButton, Select, Text, TextField } from "@radix-ui/themes";
 import { useAtomValue, useSetAtom } from "jotai";
 import { closeEditorAtom, editorItemAtom } from "./store";

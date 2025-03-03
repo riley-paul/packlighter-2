@@ -4,7 +4,7 @@ import { cn } from "@/lib/utils";
 import type { ItemSelect } from "@/lib/types";
 import useMutations from "@/hooks/use-mutations";
 import ItemImage from "./item-image";
-import ResponsiveModal from "./base/responsive-modal";
+import ResponsiveModal from "@/components/base/responsive-modal";
 import { Button, Heading, Text, TextField } from "@radix-ui/themes";
 
 interface Props {
@@ -29,7 +29,7 @@ const ItemImageDialog: React.FC<Props> = (props) => {
           size="sm"
           className={cn(
             "w-16",
-            item.image ? "h-16" : "bg-gray-4 h-full min-h-6",
+            item.image ? "h-16" : "h-full min-h-6 bg-gray-4",
             "outline-primary outline-1 outline-offset-1 transition-all hover:outline",
           )}
         />
