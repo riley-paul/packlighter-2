@@ -6,27 +6,13 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import useMutations from "@/hooks/use-mutations";
 import { initItem } from "@/lib/init";
 import ItemImage from "../item-image";
-import {
-  Button,
-  IconButton,
-  Select,
-  Table,
-  Text,
-  TextField,
-} from "@radix-ui/themes";
+import { Button, IconButton, Select, Text, TextField } from "@radix-ui/themes";
 import { useAtomValue, useSetAtom } from "jotai";
 import { closeEditorAtom, editorItemAtom } from "./store";
-import { Link } from "react-router-dom";
-import { useQuery } from "@tanstack/react-query";
-import { itemListsIncludedOptions } from "@/lib/queries";
 
 const ItemForm: React.FC = () => {
   const item = useAtomValue(editorItemAtom);
   const closeEditor = useSetAtom(closeEditorAtom);
-
-  const { data: listsIncluded = [] } = useQuery(
-    itemListsIncludedOptions(item?.id ?? ""),
-  );
 
   const methods = useForm<ItemSelect>({
     defaultValues: initItem(item),
@@ -153,39 +139,6 @@ const ItemForm: React.FC = () => {
 
         {imageUrl && (
           <ItemImage url={imageUrl} size="sm" className="mx-auto size-32" />
-        )}
-
-        {listsIncluded.length > 0 && item && (
-          <Table.Root>
-            <Table.Header>
-              <Table.Row>
-                <Table.ColumnHeaderCell>
-                  Lists Including {item.name}
-                </Table.ColumnHeaderCell>
-              </Table.Row>
-            </Table.Header>
-            <Table.Body>
-              {listsIncluded.map((list) => (
-                <Table.Row key={list.listId}>
-                  <Table.Cell className="flex items-center justify-between gap-4">
-                    <Text>
-                      {list.listName} / {list.categoryName}
-                    </Text>
-                    <Button
-                      size="1"
-                      variant="ghost"
-                      asChild
-                      onClick={closeEditor}
-                    >
-                      <Link to={`/list/${list.listId}`}>
-                        <i className="fas fa-arrow-right" />
-                      </Link>
-                    </Button>
-                  </Table.Cell>
-                </Table.Row>
-              ))}
-            </Table.Body>
-          </Table.Root>
         )}
 
         <div className="grid w-full gap-2 pt-8">

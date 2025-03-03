@@ -97,16 +97,6 @@ const PackingItemMenu: React.FC<Props> = ({ item }) => {
             Duplicate
           </DropdownMenu.Item>
 
-          <DropdownMenu.Sub>
-            <DropdownMenu.SubTrigger>
-              <i className="fas fa-list w-4 text-center opacity-70" />
-              Used in
-            </DropdownMenu.SubTrigger>
-            <DropdownMenu.SubContent className="z-30">
-              <ListIncludesSubmenu item={item} />
-            </DropdownMenu.SubContent>
-          </DropdownMenu.Sub>
-
           <DropdownMenu.Item
             color="red"
             onClick={async () => {
@@ -117,6 +107,18 @@ const PackingItemMenu: React.FC<Props> = ({ item }) => {
             <i className="fa-solid fa-backspace w-4 text-center opacity-70" />
             Delete
           </DropdownMenu.Item>
+
+          <DropdownMenu.Separator />
+
+          <DropdownMenu.Sub>
+            <DropdownMenu.SubTrigger>
+              <i className="fas fa-list w-4 text-center opacity-70" />
+              Used in
+            </DropdownMenu.SubTrigger>
+            <DropdownMenu.SubContent className="z-30">
+              <ListIncludesSubmenu item={item} />
+            </DropdownMenu.SubContent>
+          </DropdownMenu.Sub>
         </DropdownMenu.Content>
       </DropdownMenu.Root>
     </>
