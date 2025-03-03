@@ -12,12 +12,13 @@ import {
 import { useEventListener } from "usehooks-ts";
 import { useQuery } from "@tanstack/react-query";
 import { itemsQueryOptions, listsQueryOptions } from "@/lib/queries";
-import { useNavigate } from "react-router-dom";
 import useMutations from "@/hooks/use-mutations";
 import { cn } from "@/lib/utils";
 import { ACCENT_COLOR } from "@/lib/constants";
 import { atom, useAtom, useSetAtom } from "jotai";
 import { openEditorAtom } from "./item-editor/store";
+import { useNavigate } from "@tanstack/react-router";
+import { listLinkOptions } from "@/lib/links";
 
 export const commandBarOpenAtom = atom(false);
 
@@ -79,7 +80,7 @@ const CommandBar: React.FC = () => {
               <CommandItem
                 key={list.id}
                 onSelect={() => {
-                  navigate(`/list/${list.id}`);
+                  navigate(listLinkOptions(list.id));
                   setOpen(false);
                 }}
               >

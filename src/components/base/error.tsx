@@ -1,6 +1,6 @@
 import { Button, Heading, Text } from "@radix-ui/themes";
+import { Link } from "@tanstack/react-router";
 import React from "react";
-import { isRouteErrorResponse, Link, useRouteError } from "react-router-dom";
 
 interface Props {
   error?: Error | null;
@@ -9,18 +9,12 @@ interface Props {
 }
 
 const ErrorDisplay: React.FC<Props> = (props) => {
-  const routeError = useRouteError();
-  const { showGoHome, retry, error = routeError } = props;
+  const { showGoHome, retry, error } = props;
 
   console.error(error);
 
   let status = 500;
   let message = "An unknown error occurred. Please try again later.";
-
-  if (isRouteErrorResponse(error)) {
-    status = error.status;
-    message = error.statusText;
-  }
 
   if (error instanceof Error) {
     message = error.message;

@@ -7,7 +7,8 @@ import useConfirmDialog from "@/hooks/use-confirm-dialog";
 import useMutations from "@/hooks/use-mutations";
 import { itemListsIncludedOptions } from "@/lib/queries";
 import { useQuery } from "@tanstack/react-query";
-import { Link } from "react-router-dom";
+import { Link } from "@tanstack/react-router";
+import { listLinkOptions } from "@/lib/links";
 
 type Props = {
   item: ItemSelect;
@@ -40,7 +41,7 @@ const ListIncludesSubmenu: React.FC<Props> = ({ item }) => {
     <>
       {data.map((list) => (
         <DropdownMenu.Item key={list.listId} asChild>
-          <Link to={`/list/${list.listId}`}>
+          <Link {...listLinkOptions(list.listId)}>
             <Text size="2">
               {list.listName} / {list.categoryName}
             </Text>

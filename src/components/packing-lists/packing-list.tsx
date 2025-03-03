@@ -22,7 +22,6 @@ import {
   DndEntityType,
   isDndEntityType,
 } from "@/lib/constants";
-import { Link } from "react-router-dom";
 import useCurrentList from "@/hooks/use-current-list";
 import { DropdownMenu, IconButton, Portal, Text } from "@radix-ui/themes";
 import RadixProvider from "../base/radix-provider";
@@ -31,6 +30,8 @@ import { useSetAtom } from "jotai";
 import { mobileSidebarOpenAtom } from "../sidebar/store";
 import DropIndicatorWrapper from "../ui/drop-indicator-wrapper";
 import ConditionalForm from "../base/conditional-form";
+import { listLinkOptions } from "@/lib/links";
+import { Link } from "@tanstack/react-router";
 
 interface Props {
   list: ListSelect;
@@ -216,7 +217,7 @@ const PackingList: React.FC<Props> = (props) => {
                   className={cn("w-full flex-1", !displayValue && "italic")}
                 >
                   <Link
-                    to={`/list/${list.id}`}
+                    {...listLinkOptions(list.id)}
                     onClick={() => closeMobileSidebar()}
                   >
                     {displayValue || "Unnamed List"}

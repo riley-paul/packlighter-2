@@ -1,8 +1,8 @@
 import type { ExpandedList } from "@/lib/types";
 import { listQueryOptions } from "@/lib/queries";
 import { useQuery } from "@tanstack/react-query";
-import { useParams } from "react-router-dom";
 import React from "react";
+import { useParams } from "@tanstack/react-router";
 
 const getItemsIds = (list: ExpandedList | undefined) => {
   if (!list) return [];
@@ -17,7 +17,7 @@ export default function useCurrentList(): {
   listItemIds: Set<string>;
   duplicateListItemIds: Set<string>;
 } {
-  const params = useParams();
+  const params = useParams({ strict: false });
   const listId = params.listId ?? "";
 
   const { data: list } = useQuery(listQueryOptions(listId));

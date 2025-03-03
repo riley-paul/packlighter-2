@@ -14,9 +14,10 @@ import {
 import { produce } from "immer";
 import { initCategory, initCategoryItem, initItem } from "@/lib/init";
 import { actions } from "astro:actions";
-import { useNavigate } from "react-router-dom";
 import useCurrentList from "./use-current-list";
 import useMutationHelpers from "./use-mutation-helpers";
+import { useNavigate } from "@tanstack/react-router";
+import { listLinkOptions } from "@/lib/links";
 
 export default function useMutations() {
   const { listId } = useCurrentList();
@@ -92,7 +93,7 @@ export default function useMutations() {
       ]);
       toastSuccess("List deleted successfully");
       if (props.listId === listId) {
-        navigate("/");
+        navigate({ to: "/" });
       }
     },
     onMutate: () => onMutateMessage("Deleting list..."),
@@ -333,7 +334,7 @@ export default function useMutations() {
         listsQueryOptions.queryKey,
         otherListCategoriesQueryOptions(listId).queryKey,
       ]);
-      navigate(`/list/${data.id}`);
+      navigate(listLinkOptions(data.id));
     },
     onError,
   });
@@ -345,7 +346,7 @@ export default function useMutations() {
         listsQueryOptions.queryKey,
         otherListCategoriesQueryOptions(listId).queryKey,
       ]);
-      navigate(`/list/${data.listId}`);
+      navigate(listLinkOptions(data.listId));
     },
     onError,
   });
