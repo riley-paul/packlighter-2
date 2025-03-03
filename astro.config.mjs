@@ -7,6 +7,7 @@ import { TanStackRouterVite } from "@tanstack/router-vite-plugin";
 import db from "@astrojs/db";
 import node from "@astrojs/node";
 const __dirname = path.dirname(url.fileURLToPath(import.meta.url));
+import { TanStackRouterVite } from "@tanstack/router-plugin/vite";
 
 // https://astro.build/config
 export default defineConfig({
@@ -22,6 +23,14 @@ export default defineConfig({
     db(),
   ],
   vite: {
+    plugins: [
+      TanStackRouterVite({
+        target: "react",
+        autoCodeSplitting: true,
+        routesDirectory: "./src/app/routes",
+        generatedRouteTree: "./src/app/routeTree.gen.ts",
+      }),
+    ],
     resolve: {
       alias: {
         "@": path.resolve(__dirname, "./src"),
@@ -29,9 +38,7 @@ export default defineConfig({
     },
   },
   output: "server",
-  adapter: node({
-    mode: "standalone",
-  }),
+  adapter: node({ mode: "standalone" }),
   experimental: {
     env: {
       schema: {
