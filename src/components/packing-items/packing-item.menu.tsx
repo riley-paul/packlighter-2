@@ -1,13 +1,55 @@
-import { DropdownMenu, IconButton } from "@radix-ui/themes";
+import { DropdownMenu, IconButton, Spinner, Text } from "@radix-ui/themes";
 import { useSetAtom } from "jotai";
 import React from "react";
 import { openEditorAtom } from "../item-editor/store";
 import type { ItemSelect } from "@/lib/types";
 import useConfirmDialog from "@/hooks/use-confirm-dialog";
 import useMutations from "@/hooks/use-mutations";
+import { itemListsIncludedOptions } from "@/lib/queries";
+import { useQuery } from "@tanstack/react-query";
+import { Link } from "react-router-dom";
 
 type Props = {
   item: ItemSelect;
+};
+
+const ListIncludesSubmenu: React.FC<Props> = ({ item }) => {
+  const { data = [], isLoading } = useQuery(
+    itemListsIncludedOptions(item.id ?? ""),
+  );
+
+  if (isLoading) {
+    return (
+      <div className="p-4">
+        <Spinner loading />
+      </div>
+    );
+  }
+
+  if (!isLoading && data.length === 0) {
+    return (
+      <div className="p-2 text-center">
+        <Text size="2" color="gray" align="center">
+          Not included in any lists
+        </Text>
+      </div>
+    );
+  }
+
+  return (
+    <>
+      {data.map((list) => (
+        <DropdownMenu.Item key={list.listId} asChild>
+          <Link to={`/list/${list.listId}`}>
+            <Text size="2">
+              {list.listName} / {list.categoryName}
+            </Text>
+            <i className="fa-solid fa-arrow-right ml-auto pl-2 opacity-70" />
+          </Link>
+        </DropdownMenu.Item>
+      ))}
+    </>
+  );
 };
 
 const PackingItemMenu: React.FC<Props> = ({ item }) => {
@@ -54,6 +96,16 @@ const PackingItemMenu: React.FC<Props> = ({ item }) => {
             <i className="fa-solid fa-copy w-4 text-center opacity-70" />
             Duplicate
           </DropdownMenu.Item>
+
+          <DropdownMenu.Sub>
+            <DropdownMenu.SubTrigger>
+              <i className="fas fa-list w-4 text-center opacity-70" />
+              Used in
+            </DropdownMenu.SubTrigger>
+            <DropdownMenu.SubContent className="z-30">
+              <ListIncludesSubmenu item={item} />
+            </DropdownMenu.SubContent>
+          </DropdownMenu.Sub>
 
           <DropdownMenu.Item
             color="red"
