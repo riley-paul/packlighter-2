@@ -10,14 +10,14 @@ type Props = React.PropsWithChildren<{
 }>;
 
 const ResponsiveModal: React.FC<Props> = ({ open, onOpenChange, children }) => {
-  const isMobile = useIsMobile();
+  const isMobile = useIsMobile(512);
 
   if (isMobile) {
     return (
       <Drawer.Root open={open} onOpenChange={onOpenChange}>
         <Portal>
           <RadixProvider>
-            <Drawer.Overlay className="bg-black/40 fixed inset-0" />
+            <Drawer.Overlay className="fixed inset-0 bg-panel-translucent backdrop-blur" />
             <Drawer.Content className="fixed bottom-0 left-0 right-0 mt-24 flex h-fit flex-col rounded-t-3 border border-b-0 bg-panel-solid outline-none">
               <div className="hide-scrollbar grid max-h-[85vh] gap-4 overflow-y-auto px-4 py-6">
                 {children}

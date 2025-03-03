@@ -23,10 +23,16 @@ export const userQueryOptions = queryOptions({
   queryKey: ["profile"],
   retry: false,
   staleTime: 1000 * 60 * 5,
-  queryFn: () => actions.users.getMe.orThrow(),
+  queryFn: actions.users.getMe.orThrow,
 });
 
 export const itemsQueryOptions = queryOptions({
   queryKey: ["items"],
-  queryFn: () => actions.items.get.orThrow(),
+  queryFn: actions.items.get.orThrow,
 });
+
+export const itemListsIncludedOptions = (itemId: string) =>
+  queryOptions({
+    queryKey: ["itemListsIncluded", itemId],
+    queryFn: () => actions.items.getListsIncluded.orThrow({ itemId }),
+  });

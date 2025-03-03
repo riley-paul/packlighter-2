@@ -22,7 +22,7 @@ const ItemEditor: React.FC = () => {
       onOpenChange={(open) => (open ? openEditor() : closeEditor())}
     >
       <header>
-        <Heading as="h2" size="3">
+        <Heading as="h2" size="4">
           {item ? "Edit" : "Add"} Gear
         </Heading>
         <Text size="2" color="gray">

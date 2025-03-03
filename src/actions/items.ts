@@ -1,4 +1,4 @@
-import { CategoryItem, Item, db, eq } from "astro:db";
+import { Category, CategoryItem, Item, List, and, db, eq } from "astro:db";
 import { idAndUserIdFilter } from "@/lib/validators.ts";
 import { ActionError, defineAction } from "astro:actions";
 import { isAuthorized } from "@/lib/helpers";
@@ -84,5 +84,25 @@ export const update = defineAction({
       .returning()
       .then((rows) => rows[0]);
     return updated;
+  },
+});
+
+export const getListsIncluded = defineAction({
+  input: z.object({
+    itemId: z.string(),
+  }),
+  handler: async ({ itemId }, c) => {
+    const userId = isAuthorized(c).id;
+    const result = await db
+      .select({
+        listId: List.id,
+        listName: List.name,
+        categoryName: Category.name,
+      })
+      .from(CategoryItem)
+      .rightJoin(Category, eq(Category.id, CategoryItem.categoryId))
+      .rightJoin(List, eq(List.id, Category.listId))
+      .where(and(eq(List.userId, userId), eq(CategoryItem.itemId, itemId)));
+    return result;
   },
 });
