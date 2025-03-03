@@ -4,7 +4,7 @@ import {
   type ExpandedCategoryItem,
 } from "@/lib/types";
 import { createColumnHelper } from "@tanstack/react-table";
-import ServerInput from "../input/server-input";
+import ServerInput from "../ui/server-input";
 import useMutations from "@/hooks/use-mutations";
 import React from "react";
 import DeleteButton from "../base/delete-button";
