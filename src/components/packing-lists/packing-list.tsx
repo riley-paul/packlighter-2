@@ -27,7 +27,7 @@ import { DropdownMenu, IconButton, Portal, Text } from "@radix-ui/themes";
 import RadixProvider from "../base/radix-provider";
 import useConfirmDialog from "@/hooks/use-confirm-dialog";
 import { useSetAtom } from "jotai";
-import { mobileSidebarOpenAtom } from "../sidebar/store";
+import { mobileSidebarOpenAtom } from "@/modules/sidebar/store";
 import DropIndicatorWrapper from "../ui/drop-indicator-wrapper";
 import ConditionalForm from "../base/conditional-form";
 import { listLinkOptions } from "@/lib/links";

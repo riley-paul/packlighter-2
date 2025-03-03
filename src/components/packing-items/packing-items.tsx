@@ -5,7 +5,7 @@ import { itemsQueryOptions } from "@/lib/queries";
 import ArrayQueryGuard from "../base/array-query-guard";
 import PackingItemsSortFilter from "../packing-items-sort-filter/packing-item-sort-filter";
 import { usePackingItemsSortFilter } from "../packing-items-sort-filter/use-packing-item-sort-filter";
-import SidebarSectionHeader from "../sidebar/sidebar-section-header";
+import SidebarSectionHeader from "@/modules/sidebar/components/sidebar-section-header";
 import useScrollShadow from "@/hooks/use-scroll-shadow";
 import { cn } from "@/lib/utils";
 import { useVirtualizer } from "@tanstack/react-virtual";

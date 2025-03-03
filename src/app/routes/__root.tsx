@@ -1,7 +1,7 @@
 import CommandBar from "@/components/command-bar";
 import FeedbackButton from "@/components/feedback-button";
 import ItemEditor from "@/components/item-editor/item-editor";
-import AppSideBar from "@/components/sidebar/sidebar";
+import AppSideBar from "@/modules/sidebar/components/sidebar";
 import { createRootRoute, Outlet } from "@tanstack/react-router";
 
 export const Route = createRootRoute({

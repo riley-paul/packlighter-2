@@ -14,7 +14,7 @@ import { reorderWithEdge } from "@atlaskit/pragmatic-drag-and-drop-hitbox/util/r
 import { flushSync } from "react-dom";
 import { z } from "zod";
 import { DndEntityType, isDndEntityType } from "@/lib/constants";
-import SidebarSectionHeader from "../sidebar/sidebar-section-header";
+import SidebarSectionHeader from "@/modules/sidebar/components/sidebar-section-header";
 import useScrollShadow from "@/hooks/use-scroll-shadow";
 import { useVirtualizer } from "@tanstack/react-virtual";
 import useCurrentList from "@/hooks/use-current-list";

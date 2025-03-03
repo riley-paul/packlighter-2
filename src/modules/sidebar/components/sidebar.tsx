@@ -1,6 +1,6 @@
 import React from "react";
-import PackingItems from "../packing-items/packing-items";
-import PackingLists from "../packing-lists/packing-lists";
+import PackingItems from "@/components/packing-items/packing-items";
+import PackingLists from "@/components/packing-lists/packing-lists";
 import {
   ResizablePanelGroup,
   ResizablePanel,
@@ -8,15 +8,15 @@ import {
 } from "@/components/ui/resizable";
 import { NAVBAR_HEIGHT } from "@/lib/constants";
 
-import UserAvatar from "../../modules/users/components/user-avatar";
-import Logo from "../logo";
+import UserAvatar from "@/modules/users/components/user-avatar";
+import Logo from "@/components/logo";
 import { useAtom, useSetAtom } from "jotai";
-import { desktopSidebarOpenAtom, mobileSidebarOpenAtom } from "./store";
+import { desktopSidebarOpenAtom, mobileSidebarOpenAtom } from "../store";
 import { cn, getHasModifier, getIsTyping } from "@/lib/utils";
 import { useEventListener } from "usehooks-ts";
 import { useIsMobile } from "@/hooks/use-is-mobile";
 import { Button, IconButton, Kbd, Tooltip } from "@radix-ui/themes";
-import { commandBarOpenAtom } from "../command-bar";
+import { commandBarOpenAtom } from "@/components/command-bar";
 
 const AppSideBar: React.FC = () => {
   const isMobile = useIsMobile();
