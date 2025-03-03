@@ -1,4 +1,4 @@
-import { themeAtom } from "@/components/theme/store";
+import { themeAtom } from "@/modules/theme/store";
 import { Spinner } from "@radix-ui/themes";
 import { useAtomValue } from "jotai";
 import React from "react";
