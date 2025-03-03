@@ -24,6 +24,7 @@ import {
 } from "@radix-ui/themes";
 import ConditionalForm from "../base/conditional-form";
 import { z } from "zod";
+import useItemsMutations from "@/modules/items/mutations";
 
 const columnHelper = createColumnHelper<ExpandedCategoryItem>();
 
@@ -45,8 +46,8 @@ export default function useEditorColumns({
     deleteCategoryItem,
     toggleCategoryPacked,
     updateCategoryItem,
-    updateItem,
   } = useMutations();
+  const { updateItem } = useItemsMutations();
 
   const { list } = useCurrentList();
 

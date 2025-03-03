@@ -2,10 +2,10 @@ import React from "react";
 
 import { cn } from "@/lib/utils";
 import type { ItemSelect } from "@/lib/types";
-import useMutations from "@/hooks/use-mutations";
 import ItemImage from "./item-image";
 import ResponsiveModal from "@/components/base/responsive-modal";
 import { Button, Heading, Text, TextField } from "@radix-ui/themes";
+import useItemsMutations from "../mutations";
 
 interface Props {
   item: ItemSelect;
@@ -16,7 +16,7 @@ const ItemImageDialog: React.FC<Props> = (props) => {
 
   const [isOpen, setIsOpen] = React.useState(false);
   const [value, setValue] = React.useState(item.image ?? "");
-  const { updateItem } = useMutations();
+  const { updateItem } = useItemsMutations();
 
   return (
     <>

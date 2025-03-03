@@ -101,35 +101,6 @@ export default function useMutations() {
     onMutate: () => onMutateMessage("Deleting list..."),
   });
 
-  const updateItem = useMutation({
-    mutationFn: actions.items.update.orThrow,
-    onSuccess: () => {
-      invalidateQueries([
-        listQueryOptions(listId).queryKey,
-        itemsQueryOptions.queryKey,
-      ]);
-    },
-    onMutate: ({ itemId, data }) => {
-      const { queryKey } = listQueryOptions(listId);
-      return optimisticUpdate<ExpandedList>(queryKey, (prev) => ({
-        ...prev,
-        categories: prev.categories.map((category) => ({
-          ...category,
-          items: category.items.map((item) =>
-            item.itemId === itemId
-              ? { ...item, itemData: { ...item.itemData, ...data } }
-              : item,
-          ),
-        })),
-      }));
-    },
-    onError: (error, __, context) => {
-      const { queryKey } = listQueryOptions(listId);
-      onErrorOptimistic(queryKey, context);
-      onError(error);
-    },
-  });
-
   const updateCategoryItem = useMutation({
     mutationFn: actions.categoryItems.update.orThrow,
     onSuccess: () => {
@@ -239,13 +210,6 @@ export default function useMutations() {
     },
   });
 
-  const addItem = useMutation({
-    mutationFn: actions.items.create.orThrow,
-    onSuccess: () => {
-      invalidateQueries([itemsQueryOptions.queryKey]);
-    },
-  });
-
   const addCategory = useMutation({
     mutationFn: actions.categories.create.orThrow,
     onMutate: ({ data }) => {
@@ -285,19 +249,6 @@ export default function useMutations() {
         otherListCategoriesQueryOptions(listId).queryKey,
       ]);
     },
-  });
-
-  const deleteItem = useMutation({
-    mutationFn: actions.items.remove.orThrow,
-    onSuccess: () => {
-      invalidateQueries([
-        itemsQueryOptions.queryKey,
-        listQueryOptions(listId).queryKey,
-        otherListCategoriesQueryOptions(listId).queryKey,
-      ]);
-      toastSuccess(`Gear has been deleted`);
-    },
-    onMutate: () => onMutateMessage("Deleting item..."),
   });
 
   const updateList = useMutation({
@@ -342,14 +293,6 @@ export default function useMutations() {
         otherListCategoriesQueryOptions(listId).queryKey,
       ]);
       navigate(listLinkOptions(data.listId));
-    },
-  });
-
-  const duplicateItem = useMutation({
-    mutationFn: actions.items.duplicate.orThrow,
-    onSuccess: () => {
-      const { queryKey } = itemsQueryOptions;
-      queryClient.invalidateQueries({ queryKey });
     },
   });
 
@@ -444,17 +387,13 @@ export default function useMutations() {
   return {
     deleteCategoryItem,
     deleteCategory,
-    deleteItem,
     deleteList,
     updateCategoryItem,
-    updateItem,
     updateList,
     updateCategory,
     addCategoryItem,
     addItemToCategory,
     addList,
-    addItem,
-    duplicateItem,
     duplicateList,
     addCategory,
     reorderLists,

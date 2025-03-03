@@ -3,12 +3,12 @@ import React from "react";
 import { Controller, FormProvider, useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import useMutations from "@/hooks/use-mutations";
 import { initItem } from "@/lib/init";
 import ItemImage from "@/modules/items/components/item-image";
 import { Button, IconButton, Select, Text, TextField } from "@radix-ui/themes";
 import { useAtomValue, useSetAtom } from "jotai";
 import { closeEditorAtom, editorItemAtom } from "../store";
+import useItemsMutations from "../mutations";
 
 const ItemForm: React.FC = () => {
   const item = useAtomValue(editorItemAtom);
@@ -20,7 +20,7 @@ const ItemForm: React.FC = () => {
   });
 
   const { control, handleSubmit, watch } = methods;
-  const { updateItem, addItem } = useMutations();
+  const { updateItem, addItem } = useItemsMutations();
 
   const onSubmit = handleSubmit((data) => {
     item

@@ -4,11 +4,11 @@ import React from "react";
 import { openEditorAtom } from "@/modules/items/store";
 import type { ItemSelect } from "@/lib/types";
 import useConfirmDialog from "@/hooks/use-confirm-dialog";
-import useMutations from "@/hooks/use-mutations";
 import { itemListsIncludedOptions } from "@/lib/queries";
 import { useQuery } from "@tanstack/react-query";
 import { Link } from "@tanstack/react-router";
 import { listLinkOptions } from "@/lib/links";
+import useItemsMutations from "@/modules/items/mutations";
 
 type Props = {
   item: ItemSelect;
@@ -55,7 +55,7 @@ const ListIncludesSubmenu: React.FC<Props> = ({ item }) => {
 
 const PackingItemMenu: React.FC<Props> = ({ item }) => {
   const openEditor = useSetAtom(openEditorAtom);
-  const { deleteItem, duplicateItem } = useMutations();
+  const { deleteItem, duplicateItem } = useItemsMutations();
 
   const [ConfirmDeleteDialog, confirmDelete] = useConfirmDialog({
     title: "Delete Gear",
