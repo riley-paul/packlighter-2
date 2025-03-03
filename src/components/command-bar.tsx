@@ -16,7 +16,7 @@ import useMutations from "@/hooks/use-mutations";
 import { cn } from "@/lib/utils";
 import { ACCENT_COLOR } from "@/lib/constants";
 import { atom, useAtom, useSetAtom } from "jotai";
-import { openEditorAtom } from "./item-editor/store";
+import { openEditorAtom } from "@/modules/item-editor/store";
 import { useNavigate } from "@tanstack/react-router";
 import { listLinkOptions } from "@/lib/links";
 

@@ -1,6 +1,6 @@
 import React from "react";
 import ItemForm from "./item-form";
-import ResponsiveModal from "../base/responsive-modal";
+import ResponsiveModal from "@/components/base/responsive-modal";
 import { Heading, Text } from "@radix-ui/themes";
 import { useAtomValue, useSetAtom } from "jotai";
 import {
