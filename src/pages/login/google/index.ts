@@ -1,5 +1,5 @@
 import { generateCodeVerifier, generateState } from "arctic";
-import { google } from "@/lib/auth";
+import { google } from "@/modules/users/helpers/lucia";
 
 import type { APIContext } from "astro";
 
