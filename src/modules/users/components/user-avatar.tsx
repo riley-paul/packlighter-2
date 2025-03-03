@@ -4,9 +4,9 @@ import { useQuery } from "@tanstack/react-query";
 import { userQueryOptions } from "@/lib/queries";
 import { cn } from "@/lib/utils";
 import ThemeToggle from "@/components/theme/theme-toggle";
-import useMutations from "@/hooks/use-mutations";
 import useConfirmDialog from "@/hooks/use-confirm-dialog";
 import { Avatar, Button, Link, Popover, Text } from "@radix-ui/themes";
+import useUsersMutations from "@/modules/users/mutations";
 
 const UserAvatar: React.FC = () => {
   const [DeletionConfirmDialog, confirmDeleteAccount] = useConfirmDialog({
@@ -14,7 +14,7 @@ const UserAvatar: React.FC = () => {
     description:
       "This action cannot be undone. This will permanently delete your account and remove your data from our servers.",
   });
-  const { deleteUser } = useMutations();
+  const { deleteUser } = useUsersMutations();
 
   const { data: user } = useQuery(userQueryOptions);
 

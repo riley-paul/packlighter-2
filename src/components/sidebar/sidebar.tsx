@@ -8,7 +8,7 @@ import {
 } from "@/components/ui/resizable";
 import { NAVBAR_HEIGHT } from "@/lib/constants";
 
-import UserAvatar from "../user-avatar";
+import UserAvatar from "../../modules/users/components/user-avatar";
 import Logo from "../logo";
 import { useAtom, useSetAtom } from "jotai";
 import { desktopSidebarOpenAtom, mobileSidebarOpenAtom } from "./store";

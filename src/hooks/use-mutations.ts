@@ -97,7 +97,6 @@ export default function useMutations() {
       }
     },
     onMutate: () => onMutateMessage("Deleting list..."),
-    onError,
   });
 
   const updateItem = useMutation({
@@ -161,7 +160,6 @@ export default function useMutations() {
         otherListCategoriesQueryOptions(listId).queryKey,
       ]);
     },
-    onError,
   });
 
   const addCategoryItem = useMutation({
@@ -244,7 +242,6 @@ export default function useMutations() {
     onSuccess: () => {
       invalidateQueries([itemsQueryOptions.queryKey]);
     },
-    onError,
   });
 
   const addCategory = useMutation({
@@ -276,7 +273,6 @@ export default function useMutations() {
     onSuccess: () => {
       invalidateQueries([listQueryOptions(listId).queryKey]);
     },
-    onError,
   });
 
   const copyCategoryToList = useMutation({
@@ -287,7 +283,6 @@ export default function useMutations() {
         otherListCategoriesQueryOptions(listId).queryKey,
       ]);
     },
-    onError,
   });
 
   const deleteItem = useMutation({
@@ -301,7 +296,6 @@ export default function useMutations() {
       toastSuccess(`Gear has been deleted`);
     },
     onMutate: () => onMutateMessage("Deleting item..."),
-    onError,
   });
 
   const updateList = useMutation({
@@ -336,7 +330,6 @@ export default function useMutations() {
       ]);
       navigate(listLinkOptions(data.id));
     },
-    onError,
   });
 
   const duplicateList = useMutation({
@@ -348,7 +341,6 @@ export default function useMutations() {
       ]);
       navigate(listLinkOptions(data.listId));
     },
-    onError,
   });
 
   const duplicateItem = useMutation({
@@ -357,7 +349,6 @@ export default function useMutations() {
       const { queryKey } = itemsQueryOptions;
       queryClient.invalidateQueries({ queryKey });
     },
-    onError,
   });
 
   const reorderLists = useMutation({
@@ -446,7 +437,6 @@ export default function useMutations() {
     onSuccess: () => {
       invalidateQueries([listQueryOptions(listId).queryKey]);
     },
-    onError,
   });
 
   const addFeedback = useMutation({
@@ -454,15 +444,6 @@ export default function useMutations() {
     onSuccess: () => {
       toastSuccess("Feedback submitted");
     },
-    onError,
-  });
-
-  const deleteUser = useMutation({
-    mutationFn: actions.users.remove.orThrow,
-    onSuccess: () => {
-      window.location.reload();
-    },
-    onError,
   });
 
   return {
@@ -470,7 +451,6 @@ export default function useMutations() {
     deleteCategory,
     deleteItem,
     deleteList,
-    deleteUser,
     updateCategoryItem,
     updateItem,
     updateList,
