@@ -1,6 +1,6 @@
 import CommandBar from "@/components/command-bar";
 import FeedbackButton from "@/modules/feedback/feedback-button";
-import ItemEditor from "@/modules/item-editor/item-editor";
+import ItemEditor from "@/modules/items/components/item-editor";
 import AppSideBar from "@/modules/sidebar/components/sidebar";
 import { createRootRoute, Outlet } from "@tanstack/react-router";
 

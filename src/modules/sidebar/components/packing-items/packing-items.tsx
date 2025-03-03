@@ -12,7 +12,7 @@ import { useVirtualizer } from "@tanstack/react-virtual";
 import useCurrentList from "@/hooks/use-current-list";
 import { ScrollArea } from "@radix-ui/themes";
 import { useSetAtom } from "jotai";
-import { openEditorAtom } from "@/modules/item-editor/store";
+import { openEditorAtom } from "@/modules/items/store";
 
 const PackingItems: React.FC = () => {
   const itemsQuery = useQuery(itemsQueryOptions);

@@ -5,10 +5,10 @@ import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import useMutations from "@/hooks/use-mutations";
 import { initItem } from "@/lib/init";
-import ItemImage from "@/modules/item-editor/item-image";
+import ItemImage from "@/modules/items/components/item-image";
 import { Button, IconButton, Select, Text, TextField } from "@radix-ui/themes";
 import { useAtomValue, useSetAtom } from "jotai";
-import { closeEditorAtom, editorItemAtom } from "./store";
+import { closeEditorAtom, editorItemAtom } from "../store";
 
 const ItemForm: React.FC = () => {
   const item = useAtomValue(editorItemAtom);

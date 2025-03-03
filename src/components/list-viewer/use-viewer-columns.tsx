@@ -7,7 +7,7 @@ import { createColumnHelper } from "@tanstack/react-table";
 import React from "react";
 import { cn, formatWeight, getCheckboxState } from "@/lib/utils";
 import CellWrapper from "../base/cell-wrapper";
-import ItemImage from "../../modules/item-editor/item-image";
+import ItemImage from "../../modules/items/components/item-image";
 import { Checkbox } from "@radix-ui/themes";
 import { useAtomValue, useSetAtom } from "jotai";
 import { isItemPackedAtom, togglePackedItemAtom } from "./store";
