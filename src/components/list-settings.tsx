@@ -6,6 +6,7 @@ import { useEventListener } from "usehooks-ts";
 import { getHasModifier, getIsTyping } from "@/lib/utils";
 import {
   Button,
+  Kbd,
   Popover,
   SegmentedControl,
   Switch,
@@ -96,9 +97,9 @@ const ListSettings: React.FC<Props> = (props) => {
                 />
                 {name}
               </Text>
-              <Text color="gray" className="w-4" align="center">
+              <Kbd size="2" className="w-4">
                 {shortcut}
-              </Text>
+              </Kbd>
             </div>
           ))}
         </div>
