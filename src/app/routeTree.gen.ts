@@ -13,6 +13,7 @@
 import { Route as rootRoute } from './routes/__root'
 import { Route as IndexImport } from './routes/index'
 import { Route as ListListIdImport } from './routes/list.$listId'
+import { Route as ItemItemIdImport } from './routes/item.$itemId'
 
 // Create/Update Routes
 
@@ -28,6 +29,12 @@ const ListListIdRoute = ListListIdImport.update({
   getParentRoute: () => rootRoute,
 } as any)
 
+const ItemItemIdRoute = ItemItemIdImport.update({
+  id: '/item/$itemId',
+  path: '/item/$itemId',
+  getParentRoute: () => rootRoute,
+} as any)
+
 // Populate the FileRoutesByPath interface
 
 declare module '@tanstack/react-router' {
@@ -37,6 +44,13 @@ declare module '@tanstack/react-router' {
       path: '/'
       fullPath: '/'
       preLoaderRoute: typeof IndexImport
+      parentRoute: typeof rootRoute
+    }
+    '/item/$itemId': {
+      id: '/item/$itemId'
+      path: '/item/$itemId'
+      fullPath: '/item/$itemId'
+      preLoaderRoute: typeof ItemItemIdImport
       parentRoute: typeof rootRoute
     }
     '/list/$listId': {
@@ -53,36 +67,41 @@ declare module '@tanstack/react-router' {
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/item/$itemId': typeof ItemItemIdRoute
   '/list/$listId': typeof ListListIdRoute
 }
 
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/item/$itemId': typeof ItemItemIdRoute
   '/list/$listId': typeof ListListIdRoute
 }
 
 export interface FileRoutesById {
   __root__: typeof rootRoute
   '/': typeof IndexRoute
+  '/item/$itemId': typeof ItemItemIdRoute
   '/list/$listId': typeof ListListIdRoute
 }
 
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/list/$listId'
+  fullPaths: '/' | '/item/$itemId' | '/list/$listId'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/list/$listId'
-  id: '__root__' | '/' | '/list/$listId'
+  to: '/' | '/item/$itemId' | '/list/$listId'
+  id: '__root__' | '/' | '/item/$itemId' | '/list/$listId'
   fileRoutesById: FileRoutesById
 }
 
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  ItemItemIdRoute: typeof ItemItemIdRoute
   ListListIdRoute: typeof ListListIdRoute
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  ItemItemIdRoute: ItemItemIdRoute,
   ListListIdRoute: ListListIdRoute,
 }
 
@@ -97,11 +116,15 @@ export const routeTree = rootRoute
       "filePath": "__root.tsx",
       "children": [
         "/",
+        "/item/$itemId",
         "/list/$listId"
       ]
     },
     "/": {
       "filePath": "index.tsx"
+    },
+    "/item/$itemId": {
+      "filePath": "item.$itemId.tsx"
     },
     "/list/$listId": {
       "filePath": "list.$listId.tsx"

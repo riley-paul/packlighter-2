@@ -5,3 +5,9 @@ export const listLinkOptions = (listId: string) =>
     to: "/list/$listId",
     params: { listId },
   });
+
+export const itemLinkOptions = (itemId: string) =>
+  linkOptions({
+    to: "/item/$itemId",
+    params: { itemId },
+  });

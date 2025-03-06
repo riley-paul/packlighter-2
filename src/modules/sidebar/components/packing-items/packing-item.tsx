@@ -14,6 +14,8 @@ import { DND_ENTITY_TYPE, DndEntityType } from "@/lib/constants";
 import { Portal, Text } from "@radix-ui/themes";
 import RadixProvider from "@/components/base/radix-provider";
 import PackingItemMenu from "./packing-item-menu";
+import { Link } from "@tanstack/react-router";
+import { itemLinkOptions } from "@/lib/links";
 
 interface Props {
   item: ItemSelect;
@@ -81,7 +83,7 @@ const PackingItem: React.FC<Props> = (props) => {
         )}
       >
         <Gripper ref={gripperRef} />
-        <div className="flex flex-1 flex-col">
+        <Link {...itemLinkOptions(item.id)} className="flex flex-1 flex-col">
           <Text
             size="2"
             weight="medium"
@@ -92,7 +94,7 @@ const PackingItem: React.FC<Props> = (props) => {
           <Text size="2" color="gray">
             {item.description}
           </Text>
-        </div>
+        </Link>
         <Text color="gray" size="2">
           <span>{formatWeight(item.weight)}</span>
           <span>{item.weightUnit}</span>

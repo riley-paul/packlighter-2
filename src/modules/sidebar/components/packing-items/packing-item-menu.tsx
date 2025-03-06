@@ -1,13 +1,11 @@
 import { DropdownMenu, IconButton, Spinner, Text } from "@radix-ui/themes";
-import { useSetAtom } from "jotai";
 import React from "react";
-import { openEditorAtom } from "@/modules/items/store";
 import type { ItemSelect } from "@/lib/types";
 import useConfirmDialog from "@/hooks/use-confirm-dialog";
 import { itemListsIncludedOptions } from "@/lib/queries";
 import { useQuery } from "@tanstack/react-query";
 import { Link } from "@tanstack/react-router";
-import { listLinkOptions } from "@/lib/links";
+import { itemLinkOptions, listLinkOptions } from "@/lib/links";
 import useItemsMutations from "@/modules/items/mutations";
 
 type Props = {
@@ -54,7 +52,6 @@ const ListIncludesSubmenu: React.FC<Props> = ({ item }) => {
 };
 
 const PackingItemMenu: React.FC<Props> = ({ item }) => {
-  const openEditor = useSetAtom(openEditorAtom);
   const { deleteItem, duplicateItem } = useItemsMutations();
 
   const [ConfirmDeleteDialog, confirmDelete] = useConfirmDialog({
@@ -80,13 +77,11 @@ const PackingItemMenu: React.FC<Props> = ({ item }) => {
           </IconButton>
         </DropdownMenu.Trigger>
         <DropdownMenu.Content align="start" className="z-30">
-          <DropdownMenu.Item
-            onClick={() => {
-              openEditor(item);
-            }}
-          >
-            <i className="fa-solid fa-pen w-4 text-center opacity-70" />
-            Edit
+          <DropdownMenu.Item asChild>
+            <Link {...itemLinkOptions(item.id)}>
+              <i className="fa-solid fa-pen w-4 text-center opacity-70" />
+              Edit
+            </Link>
           </DropdownMenu.Item>
 
           <DropdownMenu.Item
