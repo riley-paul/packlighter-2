@@ -4,7 +4,6 @@ import ListDescription from "@/components/list-description";
 import ListSettings from "@/components/list-settings";
 import { listQueryOptions } from "@/lib/queries";
 import ErrorDisplay from "@/components/base/error-display";
-import useCurrentList from "@/hooks/use-current-list";
 import ListSharing from "@/components/list-sharing";
 import ListName from "@/components/list-name";
 import { createFileRoute } from "@tanstack/react-router";
@@ -17,17 +16,13 @@ export const Route = createFileRoute("/list/$listId")({
 });
 
 function RouteComponent() {
-  const { listId } = useCurrentList();
+  const { listId } = Route.useParams();
   const { data: list } = useSuspenseQuery(listQueryOptions(listId));
 
   if (!list)
     return (
       <div className="h-full">
-        <ErrorDisplay
-          message="Could not find that list"
-          status={404}
-          showGoHome
-        />
+        <ErrorDisplay message="List not found" showGoHome />
       </div>
     );
 
