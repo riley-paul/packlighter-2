@@ -11,6 +11,7 @@ import RadixProvider from "@/components/base/radix-provider";
 import CustomToaster from "@/components/ui/custom-toaster";
 import { toast } from "sonner";
 import ErrorDisplay from "@/components/base/error-display";
+import Loader from "@/components/base/loader";
 
 const queryClient = new QueryClient({
   defaultOptions: { queries: { staleTime: 1000 * 60 * 5 } },
@@ -35,6 +36,9 @@ const router = createRouter({
   },
   defaultNotFoundComponent: () => {
     return <ErrorDisplay message="Not found" status={404} showGoHome />;
+  },
+  defaultPendingComponent: () => {
+    return <Loader />;
   },
 });
 

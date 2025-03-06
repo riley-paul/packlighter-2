@@ -8,16 +8,11 @@
 // You should NOT make any changes in this file as it will be overwritten.
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
-import { createFileRoute } from '@tanstack/react-router'
-
 // Import Routes
 
 import { Route as rootRoute } from './routes/__root'
 import { Route as IndexImport } from './routes/index'
-
-// Create Virtual Routes
-
-const ListListIdLazyImport = createFileRoute('/list/$listId')()
+import { Route as ListListIdImport } from './routes/list.$listId'
 
 // Create/Update Routes
 
@@ -27,11 +22,11 @@ const IndexRoute = IndexImport.update({
   getParentRoute: () => rootRoute,
 } as any)
 
-const ListListIdLazyRoute = ListListIdLazyImport.update({
+const ListListIdRoute = ListListIdImport.update({
   id: '/list/$listId',
   path: '/list/$listId',
   getParentRoute: () => rootRoute,
-} as any).lazy(() => import('./routes/list.$listId.lazy').then((d) => d.Route))
+} as any)
 
 // Populate the FileRoutesByPath interface
 
@@ -48,7 +43,7 @@ declare module '@tanstack/react-router' {
       id: '/list/$listId'
       path: '/list/$listId'
       fullPath: '/list/$listId'
-      preLoaderRoute: typeof ListListIdLazyImport
+      preLoaderRoute: typeof ListListIdImport
       parentRoute: typeof rootRoute
     }
   }
@@ -58,18 +53,18 @@ declare module '@tanstack/react-router' {
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
-  '/list/$listId': typeof ListListIdLazyRoute
+  '/list/$listId': typeof ListListIdRoute
 }
 
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
-  '/list/$listId': typeof ListListIdLazyRoute
+  '/list/$listId': typeof ListListIdRoute
 }
 
 export interface FileRoutesById {
   __root__: typeof rootRoute
   '/': typeof IndexRoute
-  '/list/$listId': typeof ListListIdLazyRoute
+  '/list/$listId': typeof ListListIdRoute
 }
 
 export interface FileRouteTypes {
@@ -83,12 +78,12 @@ export interface FileRouteTypes {
 
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
-  ListListIdLazyRoute: typeof ListListIdLazyRoute
+  ListListIdRoute: typeof ListListIdRoute
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
-  ListListIdLazyRoute: ListListIdLazyRoute,
+  ListListIdRoute: ListListIdRoute,
 }
 
 export const routeTree = rootRoute
@@ -109,7 +104,7 @@ export const routeTree = rootRoute
       "filePath": "index.tsx"
     },
     "/list/$listId": {
-      "filePath": "list.$listId.lazy.tsx"
+      "filePath": "list.$listId.tsx"
     }
   }
 }

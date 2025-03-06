@@ -2,11 +2,14 @@ import CommandBar from "@/components/command-bar";
 import FeedbackButton from "@/modules/feedback/feedback-button";
 import ItemEditor from "@/modules/items/components/item-editor";
 import AppSideBar from "@/modules/sidebar/components/sidebar";
-import { createRootRoute, Outlet } from "@tanstack/react-router";
+import type { QueryClient } from "@tanstack/react-query";
+import { createRootRouteWithContext, Outlet } from "@tanstack/react-router";
 
-export const Route = createRootRoute({
-  component: Component,
-});
+export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
+  {
+    component: Component,
+  },
+);
 
 function Component() {
   return (
