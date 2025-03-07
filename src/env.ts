@@ -1,4 +1,4 @@
-import { z } from "zod";
+import { z, type ZodError } from "zod";
 import { config } from "dotenv";
 import { expand } from "dotenv-expand";
 
@@ -14,5 +14,17 @@ const zEnv = z.object({
   COOLIFY_FQDN: z.string().default("http://localhost:4321"),
 });
 
-const env = zEnv.parse(process.env);
+export type Env = z.infer<typeof zEnv>;
+
+let env: Env;
+
+try {
+  env = zEnv.parse(process.env);
+} catch (e) {
+  const error = e as ZodError;
+  console.error("❌ Invalid environment variables:");
+  console.error(error.flatten());
+  process.exit(1);
+}
+
 export default env;
