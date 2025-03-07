@@ -78,7 +78,7 @@ export const Category = sqliteTable("category", {
   ...timeStamps,
 });
 
-export const CateoryItem = sqliteTable("categoryItem", {
+export const CategoryItem = sqliteTable("categoryItem", {
   id,
   userId,
   categoryId: text()
