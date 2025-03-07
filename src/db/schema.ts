@@ -1,4 +1,3 @@
-import { WeightUnit, weightUnitArray } from "@/lib/types";
 import { integer, sqliteTable, text } from "drizzle-orm/sqlite-core";
 
 const id = text("id")
@@ -8,6 +7,8 @@ const id = text("id")
 const userId = text()
   .notNull()
   .references(() => User.id, { onDelete: "cascade" });
+
+const weightUnitArray = ["g", "kg", "oz", "lb"] as const;
 
 const timeStamps = {
   createdAt: text()
@@ -44,9 +45,7 @@ export const Item = sqliteTable("item", {
   name: text().notNull().default(""),
   description: text().notNull().default(""),
   weight: integer().notNull().default(0),
-  weightUnit: text({ enum: weightUnitArray })
-    .notNull()
-    .default(WeightUnit.Grams),
+  weightUnit: text({ enum: weightUnitArray }).notNull().default("g"),
   image: text(),
   ...timeStamps,
 });
@@ -63,9 +62,7 @@ export const List = sqliteTable("list", {
   showWeights: integer({ mode: "boolean" }).notNull().default(false),
 
   sortOrder: integer().notNull().default(0),
-  weightUnit: text({ enum: weightUnitArray })
-    .notNull()
-    .default(WeightUnit.Grams),
+  weightUnit: text({ enum: weightUnitArray }).notNull().default("g"),
   isPublic: integer({ mode: "boolean" }).notNull().default(false),
   ...timeStamps,
 });

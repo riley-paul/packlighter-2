@@ -2,7 +2,7 @@ import { Lucia } from "lucia";
 import { DrizzleSQLiteAdapter } from "@lucia-auth/adapter-drizzle";
 import { GitHub, Google } from "arctic";
 import db from "@/db";
-import { User } from "@/db/schema";
+import { User, UserSession } from "@/db/schema";
 
 import env from "@/envs";
 
