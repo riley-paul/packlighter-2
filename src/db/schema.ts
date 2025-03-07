@@ -5,21 +5,21 @@ const id = text("id")
   .$defaultFn(() => crypto.randomUUID());
 
 const timeStamps = {
-  createdAt: text("createdAt").$defaultFn(() => new Date().toISOString()),
-  updatedAt: text("updatedAt")
+  createdAt: text().$defaultFn(() => new Date().toISOString()),
+  updatedAt: text()
     .$defaultFn(() => new Date().toISOString())
     .$onUpdateFn(() => new Date().toISOString()),
 };
 
 export const user = sqliteTable("user", {
   id,
-  email: text("email").unique(),
+  email: text().unique(),
 
-  googleId: text("googleId").unique(),
-  githubId: text("githubId").unique(),
-  githubUsername: text("githubUsername").unique(),
+  googleId: text().unique(),
+  githubId: text().unique(),
+  githubUsername: text().unique(),
 
-  name: text("name"),
-  avatarUrl: text("avatarUrl"),
+  name: text(),
+  avatarUrl: text(),
   ...timeStamps,
 });
