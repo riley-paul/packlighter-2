@@ -18,12 +18,12 @@ const timeStamps = {
 
 export const User = sqliteTable("user", {
   id,
-  email: text().unique(),
-  name: text(),
+  email: text().notNull().unique(),
+  name: text().notNull(),
   avatarUrl: text(),
 
   googleId: text().unique(),
-  githubId: text().unique(),
+  githubId: integer().unique(),
   githubUsername: text().unique(),
   ...timeStamps,
 });

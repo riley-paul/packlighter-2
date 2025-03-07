@@ -1,33 +1,29 @@
-import { Category, CategoryItem, Item, List, User, db } from "astro:db";
-import { randomItemFromArray, randomNumberWithinRange } from "./seeds/utils";
-import { categoryNames } from "./seeds/category-names";
-import { itemNamesDescs } from "./seeds/item-names-descs";
-import { listNamesDescs } from "./seeds/list-names-descs";
-import { imageLinks } from "./seeds/image-links";
+import { Category, CategoryItem, Item, List, User } from "../schema";
+import { randomItemFromArray, randomNumberWithinRange } from "./utils";
+import { categoryNames } from "./category-names";
+import { itemNamesDescs } from "./item-names-descs";
+import { listNamesDescs } from "./list-names-descs";
+import { imageLinks } from "./image-links";
 
-import { v4 as uuid } from "uuid";
 import { weightUnits } from "@/lib/types";
+import db from "@/db";
 
-// https://astro.build/db/seed
 export default async function seed() {
-  const { id: userId } = await db
+  const [{ id: userId }] = await db
     .insert(User)
     .values({
-      id: uuid(),
       email: "rileypaul96@gmail.com",
       githubId: 71047303,
       githubUsername: "rjp301",
       name: "Riley Paul",
       avatarUrl: "https://avatars.githubusercontent.com/u/71047303?v=4",
     })
-    .returning()
-    .then((rows) => rows[0]);
+    .returning();
 
   const lists = await db
     .insert(List)
     .values(
       listNamesDescs.map(({ name, description }, idx) => ({
-        id: uuid(),
         userId,
         name,
         description,
@@ -41,7 +37,6 @@ export default async function seed() {
     .insert(Item)
     .values(
       itemNamesDescs.map(({ name, description }) => ({
-        id: uuid(),
         userId,
         name,
         description,
@@ -57,7 +52,6 @@ export default async function seed() {
     .insert(Category)
     .values(
       new Array(20).fill(0).map((_, index) => ({
-        id: uuid(),
         listId: randomItemFromArray(lists).id,
         userId,
         sortOrder: index + 1,
@@ -71,7 +65,6 @@ export default async function seed() {
     .insert(CategoryItem)
     .values(
       new Array(200).fill(0).map(() => ({
-        id: uuid(),
         userId,
         categoryId: randomItemFromArray(categories).id,
         itemId: randomItemFromArray(items).id,
@@ -81,3 +74,8 @@ export default async function seed() {
     .returning();
   console.log(`✅ Seeded ${categoryItems.length} categoryItems`);
 }
+
+seed().catch((e) => {
+  console.error(e);
+  process.exit(1);
+});

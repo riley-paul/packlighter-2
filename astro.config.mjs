@@ -4,7 +4,6 @@ import react from "@astrojs/react";
 import { defineConfig, envField } from "astro/config";
 import tailwind from "@astrojs/tailwind";
 import { TanStackRouterVite } from "@tanstack/router-vite-plugin";
-import db from "@astrojs/db";
 import node from "@astrojs/node";
 const __dirname = path.dirname(url.fileURLToPath(import.meta.url));
 import { TanStackRouterVite } from "@tanstack/router-plugin/vite";
@@ -15,7 +14,7 @@ export default defineConfig({
   security: {
     checkOrigin: true,
   },
-  integrations: [tailwind({ applyBaseStyles: false }), react(), db()],
+  integrations: [tailwind({ applyBaseStyles: false }), react()],
   vite: {
     plugins: [
       TanStackRouterVite({
