@@ -15,13 +15,7 @@ export default defineConfig({
   security: {
     checkOrigin: true,
   },
-  integrations: [
-    tailwind({
-      applyBaseStyles: false,
-    }),
-    react(),
-    db(),
-  ],
+  integrations: [tailwind({ applyBaseStyles: false }), react(), db()],
   vite: {
     plugins: [
       TanStackRouterVite({
@@ -39,26 +33,4 @@ export default defineConfig({
   },
   output: "server",
   adapter: node({ mode: "standalone" }),
-  experimental: {
-    env: {
-      schema: {
-        // GITHUB_CLIENT_ID: envField.string({
-        //   context: "server",
-        //   access: "secret",
-        // }),
-        // GITHUB_CLIENT_SECRET: envField.string({
-        //   context: "server",
-        //   access: "secret",
-        // }),
-        // GOOGLE_CLIENT_ID: envField.string({
-        //   context: "server",
-        //   access: "secret",
-        // }),
-        // GOOGLE_CLIENT_SECRET: envField.string({
-        //   context: "server",
-        //   access: "secret",
-        // }),
-      },
-    },
-  },
 });

@@ -2,6 +2,7 @@ import { generateState } from "arctic";
 import { github } from "@/modules/users/helpers/lucia";
 
 import type { APIContext } from "astro";
+import env from "@/env";
 
 export async function GET(context: APIContext): Promise<Response> {
   const state = generateState();
@@ -9,7 +10,7 @@ export async function GET(context: APIContext): Promise<Response> {
 
   context.cookies.set("github_oauth_state", state, {
     path: "/",
-    secure: import.meta.env.PROD,
+    secure: env.PROD,
     httpOnly: true,
     maxAge: 60 * 10,
     sameSite: "lax",
