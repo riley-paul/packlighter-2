@@ -1,17 +1,9 @@
 import type { ExpandedCategory, ExpandedList } from "@/lib/types";
 import type { ActionAPIContext } from "astro/actions/runtime/utils.js";
 import { ActionError } from "astro:actions";
-import {
-  Category,
-  CategoryItem,
-  db,
-  eq,
-  inArray,
-  Item,
-  List,
-  sql,
-  User,
-} from "astro:db";
+import { Category, CategoryItem, Item, List, User } from "@/db/schema";
+import db from "@/db";
+import { eq, sql, inArray } from "drizzle-orm";
 
 export const isAuthorized = (context: ActionAPIContext) => {
   const user = context.locals.user;
@@ -58,9 +50,9 @@ export const getExpandedList = async (
 
   const expandedCategories: ExpandedCategory[] = categories.map((category) => {
     const items = categoryItems
-      .filter((ci) => ci.CategoryItem.categoryId === category.id)
-      .filter((ci) => ci.Item !== null)
-      .map((ci) => ({ ...ci.CategoryItem, itemData: ci.Item! }));
+      .filter((ci) => ci.categoryItem.categoryId === category.id)
+      .filter((ci) => ci.item !== null)
+      .map((ci) => ({ ...ci.categoryItem, itemData: ci.item! }));
     const packed = items.every((ci) => ci.packed);
     return { ...category, items, packed };
   });

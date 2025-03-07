@@ -1,9 +1,10 @@
 import { z } from "zod";
 import { idAndUserIdFilter } from "@/lib/validators.ts";
-import { Category, CategoryItem, Item, and, db, eq, max } from "astro:db";
 import { ActionError, defineAction } from "astro:actions";
 import { getListItemIds, isAuthorized } from "@/lib/helpers";
-
+import db from "@/db";
+import { CategoryItem, Item, Category } from "@/db/schema";
+import { and, eq, max } from "drizzle-orm";
 import { v4 as uuid } from "uuid";
 
 const categoryItemUpdateSchema =

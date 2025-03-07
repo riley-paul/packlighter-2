@@ -1,8 +1,9 @@
 import { isAuthorized } from "@/lib/helpers";
 import { defineAction } from "astro:actions";
-import { AppFeedback, db } from "astro:db";
+import db from "@/db";
 import { z } from "zod";
 import { v4 as uuid } from "uuid";
+import { AppFeedback } from "@/db/schema";
 
 export const create = defineAction({
   input: z.object({

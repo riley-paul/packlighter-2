@@ -10,8 +10,11 @@ const userId = text()
   .references(() => User.id, { onDelete: "cascade" });
 
 const timeStamps = {
-  createdAt: text().$defaultFn(() => new Date().toISOString()),
+  createdAt: text()
+    .notNull()
+    .$defaultFn(() => new Date().toISOString()),
   updatedAt: text()
+    .notNull()
     .$defaultFn(() => new Date().toISOString())
     .$onUpdateFn(() => new Date().toISOString()),
 };

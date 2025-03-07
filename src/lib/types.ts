@@ -1,4 +1,4 @@
-import type { Category, CategoryItem, Item, List, User } from "astro:db";
+import { User, Item, List, CategoryItem, Category } from "@/db/schema";
 
 export type Unit = {
   symbol: string;

@@ -1,5 +1,7 @@
 import type { APIRoute } from "astro";
-import { count, db, User } from "astro:db";
+import db from "@/db";
+import { User } from "@/db/schema";
+import { count } from "drizzle-orm";
 
 export const GET: APIRoute = async () => {
   const numUsers = await db

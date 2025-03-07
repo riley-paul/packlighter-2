@@ -1,16 +1,7 @@
 import { z } from "zod";
-import {
-  Category,
-  CategoryItem,
-  db,
-  eq,
-  max,
-  and,
-  ne,
-  List,
-  desc,
-  notInArray,
-} from "astro:db";
+import { Category, CategoryItem, List } from "@/db/schema";
+import { eq, max, and, ne, desc, notInArray } from "drizzle-orm";
+import db from "@/db";
 import { idAndUserIdFilter } from "@/lib/validators.ts";
 import { ActionError, defineAction } from "astro:actions";
 import { isAuthorized } from "@/lib/helpers";

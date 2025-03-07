@@ -1,4 +1,4 @@
-import { and, eq } from "astro:db";
+import { and, eq } from "drizzle-orm";
 import { type AllTables } from "./types";
 
 export const idAndUserIdFilter = (

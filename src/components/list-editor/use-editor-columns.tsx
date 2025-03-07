@@ -2,6 +2,7 @@ import {
   weightUnits,
   type ExpandedCategory,
   type ExpandedCategoryItem,
+  type WeightUnit,
 } from "@/lib/types";
 import { createColumnHelper } from "@tanstack/react-table";
 import ServerInput from "../ui/server-input";
@@ -216,7 +217,7 @@ export default function useEditorColumns({
                   <Select.Root
                     size="1"
                     value={props.getValue().weightUnit}
-                    onValueChange={(weightUnit) =>
+                    onValueChange={(weightUnit: WeightUnit) =>
                       updateItem.mutate({
                         itemId: props.row.original.itemId,
                         data: { weightUnit },

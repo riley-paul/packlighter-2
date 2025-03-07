@@ -1,5 +1,7 @@
 import type { APIRoute } from "astro";
-import { db, eq, Item } from "astro:db";
+import db from "@/db";
+import { Item } from "@/db/schema";
+import { eq } from "drizzle-orm";
 import { desc } from "drizzle-orm";
 import { stringify } from "csv/sync";
 

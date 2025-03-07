@@ -3,9 +3,11 @@ import { OAuth2RequestError } from "arctic";
 
 import type { APIContext } from "astro";
 import getGithubUser from "@/modules/users/helpers/get-github-user";
-import { db, eq, User } from "astro:db";
 import { v4 as uuid } from "uuid";
 import setUserSession from "@/modules/users/helpers/set-user-session";
+import db from "@/db";
+import { User } from "@/db/schema";
+import { eq } from "drizzle-orm";
 
 export async function GET(context: APIContext): Promise<Response> {
   const code = context.url.searchParams.get("code");

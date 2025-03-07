@@ -1,6 +1,8 @@
 import { isAuthorized } from "@/lib/helpers";
 import { defineAction } from "astro:actions";
-import { db, Item, eq, List } from "astro:db";
+import db from "@/db";
+import { Item, List } from "@/db/schema";
+import { eq } from "drizzle-orm";
 
 export const getAllItems = defineAction({
   handler: async (_, c) => {

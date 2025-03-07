@@ -1,4 +1,7 @@
-import { Category, CategoryItem, Item, List, and, db, eq } from "astro:db";
+import { Category, CategoryItem, Item, List } from "@/db/schema";
+import db from "@/db";
+import { and, eq } from "drizzle-orm";
+
 import { idAndUserIdFilter } from "@/lib/validators.ts";
 import { ActionError, defineAction } from "astro:actions";
 import { isAuthorized } from "@/lib/helpers";

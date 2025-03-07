@@ -1,12 +1,13 @@
-import type {
-  ExpandedCategory,
-  ExpandedCategoryItem,
-  ItemSelect,
+import {
+  WeightUnit,
+  type ExpandedCategory,
+  type ExpandedCategoryItem,
+  type ItemSelect,
 } from "@/lib/types";
 import { v4 as uuid } from "uuid";
 
 const MOCK_USER_ID = "mock-user-id";
-const createdAt = () => new Date().toISOString();
+const currentTime = () => new Date().toISOString();
 
 export const initItem = (data?: Partial<ItemSelect>): ItemSelect => ({
   id: uuid(),
@@ -14,8 +15,9 @@ export const initItem = (data?: Partial<ItemSelect>): ItemSelect => ({
   name: "",
   description: "",
   weight: 0,
-  createdAt: createdAt(),
-  weightUnit: "g",
+  createdAt: currentTime(),
+  updatedAt: currentTime(),
+  weightUnit: WeightUnit.Grams,
   image: "",
   ...data,
 });
@@ -27,13 +29,14 @@ export const initCategoryItem = (
   userId: MOCK_USER_ID,
   categoryId: uuid(),
   itemData: initItem(),
-  createdAt: createdAt(),
+  createdAt: currentTime(),
+  updatedAt: currentTime(),
   quantity: 1,
   sortOrder: 1,
   itemId: uuid(),
   packed: false,
   wornWeight: false,
-  consWeight: false,
+  consumableWeight: false,
   ...data,
 });
 
@@ -45,7 +48,8 @@ export const initCategory = (
   name: "",
   sortOrder: 1,
   items: [],
-  createdAt: createdAt(),
+  createdAt: currentTime(),
+  updatedAt: currentTime(),
   listId: uuid(),
   packed: false,
   ...data,

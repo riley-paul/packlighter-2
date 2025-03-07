@@ -1,7 +1,8 @@
 import { Lucia } from "lucia";
 import { DrizzleSQLiteAdapter } from "@lucia-auth/adapter-drizzle";
 import { GitHub, Google } from "arctic";
-import { User, db, UserSession } from "astro:db";
+import db from "@/db";
+import { User } from "@/db/schema";
 
 import env from "@/envs";
 

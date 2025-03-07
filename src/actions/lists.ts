@@ -1,14 +1,7 @@
 import { z } from "zod";
-import {
-  Category,
-  CategoryItem,
-  List,
-  and,
-  db,
-  eq,
-  inArray,
-  max,
-} from "astro:db";
+import db from "@/db";
+import { List, Category, CategoryItem } from "@/db/schema";
+import { and, eq, inArray, max } from "drizzle-orm";
 import { idAndUserIdFilter } from "@/lib/validators.ts";
 import { ActionError, defineAction } from "astro:actions";
 import { getExpandedList, isAuthorized } from "@/lib/helpers";
@@ -191,9 +184,9 @@ export const duplicate = defineAction({
           .then((rows) => rows[0]);
 
         const newCategoryItems = categoryItems
-          .filter((ci) => ci.CategoryItem.categoryId === category.id)
+          .filter((ci) => ci.categoryItem.categoryId === category.id)
           .map((ci) => ({
-            ...ci.CategoryItem,
+            ...ci.categoryItem,
             id: uuid(),
             categoryId: newCategory.id,
           }));
