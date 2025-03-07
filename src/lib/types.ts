@@ -13,6 +13,13 @@ export enum WeightUnit {
   Pounds = "lb",
 }
 
+export const weightUnitArray = [
+  WeightUnit.Grams,
+  WeightUnit.Kilograms,
+  WeightUnit.Ounces,
+  WeightUnit.Pounds,
+] as const;
+
 export const weightUnits: Unit[] = [
   { symbol: WeightUnit.Grams, multiplier: 1, name: "grams" },
   { symbol: WeightUnit.Kilograms, multiplier: 1000, name: "kilograms" },
