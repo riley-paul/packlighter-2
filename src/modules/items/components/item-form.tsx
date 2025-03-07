@@ -6,16 +6,15 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { initItem } from "@/lib/init";
 import ItemImage from "@/modules/items/components/item-image";
 import { Button, IconButton, Select, Text, TextField } from "@radix-ui/themes";
-import { useAtomValue, useSetAtom } from "jotai";
-import { closeEditorAtom, editorItemAtom } from "../store";
 import useItemsMutations from "../mutations";
 
-const ItemForm: React.FC = () => {
-  const item = useAtomValue(editorItemAtom);
-  const closeEditor = useSetAtom(closeEditorAtom);
+type Props = {
+  item: ItemSelect | undefined;
+};
 
+const ItemForm: React.FC<Props> = ({ item }) => {
   const methods = useForm<ItemSelect>({
-    defaultValues: initItem(item),
+    values: initItem(item),
     resolver: zodResolver(z.custom<ItemSelect>()),
   });
 
@@ -26,7 +25,6 @@ const ItemForm: React.FC = () => {
     item
       ? updateItem.mutate({ itemId: item.id, data })
       : addItem.mutate({ data });
-    closeEditor();
   });
 
   const imageUrl = watch("image");
@@ -147,7 +145,6 @@ const ItemForm: React.FC = () => {
             type="button"
             variant="soft"
             color="gray"
-            onClick={closeEditor}
           >
             Cancel
           </Button>

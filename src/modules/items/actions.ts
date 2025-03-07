@@ -8,17 +8,36 @@ import { z } from "zod";
 
 const itemUpdateSchema = z.custom<Partial<typeof Item.$inferInsert>>();
 
+export const getOne = defineAction({
+  input: z.object({ itemId: z.string() }),
+  handler: async ({ itemId }, c) => {
+    const userId = isAuthorized(c).id;
+    const [item] = await db
+      .select()
+      .from(Item)
+      .where(idAndUserIdFilter(Item, { userId, id: itemId }));
+
+    if (!item) {
+      throw new ActionError({
+        code: "NOT_FOUND",
+        message: "Item not found",
+      });
+    }
+
+    return item;
+  },
+});
+
 export const create = defineAction({
   input: z.object({
     data: itemUpdateSchema.optional(),
   }),
   handler: async ({ data }, c) => {
     const userId = isAuthorized(c).id;
-    const newItem = await db
+    const [newItem] = await db
       .insert(Item)
       .values({ ...data, userId, id: uuid() })
-      .returning()
-      .then((rows) => rows[0]);
+      .returning();
     return newItem;
   },
 });

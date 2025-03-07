@@ -24,11 +24,10 @@ export const getOne = defineAction({
   handler: async ({ listId }, c) => {
     const userId = isAuthorized(c).id;
 
-    const list = await db
+    const [list] = await db
       .select({ id: List.id })
       .from(List)
-      .where(idAndUserIdFilter(List, { userId, id: listId }))
-      .then((rows) => rows[0]);
+      .where(idAndUserIdFilter(List, { userId, id: listId }));
 
     if (!list) {
       throw new ActionError({
