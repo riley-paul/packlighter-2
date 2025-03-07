@@ -3,7 +3,7 @@ import { DrizzleSQLiteAdapter } from "@lucia-auth/adapter-drizzle";
 import { GitHub, Google } from "arctic";
 import { User, db, UserSession } from "astro:db";
 
-import env from "@/env";
+import env from "@/envs";
 
 const {
   GITHUB_CLIENT_ID,

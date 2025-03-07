@@ -2,7 +2,7 @@ import { generateCodeVerifier, generateState } from "arctic";
 import { google } from "@/modules/users/helpers/lucia";
 
 import type { APIContext } from "astro";
-import env from "@/env";
+import env from "@/envs";
 
 export async function GET(context: APIContext): Promise<Response> {
   const state = generateState();
@@ -14,7 +14,7 @@ export async function GET(context: APIContext): Promise<Response> {
 
   context.cookies.set("google_oauth_state", state, {
     path: "/",
-    secure: env.PROD,
+    secure: env.NODE_ENV === "production",
     httpOnly: true,
     maxAge: 60 * 10, // 10 min
     sameSite: "lax",
@@ -22,7 +22,7 @@ export async function GET(context: APIContext): Promise<Response> {
 
   context.cookies.set("google_oauth_code_verifier", codeVerifier, {
     path: "/",
-    secure: env.PROD,
+    secure: env.NODE_ENV === "production",
     httpOnly: true,
     maxAge: 60 * 10, // 10 min
     sameSite: "lax",
