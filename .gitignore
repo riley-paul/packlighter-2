@@ -4,6 +4,8 @@
 
 db/data
 
+dev.db
+
 ### Node ###
 # Logs
 logs
