@@ -1,7 +1,7 @@
 import React from "react";
 
 import useMutations from "@/hooks/use-mutations";
-import { weightUnits, type ExpandedList, type WeightUnit } from "@/lib/types";
+import { type ExpandedList } from "@/lib/types";
 import { useEventListener } from "usehooks-ts";
 import { getHasModifier, getIsTyping } from "@/lib/utils";
 import {
@@ -12,6 +12,7 @@ import {
   Switch,
   Text,
 } from "@radix-ui/themes";
+import { weightUnitsInfo, type WeightUnit } from "@/db/schema";
 
 interface Props {
   list: ExpandedList;
@@ -116,7 +117,7 @@ const ListSettings: React.FC<Props> = (props) => {
             });
           }}
         >
-          {Object.values(weightUnits).map(({ symbol, name }) => (
+          {Object.values(weightUnitsInfo).map(({ symbol, name }) => (
             <SegmentedControl.Item
               value={symbol}
               key={symbol}

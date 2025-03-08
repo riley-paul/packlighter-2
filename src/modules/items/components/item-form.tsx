@@ -1,4 +1,4 @@
-import { weightUnits, type ItemSelect } from "@/lib/types";
+import { type ItemSelect } from "@/lib/types";
 import React from "react";
 import { Controller, FormProvider, useForm } from "react-hook-form";
 import { z } from "zod";
@@ -9,6 +9,7 @@ import { Button, IconButton, Select, Text, TextField } from "@radix-ui/themes";
 import { useAtomValue, useSetAtom } from "jotai";
 import { closeEditorAtom, editorItemAtom } from "../store";
 import useItemsMutations from "../mutations";
+import { weightUnitsInfo } from "@/db/schema";
 
 const ItemForm: React.FC = () => {
   const item = useAtomValue(editorItemAtom);
@@ -90,7 +91,7 @@ const ItemForm: React.FC = () => {
                       >
                         <Select.Trigger variant="ghost" placeholder="Unit" />
                         <Select.Content>
-                          {weightUnits.map(({ symbol, name }) => (
+                          {weightUnitsInfo.map(({ symbol, name }) => (
                             <Select.Item key={symbol} value={symbol}>
                               {name}
                             </Select.Item>

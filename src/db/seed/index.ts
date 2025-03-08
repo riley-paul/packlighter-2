@@ -1,11 +1,17 @@
-import { Category, CategoryItem, Item, List, User } from "../schema";
+import {
+  Category,
+  CategoryItem,
+  Item,
+  List,
+  User,
+  weightUnits,
+} from "../schema";
 import { randomItemFromArray, randomNumberWithinRange } from "./utils";
 import { categoryNames } from "./category-names";
 import { itemNamesDescs } from "./item-names-descs";
 import { listNamesDescs } from "./list-names-descs";
 import { imageLinks } from "./image-links";
 
-import { weightUnits } from "@/lib/types";
 import db from "@/db";
 
 export default async function seed() {

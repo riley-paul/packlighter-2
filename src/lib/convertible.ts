@@ -1,4 +1,4 @@
-import { weightUnits, type Unit } from "@/lib/types";
+import { weightUnitsInfo, type Unit } from "@/db/schema";
 
 class Convertible {
   units: Unit[] = [];
@@ -19,4 +19,4 @@ class Convertible {
   }
 }
 
-export const WeightConvertible = new Convertible(weightUnits);
+export const WeightConvertible = new Convertible(weightUnitsInfo);

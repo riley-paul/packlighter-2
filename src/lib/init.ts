@@ -1,5 +1,4 @@
 import {
-  WeightUnit,
   type ExpandedCategory,
   type ExpandedCategoryItem,
   type ItemSelect,
@@ -17,7 +16,7 @@ export const initItem = (data?: Partial<ItemSelect>): ItemSelect => ({
   weight: 0,
   createdAt: currentTime(),
   updatedAt: currentTime(),
-  weightUnit: WeightUnit.Grams,
+  weightUnit: "g",
   image: "",
   ...data,
 });

@@ -10,7 +10,20 @@ const userId = text()
   .notNull()
   .references(() => User.id, { onDelete: "cascade" });
 
-const weightUnitArray = ["g", "kg", "oz", "lb"] as const;
+export type Unit = {
+  symbol: string;
+  multiplier: number;
+  name: string;
+};
+
+export const weightUnits = ["g", "kg", "oz", "lb"] as const;
+export type WeightUnit = (typeof weightUnits)[number];
+export const weightUnitsInfo: Unit[] = [
+  { symbol: "g", multiplier: 1, name: "grams" },
+  { symbol: "kg", multiplier: 1000, name: "kilograms" },
+  { symbol: "oz", multiplier: 28.3495, name: "ounces" },
+  { symbol: "lb", multiplier: 453.592, name: "pounds" },
+];
 
 const timeStamps = {
   createdAt: text()
@@ -51,7 +64,7 @@ export const Item = sqliteTable("item", {
   name: text().notNull().default(""),
   description: text().notNull().default(""),
   weight: integer().notNull().default(0),
-  weightUnit: text({ enum: weightUnitArray }).notNull().default("g"),
+  weightUnit: text({ enum: weightUnits }).notNull().default("g"),
   image: text(),
   ...timeStamps,
 });
@@ -72,7 +85,7 @@ export const List = sqliteTable("list", {
   showWeights: integer({ mode: "boolean" }).notNull().default(false),
 
   sortOrder: integer().notNull().default(0),
-  weightUnit: text({ enum: weightUnitArray }).notNull().default("g"),
+  weightUnit: text({ enum: weightUnits }).notNull().default("g"),
   isPublic: integer({ mode: "boolean" }).notNull().default(false),
   ...timeStamps,
 });
