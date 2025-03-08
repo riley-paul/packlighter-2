@@ -113,7 +113,7 @@ export const copyToList = defineAction({
 export const create = defineAction({
   input: z.object({
     listId: z.string(),
-    data: zCategoryInsert.optional(),
+    data: zCategoryInsert.partial().optional(),
   }),
   handler: async ({ listId, data }, c) => {
     const userId = isAuthorized(c).id;
@@ -174,7 +174,7 @@ export const remove = defineAction({
 export const update = defineAction({
   input: z.object({
     categoryId: z.string(),
-    data: zCategoryInsert,
+    data: zCategoryInsert.partial(),
   }),
   handler: async ({ categoryId, data }, c) => {
     const userId = isAuthorized(c).id;

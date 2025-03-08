@@ -1,5 +1,6 @@
 import { integer, sqliteTable, text } from "drizzle-orm/sqlite-core";
 import { createInsertSchema, createSelectSchema } from "drizzle-zod";
+import type { z } from "zod";
 
 const id = text("id")
   .primaryKey()
@@ -34,6 +35,8 @@ export const User = sqliteTable("user", {
 });
 export const zUserSelect = createSelectSchema(User);
 export const zUserInsert = createInsertSchema(User);
+export type UserSelect = z.infer<typeof zUserSelect>;
+export type UserInsert = z.infer<typeof zUserInsert>;
 
 export const UserSession = sqliteTable("userSession", {
   id,
@@ -54,6 +57,8 @@ export const Item = sqliteTable("item", {
 });
 export const zItemSelect = createSelectSchema(Item);
 export const zItemInsert = createInsertSchema(Item);
+export type ItemSelect = z.infer<typeof zItemSelect>;
+export type ItemInsert = z.infer<typeof zItemInsert>;
 
 export const List = sqliteTable("list", {
   id,
@@ -73,6 +78,8 @@ export const List = sqliteTable("list", {
 });
 export const zListSelect = createSelectSchema(List);
 export const zListInsert = createInsertSchema(List);
+export type ListSelect = z.infer<typeof zListSelect>;
+export type ListInsert = z.infer<typeof zListInsert>;
 
 export const Category = sqliteTable("category", {
   id,
@@ -86,6 +93,8 @@ export const Category = sqliteTable("category", {
 });
 export const zCategorySelect = createSelectSchema(Category);
 export const zCategoryInsert = createInsertSchema(Category);
+export type CategorySelect = z.infer<typeof zCategorySelect>;
+export type CategoryInsert = z.infer<typeof zCategoryInsert>;
 
 export const CategoryItem = sqliteTable("categoryItem", {
   id,
@@ -107,6 +116,8 @@ export const CategoryItem = sqliteTable("categoryItem", {
 });
 export const zCategoryItemSelect = createSelectSchema(CategoryItem);
 export const zCategoryItemInsert = createInsertSchema(CategoryItem);
+export type CategoryItemSelect = z.infer<typeof zCategoryItemSelect>;
+export type CategoryItemInsert = z.infer<typeof zCategoryItemInsert>;
 
 export const AppFeedback = sqliteTable("appFeedback", {
   id,
@@ -116,3 +127,5 @@ export const AppFeedback = sqliteTable("appFeedback", {
 });
 export const zAppFeedbackSelect = createSelectSchema(AppFeedback);
 export const zAppFeedbackInsert = createInsertSchema(AppFeedback);
+export type AppFeedbackSelect = z.infer<typeof zAppFeedbackSelect>;
+export type AppFeedbackInsert = z.infer<typeof zAppFeedbackInsert>;

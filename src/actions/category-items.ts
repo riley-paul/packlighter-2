@@ -82,10 +82,10 @@ export const create = defineAction({
 export const createAndAddToCategory = defineAction({
   input: z.object({
     categoryId: z.string(),
-    itemData: zItemInsert.optional(),
-    data: zCategoryItemInsert.optional(),
+    itemData: zItemInsert.partial().optional(),
+    categoryItemData: zCategoryItemInsert.partial().optional(),
   }),
-  handler: async ({ categoryId, itemData, data }, c) => {
+  handler: async ({ categoryId, itemData, categoryItemData }, c) => {
     const userId = isAuthorized(c).id;
 
     const newItem = await db
@@ -107,7 +107,7 @@ export const createAndAddToCategory = defineAction({
         sortOrder: maxSortOrder ?? 1,
         categoryId,
         itemId: newItem.id,
-        ...data,
+        ...categoryItemData,
         userId,
       })
       .returning()
@@ -136,7 +136,7 @@ export const reorder = defineAction({
 export const update = defineAction({
   input: z.object({
     categoryItemId: z.string(),
-    data: zCategoryItemInsert,
+    data: zCategoryItemInsert.partial(),
   }),
   handler: async ({ categoryItemId, data }, c) => {
     const userId = isAuthorized(c).id;

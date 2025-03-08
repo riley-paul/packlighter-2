@@ -90,7 +90,7 @@ export const reorder = defineAction({
 export const update = defineAction({
   input: z.object({
     listId: z.string(),
-    data: zListInsert,
+    data: zListInsert.partial(),
   }),
   handler: async ({ listId, data }, c) => {
     const userId = isAuthorized(c).id;

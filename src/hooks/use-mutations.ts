@@ -137,7 +137,7 @@ export default function useMutations() {
 
   const addCategoryItem = useMutation({
     mutationFn: actions.categoryItems.createAndAddToCategory.orThrow,
-    onMutate: async ({ categoryId, itemData, data }) => {
+    onMutate: async ({ categoryId, itemData, categoryItemData }) => {
       const { queryKey } = listQueryOptions(listId);
       return optimisticUpdate<ExpandedList>(queryKey, (prev) =>
         produce(prev, (draft) => {
@@ -150,7 +150,7 @@ export default function useMutations() {
           const categoryItem = initCategoryItem({
             itemData: item,
             categoryId,
-            ...data,
+            ...categoryItemData,
           });
           draft.categories[categoryIdx].items.push(categoryItem);
         }),
@@ -173,7 +173,7 @@ export default function useMutations() {
     mutationFn: (props: {
       itemId: string;
       categoryId: string;
-      data?: Partial<ExpandedCategoryItem>;
+      categoryItemData?: Partial<ExpandedCategoryItem>;
       categoryItems: ExpandedCategoryItem[];
     }) =>
       actions.categoryItems.create.orThrow({

@@ -19,7 +19,7 @@ export const getAll = defineAction({
 
 export const create = defineAction({
   input: z.object({
-    data: zItemInsert.optional(),
+    data: zItemInsert.partial().optional(),
   }),
   handler: async ({ data }, c) => {
     const userId = isAuthorized(c).id;
@@ -74,7 +74,7 @@ export const remove = defineAction({
 export const update = defineAction({
   input: z.object({
     itemId: z.string(),
-    data: zItemInsert,
+    data: zItemInsert.partial(),
   }),
   handler: async ({ itemId, data }, c) => {
     const userId = isAuthorized(c).id;
