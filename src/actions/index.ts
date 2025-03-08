@@ -1,10 +1,9 @@
-import * as items from "@/modules/items/actions";
+import * as items from "./items";
 import * as lists from "./lists";
 import * as categories from "./categories";
 import * as categoryItems from "./category-items";
-import * as users from "@/modules/users/actions";
-import * as feedback from "@/modules/feedback/actions";
-import * as sidebar from "@/modules/sidebar/actions";
+import * as users from "./users";
+import * as feedback from "./feedback";
 
 export const server = {
   items,
@@ -13,5 +12,4 @@ export const server = {
   categoryItems,
   users,
   feedback,
-  sidebar,
 };

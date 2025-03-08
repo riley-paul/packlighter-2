@@ -3,10 +3,10 @@ import { actions } from "astro:actions";
 
 export const itemsQueryOptions = queryOptions({
   queryKey: ["items"],
-  queryFn: actions.sidebar.getAllItems.orThrow,
+  queryFn: actions.items.getAll.orThrow,
 });
 
 export const listsQueryOptions = queryOptions({
   queryKey: ["lists"],
-  queryFn: () => actions.sidebar.getAllLists.orThrow(),
+  queryFn: () => actions.lists.getAll.orThrow(),
 });

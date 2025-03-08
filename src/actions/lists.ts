@@ -10,6 +10,18 @@ import { v4 as uuid } from "uuid";
 
 const listUpdateSchema = z.custom<Partial<typeof List.$inferInsert>>();
 
+export const getAll = defineAction({
+  handler: async (_, c) => {
+    const userId = isAuthorized(c).id;
+    const lists = await db
+      .select()
+      .from(List)
+      .where(eq(List.userId, userId))
+      .orderBy(List.sortOrder);
+    return lists;
+  },
+});
+
 export const getOne = defineAction({
   input: z.object({
     listId: z.string(),
