@@ -1,4 +1,4 @@
-import { Category, CategoryItem, Item, List } from "@/db/schema";
+import { Category, CategoryItem, Item, List, zItemInsert } from "@/db/schema";
 import db from "@/db";
 import { and, eq } from "drizzle-orm";
 
@@ -8,8 +8,6 @@ import { isAuthorized } from "@/lib/helpers";
 
 import { v4 as uuid } from "uuid";
 import { z } from "zod";
-
-const itemUpdateSchema = z.custom<Partial<typeof Item.$inferInsert>>();
 
 export const getAll = defineAction({
   handler: async (_, c) => {
@@ -21,7 +19,7 @@ export const getAll = defineAction({
 
 export const create = defineAction({
   input: z.object({
-    data: itemUpdateSchema.optional(),
+    data: zItemInsert.optional(),
   }),
   handler: async ({ data }, c) => {
     const userId = isAuthorized(c).id;
@@ -76,7 +74,7 @@ export const remove = defineAction({
 export const update = defineAction({
   input: z.object({
     itemId: z.string(),
-    data: itemUpdateSchema,
+    data: zItemInsert,
   }),
   handler: async ({ itemId, data }, c) => {
     const userId = isAuthorized(c).id;

@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { Category, CategoryItem, List } from "@/db/schema";
+import { Category, CategoryItem, List, zCategoryInsert } from "@/db/schema";
 import { eq, max, and, ne, desc, notInArray } from "drizzle-orm";
 import db from "@/db";
 import { idAndUserIdFilter } from "@/lib/validators.ts";
@@ -7,8 +7,6 @@ import { ActionError, defineAction } from "astro:actions";
 import { isAuthorized } from "@/lib/helpers";
 
 import { v4 as uuid } from "uuid";
-
-const categoryUpdateSchema = z.custom<Partial<typeof Category.$inferInsert>>();
 
 export const getFromOtherLists = defineAction({
   input: z.object({ listId: z.string() }),
@@ -115,7 +113,7 @@ export const copyToList = defineAction({
 export const create = defineAction({
   input: z.object({
     listId: z.string(),
-    data: categoryUpdateSchema.optional(),
+    data: zCategoryInsert.optional(),
   }),
   handler: async ({ listId, data }, c) => {
     const userId = isAuthorized(c).id;
@@ -176,7 +174,7 @@ export const remove = defineAction({
 export const update = defineAction({
   input: z.object({
     categoryId: z.string(),
-    data: categoryUpdateSchema,
+    data: zCategoryInsert,
   }),
   handler: async ({ categoryId, data }, c) => {
     const userId = isAuthorized(c).id;

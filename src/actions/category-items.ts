@@ -3,20 +3,22 @@ import { idAndUserIdFilter } from "@/lib/validators.ts";
 import { ActionError, defineAction } from "astro:actions";
 import { getListItemIds, isAuthorized } from "@/lib/helpers";
 import db from "@/db";
-import { CategoryItem, Item, Category } from "@/db/schema";
+import {
+  CategoryItem,
+  Item,
+  Category,
+  zItemInsert,
+  zCategoryItemInsert,
+} from "@/db/schema";
 import { and, eq, max } from "drizzle-orm";
 import { v4 as uuid } from "uuid";
-
-const categoryItemUpdateSchema =
-  z.custom<Partial<typeof CategoryItem.$inferInsert>>();
-const itemUpdateSchema = z.custom<Partial<typeof Item.$inferInsert>>();
 
 export const create = defineAction({
   input: z.object({
     itemId: z.string(),
     categoryId: z.string(),
     reorderIds: z.array(z.string()).optional(),
-    data: categoryItemUpdateSchema.optional(),
+    data: zCategoryItemInsert.optional(),
   }),
   handler: async ({ itemId, categoryId, reorderIds, data }, c) => {
     const userId = isAuthorized(c).id;
@@ -80,8 +82,8 @@ export const create = defineAction({
 export const createAndAddToCategory = defineAction({
   input: z.object({
     categoryId: z.string(),
-    itemData: itemUpdateSchema.optional(),
-    data: categoryItemUpdateSchema.optional(),
+    itemData: zItemInsert.optional(),
+    data: zCategoryItemInsert.optional(),
   }),
   handler: async ({ categoryId, itemData, data }, c) => {
     const userId = isAuthorized(c).id;
@@ -134,7 +136,7 @@ export const reorder = defineAction({
 export const update = defineAction({
   input: z.object({
     categoryItemId: z.string(),
-    data: categoryItemUpdateSchema,
+    data: zCategoryItemInsert,
   }),
   handler: async ({ categoryItemId, data }, c) => {
     const userId = isAuthorized(c).id;

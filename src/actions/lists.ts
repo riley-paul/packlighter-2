@@ -1,14 +1,12 @@
 import { z } from "zod";
 import db from "@/db";
-import { List, Category, CategoryItem } from "@/db/schema";
+import { List, Category, CategoryItem, zListInsert } from "@/db/schema";
 import { and, eq, inArray, max } from "drizzle-orm";
 import { idAndUserIdFilter } from "@/lib/validators.ts";
 import { ActionError, defineAction } from "astro:actions";
 import { getExpandedList, isAuthorized } from "@/lib/helpers";
 
 import { v4 as uuid } from "uuid";
-
-const listUpdateSchema = z.custom<Partial<typeof List.$inferInsert>>();
 
 export const getAll = defineAction({
   handler: async (_, c) => {
@@ -48,7 +46,7 @@ export const getOne = defineAction({
 
 export const create = defineAction({
   input: z.object({
-    data: listUpdateSchema.optional(),
+    data: zListInsert.optional(),
   }),
   handler: async ({ data }, c) => {
     const userId = isAuthorized(c).id;
@@ -92,7 +90,7 @@ export const reorder = defineAction({
 export const update = defineAction({
   input: z.object({
     listId: z.string(),
-    data: listUpdateSchema,
+    data: zListInsert,
   }),
   handler: async ({ listId, data }, c) => {
     const userId = isAuthorized(c).id;
