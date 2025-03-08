@@ -40,9 +40,9 @@ const ListIncludesSubmenu: React.FC<Props> = ({ item }) => {
   return (
     <>
       {data.map((list) => (
-        <Link {...listLinkOptions(list.listId)}>
+        <Link key={list.listId} {...listLinkOptions(list.listId)}>
           {({ isActive }) => (
-            <DropdownMenu.Item key={list.listId} disabled={isActive}>
+            <DropdownMenu.Item disabled={isActive}>
               {list.listName} / {list.categoryName}
               <i className="fas fa-arrow-right ml-auto pl-2 opacity-70" />
             </DropdownMenu.Item>
