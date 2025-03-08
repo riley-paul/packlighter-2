@@ -7,7 +7,7 @@ import {
 } from "@/lib/queries";
 import { actions } from "astro:actions";
 import useCurrentList from "@/hooks/use-current-list";
-import type { ExpandedList } from "@/lib/types";
+import type { ExpandedList } from "@/db/schema";
 
 export default function useItemsMutations() {
   const { listId } = useCurrentList();

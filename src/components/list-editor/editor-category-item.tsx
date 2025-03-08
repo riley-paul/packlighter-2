@@ -1,7 +1,6 @@
 import React from "react";
 import { centerDragPreviewOnMouse, cn } from "@/lib/utils";
 
-import type { ExpandedCategoryItem } from "@/lib/types";
 import useDraggableState from "@/hooks/use-draggable-state";
 import {
   attachClosestEdge,
@@ -25,6 +24,7 @@ import Gripper from "../base/gripper";
 import { Portal, Separator } from "@radix-ui/themes";
 import RadixProvider from "../base/radix-provider";
 import DropIndicatorWrapper from "../ui/drop-indicator-wrapper";
+import type { ExpandedCategoryItem } from "@/db/schema";
 
 interface Props {
   row: Row<ExpandedCategoryItem>;

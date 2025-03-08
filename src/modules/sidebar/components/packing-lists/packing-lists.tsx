@@ -8,7 +8,6 @@ import useMutations from "@/hooks/use-mutations";
 import ArrayQueryGuard from "@/components/base/array-query-guard";
 
 import { monitorForElements } from "@atlaskit/pragmatic-drag-and-drop/element/adapter";
-import type { ListSelect } from "@/lib/types";
 import { extractClosestEdge } from "@atlaskit/pragmatic-drag-and-drop-hitbox/closest-edge";
 import { reorderWithEdge } from "@atlaskit/pragmatic-drag-and-drop-hitbox/util/reorder-with-edge";
 import { flushSync } from "react-dom";
@@ -19,6 +18,7 @@ import useScrollShadow from "@/hooks/use-scroll-shadow";
 import { useVirtualizer } from "@tanstack/react-virtual";
 import useCurrentList from "@/hooks/use-current-list";
 import { ScrollArea } from "@radix-ui/themes";
+import type { ListSelect } from "@/db/schema";
 
 export default function PackingLists(): ReturnType<React.FC> {
   const listsQuery = useQuery(listsQueryOptions);

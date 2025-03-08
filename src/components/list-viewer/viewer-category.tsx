@@ -1,7 +1,6 @@
 import React from "react";
 
 import { cn } from "@/lib/utils";
-import type { ExpandedCategory, ListSelect } from "@/lib/types";
 import {
   flexRender,
   getCoreRowModel,
@@ -11,6 +10,7 @@ import useListTableState from "../../hooks/use-list-table-state";
 import useViewerColumns from "./use-viewer-columns";
 import Placeholder from "../base/placeholder";
 import { Separator } from "@radix-ui/themes";
+import type { ExpandedCategory, ListSelect } from "@/db/schema";
 
 interface Props {
   category: ExpandedCategory;
@@ -43,10 +43,10 @@ const ViewerCategory: React.FC<Props> = (props) => {
       data-category-id={category.id}
       className={cn("relative flex w-full flex-col")}
     >
-      <header className="text-2 font-bold text-gray-11 w-full border-b">
+      <header className="w-full border-b text-2 font-bold text-gray-11">
         {table.getHeaderGroups().map((headerGroup) => (
           <div
-            className="hover:bg-gray-2 flex h-10 min-h-12 w-full items-center gap-3 px-3 transition-colors"
+            className="flex h-10 min-h-12 w-full items-center gap-3 px-3 transition-colors hover:bg-gray-2"
             key={headerGroup.id}
           >
             {headerGroup.headers.map((header) => (
@@ -69,7 +69,7 @@ const ViewerCategory: React.FC<Props> = (props) => {
               ref={ref}
               data-category-item-id={row.original.id}
               className={cn(
-                "text-2 hover:bg-gray-2 relative flex h-fit min-h-10 items-center gap-3 px-3 py-1 transition-colors",
+                "relative flex h-fit min-h-10 items-center gap-3 px-3 py-1 text-2 transition-colors hover:bg-gray-2",
               )}
             >
               {row.getVisibleCells().map((cell) => (

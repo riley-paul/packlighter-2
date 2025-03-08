@@ -1,9 +1,9 @@
 import useMutations from "@/hooks/use-mutations";
-import type { ListSelect } from "@/lib/types";
 import { cn } from "@/lib/utils";
 import { Button, Heading } from "@radix-ui/themes";
 import React from "react";
 import ConditionalForm from "./base/conditional-form";
+import type { ListSelect } from "@/db/schema";
 
 const PLACEHOLDER = "Unnamed List";
 

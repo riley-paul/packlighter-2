@@ -1,6 +1,5 @@
 import React from "react";
 
-import type { ItemSelect } from "@/lib/types";
 import useCurrentList from "@/hooks/use-current-list";
 import {
   filterOptionsAtom,
@@ -9,6 +8,7 @@ import {
 } from "@/modules/sidebar/store";
 import { FilterOptions, SortOptions } from "@/modules/sidebar/types";
 import { useAtomValue } from "jotai";
+import type { ItemSelect } from "@/db/schema";
 
 type FilteringFn = (item: ItemSelect) => boolean;
 type SortingFn = (a: ItemSelect, b: ItemSelect) => number;

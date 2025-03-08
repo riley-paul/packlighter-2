@@ -142,3 +142,16 @@ export const zAppFeedbackSelect = createSelectSchema(AppFeedback);
 export const zAppFeedbackInsert = createInsertSchema(AppFeedback);
 export type AppFeedbackSelect = z.infer<typeof zAppFeedbackSelect>;
 export type AppFeedbackInsert = z.infer<typeof zAppFeedbackInsert>;
+
+export type ExpandedCategoryItem = CategoryItemSelect & {
+  itemData: ItemSelect;
+};
+
+export type ExpandedCategory = CategorySelect & {
+  items: ExpandedCategoryItem[];
+  packed: boolean;
+};
+
+export type ExpandedList = ListSelect & {
+  categories: ExpandedCategory[];
+};

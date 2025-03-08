@@ -1,7 +1,6 @@
 import React from "react";
 
 import useMutations from "@/hooks/use-mutations";
-import { type ExpandedList } from "@/lib/types";
 import { useEventListener } from "usehooks-ts";
 import { getHasModifier, getIsTyping } from "@/lib/utils";
 import {
@@ -12,7 +11,11 @@ import {
   Switch,
   Text,
 } from "@radix-ui/themes";
-import { weightUnitsInfo, type WeightUnit } from "@/db/schema";
+import {
+  weightUnitsInfo,
+  type ExpandedList,
+  type WeightUnit,
+} from "@/db/schema";
 
 interface Props {
   list: ExpandedList;

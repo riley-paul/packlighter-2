@@ -1,4 +1,3 @@
-import { type ExpandedCategory, type ExpandedCategoryItem } from "@/lib/types";
 import { createColumnHelper } from "@tanstack/react-table";
 import ServerInput from "../ui/server-input";
 import useMutations from "@/hooks/use-mutations";
@@ -21,7 +20,12 @@ import {
 import ConditionalForm from "../base/conditional-form";
 import { z } from "zod";
 import useItemsMutations from "@/modules/items/mutations";
-import { weightUnitsInfo, type WeightUnit } from "@/db/schema";
+import {
+  weightUnitsInfo,
+  type ExpandedCategory,
+  type ExpandedCategoryItem,
+  type WeightUnit,
+} from "@/db/schema";
 
 const columnHelper = createColumnHelper<ExpandedCategoryItem>();
 

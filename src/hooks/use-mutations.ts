@@ -3,12 +3,6 @@ import {
   listQueryOptions,
   otherListCategoriesQueryOptions,
 } from "@/lib/queries";
-import {
-  type ExpandedList,
-  type ExpandedCategory,
-  type ExpandedCategoryItem,
-  type ListSelect,
-} from "@/lib/types";
 import { produce } from "immer";
 import { initCategory, initCategoryItem, initItem } from "@/lib/init";
 import { actions } from "astro:actions";
@@ -20,6 +14,12 @@ import {
   itemsQueryOptions,
   listsQueryOptions,
 } from "@/modules/sidebar/queries";
+import type {
+  ExpandedCategory,
+  ExpandedCategoryItem,
+  ExpandedList,
+  ListSelect,
+} from "@/db/schema";
 
 export default function useMutations() {
   const { listId } = useCurrentList();

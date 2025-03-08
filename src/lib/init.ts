@@ -1,8 +1,8 @@
-import {
-  type ExpandedCategory,
-  type ExpandedCategoryItem,
-  type ItemSelect,
-} from "@/lib/types";
+import type {
+  ExpandedCategory,
+  ExpandedCategoryItem,
+  ItemSelect,
+} from "@/db/schema";
 import { v4 as uuid } from "uuid";
 
 const MOCK_USER_ID = "mock-user-id";

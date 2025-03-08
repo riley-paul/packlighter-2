@@ -1,4 +1,4 @@
-import type { ItemSelect } from "@/lib/types";
+import type { ItemSelect } from "@/db/schema";
 import { atom } from "jotai";
 
 export const editorItemAtom = atom<ItemSelect | undefined>(undefined);

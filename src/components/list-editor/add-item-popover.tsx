@@ -12,13 +12,13 @@ import {
 import { useQuery } from "@tanstack/react-query";
 import { CommandLoading } from "cmdk";
 import useMutations from "@/hooks/use-mutations";
-import type { ExpandedCategory } from "@/lib/types";
 import { initCategoryItem } from "@/lib/init";
 import useCurrentList from "@/hooks/use-current-list";
 import { usePackingItemsSortFilter } from "../../modules/sidebar/components/packing-items-sort-filter/use-packing-item-sort-filter";
 import { v4 as uuidv4 } from "uuid";
 import { Button, Popover, Spinner } from "@radix-ui/themes";
 import { itemsQueryOptions } from "@/modules/sidebar/queries";
+import type { ExpandedCategory } from "@/db/schema";
 
 type Props = {
   category: ExpandedCategory;

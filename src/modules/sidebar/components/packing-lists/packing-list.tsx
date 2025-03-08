@@ -15,7 +15,6 @@ import {
 
 import Gripper from "@/components/base/gripper";
 import useMutations from "@/hooks/use-mutations";
-import type { ListSelect } from "@/lib/types";
 import useDraggableState from "@/hooks/use-draggable-state";
 import {
   DND_ENTITY_TYPE,
@@ -32,6 +31,7 @@ import DropIndicatorWrapper from "../../../../components/ui/drop-indicator-wrapp
 import ConditionalForm from "../../../../components/base/conditional-form";
 import { listLinkOptions } from "@/lib/links";
 import { Link } from "@tanstack/react-router";
+import type { ListSelect } from "@/db/schema";
 
 interface Props {
   list: ListSelect;

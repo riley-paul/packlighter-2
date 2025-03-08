@@ -1,4 +1,3 @@
-import type { ListSelect } from "@/lib/types";
 import React from "react";
 
 import useMutations from "@/hooks/use-mutations";
@@ -15,6 +14,7 @@ import {
   TextField,
   Tooltip,
 } from "@radix-ui/themes";
+import type { ListSelect } from "@/db/schema";
 
 type Props = {
   list: ListSelect;

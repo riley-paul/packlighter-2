@@ -1,10 +1,4 @@
-import type {
-  ExpandedCategory,
-  ExpandedCategoryItem,
-  ItemSelect,
-} from "@/lib/types";
 import React from "react";
-
 import { monitorForElements } from "@atlaskit/pragmatic-drag-and-drop/element/adapter";
 import { DndEntityType, isDndEntityType } from "@/lib/constants";
 import { extractClosestEdge } from "@atlaskit/pragmatic-drag-and-drop-hitbox/closest-edge";
@@ -16,6 +10,11 @@ import { initCategoryItem } from "@/lib/init";
 import EditorCategory from "./editor-category";
 import AddCategoryPopover from "./add-category-popover";
 import { triggerElementFlash } from "@/lib/utils";
+import type {
+  ExpandedCategory,
+  ExpandedCategoryItem,
+  ItemSelect,
+} from "@/db/schema";
 
 type Props = {
   categories: ExpandedCategory[];

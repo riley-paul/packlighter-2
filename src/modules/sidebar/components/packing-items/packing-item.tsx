@@ -2,7 +2,6 @@ import React from "react";
 import { centerDragPreviewOnMouse, cn } from "@/lib/utils";
 import { formatWeight } from "@/lib/utils";
 import Gripper from "@/components/base/gripper";
-import type { ItemSelect } from "@/lib/types";
 import invariant from "tiny-invariant";
 
 import { draggable } from "@atlaskit/pragmatic-drag-and-drop/element/adapter";
@@ -14,6 +13,7 @@ import { DND_ENTITY_TYPE, DndEntityType } from "@/lib/constants";
 import { Portal, Text } from "@radix-ui/themes";
 import RadixProvider from "@/components/base/radix-provider";
 import PackingItemMenu from "./packing-item-menu";
+import type { ItemSelect } from "@/db/schema";
 
 interface Props {
   item: ItemSelect;

@@ -1,11 +1,11 @@
 import React from "react";
 
 import { cn } from "@/lib/utils";
-import type { ItemSelect } from "@/lib/types";
 import ItemImage from "./item-image";
 import ResponsiveModal from "@/components/base/responsive-modal";
 import { Button, Heading, Text, TextField } from "@radix-ui/themes";
 import useItemsMutations from "../mutations";
+import type { ItemSelect } from "@/db/schema";
 
 interface Props {
   item: ItemSelect;

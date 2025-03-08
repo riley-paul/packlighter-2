@@ -1,7 +1,14 @@
-import type { ExpandedCategory, ExpandedList } from "@/lib/types";
 import type { ActionAPIContext } from "astro/actions/runtime/utils.js";
 import { ActionError } from "astro:actions";
-import { Category, CategoryItem, Item, List, User } from "@/db/schema";
+import {
+  Category,
+  CategoryItem,
+  Item,
+  List,
+  User,
+  type ExpandedCategory,
+  type ExpandedList,
+} from "@/db/schema";
 import db from "@/db";
 import { eq, sql, inArray } from "drizzle-orm";
 
