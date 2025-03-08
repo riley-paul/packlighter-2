@@ -49,12 +49,8 @@
           "name": "appFeedback_userId_user_id_fk",
           "tableFrom": "appFeedback",
           "tableTo": "user",
-          "columnsFrom": [
-            "userId"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["userId"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
@@ -124,12 +120,8 @@
           "name": "category_userId_user_id_fk",
           "tableFrom": "category",
           "tableTo": "user",
-          "columnsFrom": [
-            "userId"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["userId"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         },
@@ -137,12 +129,8 @@
           "name": "category_listId_list_id_fk",
           "tableFrom": "category",
           "tableTo": "list",
-          "columnsFrom": [
-            "listId"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["listId"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
@@ -214,8 +202,8 @@
           "autoincrement": false,
           "default": false
         },
-        "consumableWeight": {
-          "name": "consumableWeight",
+        "consWeight": {
+          "name": "consWeight",
           "type": "integer",
           "primaryKey": false,
           "notNull": true,
@@ -243,12 +231,8 @@
           "name": "categoryItem_userId_user_id_fk",
           "tableFrom": "categoryItem",
           "tableTo": "user",
-          "columnsFrom": [
-            "userId"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["userId"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         },
@@ -256,12 +240,8 @@
           "name": "categoryItem_categoryId_category_id_fk",
           "tableFrom": "categoryItem",
           "tableTo": "category",
-          "columnsFrom": [
-            "categoryId"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["categoryId"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         },
@@ -269,12 +249,8 @@
           "name": "categoryItem_itemId_item_id_fk",
           "tableFrom": "categoryItem",
           "tableTo": "item",
-          "columnsFrom": [
-            "itemId"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["itemId"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
@@ -360,12 +336,8 @@
           "name": "item_userId_user_id_fk",
           "tableFrom": "item",
           "tableTo": "user",
-          "columnsFrom": [
-            "userId"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["userId"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
@@ -484,12 +456,8 @@
           "name": "list_userId_user_id_fk",
           "tableFrom": "list",
           "tableTo": "user",
-          "columnsFrom": [
-            "userId"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["userId"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
@@ -568,30 +536,22 @@
       "indexes": {
         "user_email_unique": {
           "name": "user_email_unique",
-          "columns": [
-            "email"
-          ],
+          "columns": ["email"],
           "isUnique": true
         },
         "user_googleId_unique": {
           "name": "user_googleId_unique",
-          "columns": [
-            "googleId"
-          ],
+          "columns": ["googleId"],
           "isUnique": true
         },
         "user_githubId_unique": {
           "name": "user_githubId_unique",
-          "columns": [
-            "githubId"
-          ],
+          "columns": ["githubId"],
           "isUnique": true
         },
         "user_githubUsername_unique": {
           "name": "user_githubUsername_unique",
-          "columns": [
-            "githubUsername"
-          ],
+          "columns": ["githubUsername"],
           "isUnique": true
         }
       },
@@ -645,12 +605,8 @@
           "name": "userSession_userId_user_id_fk",
           "tableFrom": "userSession",
           "tableTo": "user",
-          "columnsFrom": [
-            "userId"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["userId"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }

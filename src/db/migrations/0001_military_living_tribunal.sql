@@ -28,7 +28,7 @@ CREATE TABLE `categoryItem` (
 	`quantity` integer DEFAULT 1 NOT NULL,
 	`packed` integer DEFAULT false NOT NULL,
 	`wornWeight` integer DEFAULT false NOT NULL,
-	`consumableWeight` integer DEFAULT false NOT NULL,
+	`consWeight` integer DEFAULT false NOT NULL,
 	`createdAt` text,
 	`updatedAt` text,
 	FOREIGN KEY (`userId`) REFERENCES `user`(`id`) ON UPDATE no action ON DELETE cascade,

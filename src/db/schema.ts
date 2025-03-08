@@ -30,7 +30,7 @@ const timeStamps = {
     .notNull()
     .$defaultFn(() => new Date().toISOString()),
   updatedAt: text()
-    .notNull()
+    // .notNull()
     .$defaultFn(() => new Date().toISOString())
     .$onUpdateFn(() => new Date().toISOString()),
 };
@@ -124,7 +124,7 @@ export const CategoryItem = sqliteTable("categoryItem", {
 
   packed: integer({ mode: "boolean" }).notNull().default(false),
   wornWeight: integer({ mode: "boolean" }).notNull().default(false),
-  consumableWeight: integer({ mode: "boolean" }).notNull().default(false),
+  consWeight: integer({ mode: "boolean" }).notNull().default(false),
   ...timeStamps,
 });
 export const zCategoryItemSelect = createSelectSchema(CategoryItem);

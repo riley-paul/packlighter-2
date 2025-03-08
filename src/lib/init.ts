@@ -37,7 +37,7 @@ const zCategoryItemInit = zCategoryItemSelect.extend({
   itemId: zCategoryItemSelect.shape.itemId.default(uuid),
   packed: zCategoryItemSelect.shape.packed.default(false),
   wornWeight: zCategoryItemSelect.shape.wornWeight.default(false),
-  consumableWeight: zCategoryItemSelect.shape.consumableWeight.default(false),
+  consWeight: zCategoryItemSelect.shape.consWeight.default(false),
   createdAt: zCategoryItemSelect.shape.createdAt.default(currentTime),
   updatedAt: zCategoryItemSelect.shape.updatedAt.default(currentTime),
 });
