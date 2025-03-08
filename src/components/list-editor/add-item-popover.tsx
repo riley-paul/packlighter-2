@@ -110,7 +110,7 @@ const AddItemPopover = React.forwardRef<HTMLButtonElement, Props>(
                         categoryId: category.id,
                         itemId: item.id,
                         categoryItems: [...category.items, newCategoryItem],
-                        data: newCategoryItem,
+                        categoryItemData: newCategoryItem,
                       });
                       setIsOpen(false);
                     }}

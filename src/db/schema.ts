@@ -155,3 +155,10 @@ export type ExpandedCategory = CategorySelect & {
 export type ExpandedList = ListSelect & {
   categories: ExpandedCategory[];
 };
+
+export type AllTables =
+  | typeof Item
+  | typeof List
+  | typeof Category
+  | typeof CategoryItem
+  | typeof AppFeedback;

@@ -1,5 +1,5 @@
+import type { AllTables } from "@/db/schema";
 import { and, eq } from "drizzle-orm";
-import { type AllTables } from "./types";
 
 export const idAndUserIdFilter = (
   table: AllTables,

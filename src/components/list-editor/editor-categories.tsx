@@ -131,7 +131,7 @@ const EditorCategories: React.FC<Props> = (props) => {
                 closestEdgeOfTarget,
                 axis: "vertical",
               }),
-              data: newCategoryItem,
+              categoryItemData: newCategoryItem,
               itemId: sourceData.data.id,
             });
           });
