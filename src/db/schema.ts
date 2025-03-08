@@ -1,4 +1,5 @@
 import { integer, sqliteTable, text } from "drizzle-orm/sqlite-core";
+import { createInsertSchema, createSelectSchema } from "drizzle-zod";
 
 const id = text("id")
   .primaryKey()
@@ -31,6 +32,8 @@ export const User = sqliteTable("user", {
   githubUsername: text().unique(),
   ...timeStamps,
 });
+export const zUserSelect = createSelectSchema(User);
+export const zUserInsert = createInsertSchema(User);
 
 export const UserSession = sqliteTable("userSession", {
   id,
@@ -49,6 +52,8 @@ export const Item = sqliteTable("item", {
   image: text(),
   ...timeStamps,
 });
+export const zItemSelect = createSelectSchema(Item);
+export const zItemInsert = createInsertSchema(Item);
 
 export const List = sqliteTable("list", {
   id,
@@ -66,6 +71,8 @@ export const List = sqliteTable("list", {
   isPublic: integer({ mode: "boolean" }).notNull().default(false),
   ...timeStamps,
 });
+export const zListSelect = createSelectSchema(List);
+export const zListInsert = createInsertSchema(List);
 
 export const Category = sqliteTable("category", {
   id,
@@ -77,6 +84,8 @@ export const Category = sqliteTable("category", {
   sortOrder: integer().notNull().default(0),
   ...timeStamps,
 });
+export const zCategorySelect = createSelectSchema(Category);
+export const zCategoryInsert = createInsertSchema(Category);
 
 export const CategoryItem = sqliteTable("categoryItem", {
   id,
@@ -96,6 +105,8 @@ export const CategoryItem = sqliteTable("categoryItem", {
   consumableWeight: integer({ mode: "boolean" }).notNull().default(false),
   ...timeStamps,
 });
+export const zCategoryItemSelect = createSelectSchema(CategoryItem);
+export const zCategoryItemInsert = createInsertSchema(CategoryItem);
 
 export const AppFeedback = sqliteTable("appFeedback", {
   id,
@@ -103,3 +114,5 @@ export const AppFeedback = sqliteTable("appFeedback", {
   feedback: text().notNull(),
   ...timeStamps,
 });
+export const zAppFeedbackSelect = createSelectSchema(AppFeedback);
+export const zAppFeedbackInsert = createInsertSchema(AppFeedback);
