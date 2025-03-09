@@ -7,12 +7,18 @@ expand(config());
 const zEnv = z
   .object({
     NODE_ENV: z.enum(["development", "production"]).default("development"),
+
     GITHUB_CLIENT_ID: z.string(),
     GITHUB_CLIENT_SECRET: z.string(),
     GOOGLE_CLIENT_ID: z.string(),
     GOOGLE_CLIENT_SECRET: z.string(),
 
     COOLIFY_FQDN: z.string().default("http://localhost:4321"),
+
+    AWS_ACCESS_KEY_ID: z.string(),
+    AWS_ACCESS_SECRET: z.string(),
+    AWS_REGION: z.string().default("us-west-2"),
+    AWS_S3_BUCKET: z.string(),
 
     DATABASE_URL: z.string().url(),
     DATABASE_AUTH_TOKEN: z.string().optional(),
