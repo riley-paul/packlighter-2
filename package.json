@@ -85,6 +85,7 @@
     "@types/node": "^20.12.11",
     "@types/uuid": "^9.0.8",
     "drizzle-kit": "^0.30.5",
+    "fetch-blob": "^4.0.0",
     "prettier": "^3.2.5",
     "prettier-plugin-tailwindcss": "^0.6.1",
     "tsx": "^4.10.2",

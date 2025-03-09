@@ -18,13 +18,13 @@ export const uploadImageToS3 = async (file: File) => {
   // Prepare file for S3 upload
   const fileExt = path.extname(file.name);
   const fileName = `${crypto.randomUUID()}${fileExt}`;
-  const fileBlob = new Blob([file]);
   const fileKey = `uploads/${fileName}`;
 
   const putCommand = new PutObjectCommand({
     Bucket: env.AWS_S3_BUCKET,
     Key: fileKey,
-    Body: fileBlob,
+    Body: file,
+    ContentLength: file.size,
     ContentType: file.type,
     ACL: "public-read", // Make the file publicly accessible
   });
@@ -37,6 +37,7 @@ export const uploadImageToS3 = async (file: File) => {
     // Return the public URL of the uploaded file
   } catch (e) {
     const error = e as Error;
+    console.error("Error uploading image to S3", error);
     return { success: false, error };
   }
 };
