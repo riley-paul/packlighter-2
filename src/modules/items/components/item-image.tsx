@@ -3,12 +3,12 @@ import { cn } from "@/lib/utils";
 
 interface Props {
   url: string | undefined | null;
-  size: "lg" | "sm";
+  size?: "lg" | "sm";
   className?: string;
 }
 
 const NoImage: React.FC<Props> = (props) => {
-  const { size } = props;
+  const { size = "sm" } = props;
   if (size === "sm") return null;
   return "No Image";
 };
@@ -34,7 +34,7 @@ const ItemImage: React.FC<Props> = (props) => {
   return (
     <div
       className={cn(
-        "flex shrink-0 items-center justify-center text-gray-10",
+        "flex h-full shrink-0 items-center justify-center text-gray-10",
         url ? "bg-[white]" : "bg-gray-4",
         size === "lg" ? "rounded-3 p-2" : "rounded-2 p-0.5",
         className,

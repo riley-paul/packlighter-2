@@ -3,23 +3,23 @@ import { Controller, FormProvider, useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { initItem } from "@/lib/init";
-import ItemImage from "@/modules/items/components/item-image";
-import { Button, IconButton, Select, Text, TextField } from "@radix-ui/themes";
+import { Button, Select, Text, TextField } from "@radix-ui/themes";
 import { useAtomValue, useSetAtom } from "jotai";
 import { closeEditorAtom, editorItemAtom } from "../store";
 import useItemsMutations from "../mutations";
-import { weightUnitsInfo, type ItemSelect } from "@/db/schema";
+import { weightUnitsInfo, type ItemInsert } from "@/db/schema";
+import ItemFormImage from "./item-form-image";
 
 const ItemForm: React.FC = () => {
   const item = useAtomValue(editorItemAtom);
   const closeEditor = useSetAtom(closeEditorAtom);
 
-  const methods = useForm<ItemSelect>({
+  const methods = useForm<ItemInsert>({
     defaultValues: initItem(item),
-    resolver: zodResolver(z.custom<ItemSelect>()),
+    resolver: zodResolver(z.custom<ItemInsert>()),
   });
 
-  const { control, handleSubmit, watch } = methods;
+  const { control, handleSubmit } = methods;
   const { updateItem, addItem } = useItemsMutations();
 
   const onSubmit = handleSubmit((data) => {
@@ -28,8 +28,6 @@ const ItemForm: React.FC = () => {
       : addItem.mutate({ data });
     closeEditor();
   });
-
-  const imageUrl = watch("image");
 
   return (
     <FormProvider {...methods}>
@@ -105,41 +103,7 @@ const ItemForm: React.FC = () => {
           )}
         />
 
-        <Controller
-          control={control}
-          name="image"
-          render={({ field }) => (
-            <div className="grid gap-2">
-              <Text as="label" size="2" weight="medium">
-                Image URL
-              </Text>
-              <TextField.Root
-                type="url"
-                placeholder="https://example.com/image.jpg"
-                {...field}
-                value={field.value || ""}
-              >
-                {field.value && (
-                  <TextField.Slot side="right">
-                    <IconButton
-                      type="button"
-                      size="1"
-                      variant="soft"
-                      color="red"
-                      onClick={() => field.onChange("")}
-                    >
-                      <i className="fa-solid fa-xmark" />
-                    </IconButton>
-                  </TextField.Slot>
-                )}
-              </TextField.Root>
-            </div>
-          )}
-        />
-
-        {imageUrl && (
-          <ItemImage url={imageUrl} size="sm" className="mx-auto size-32" />
-        )}
+        <ItemFormImage />
 
         <div className="grid w-full gap-2 pt-8">
           <Button
