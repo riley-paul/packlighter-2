@@ -85,7 +85,7 @@ export default function useEditorColumns({
         ),
       }),
 
-      columnHelper.accessor("itemData.image", {
+      columnHelper.accessor("itemData.imageUrl", {
         id: "image",
         header: () => null,
         cell: (props) => <ItemImageDialog item={props.row.original.itemData} />,

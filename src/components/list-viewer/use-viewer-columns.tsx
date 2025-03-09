@@ -64,7 +64,7 @@ export default function useViewerColumns(
         ),
       }),
 
-      columnHelper.accessor("itemData.image", {
+      columnHelper.accessor("itemData.imageUrl", {
         id: "image",
         header: () => null,
         cell: ({ getValue }) => {

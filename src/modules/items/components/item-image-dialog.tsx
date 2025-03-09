@@ -15,7 +15,7 @@ const ItemImageDialog: React.FC<Props> = (props) => {
   const { item } = props;
 
   const [isOpen, setIsOpen] = React.useState(false);
-  const [value, setValue] = React.useState(item.image ?? "");
+  const [value, setValue] = React.useState(item.imageUrl ?? "");
   const { updateItem } = useItemsMutations();
 
   return (
@@ -25,11 +25,11 @@ const ItemImageDialog: React.FC<Props> = (props) => {
         onClick={() => setIsOpen((prev) => !prev)}
       >
         <ItemImage
-          url={item.image}
+          url={item.imageUrl}
           size="sm"
           className={cn(
             "w-16",
-            item.image ? "h-16" : "h-full min-h-6 bg-gray-4",
+            item.imageUrl ? "h-16" : "h-full min-h-6 bg-gray-4",
             "outline-primary outline-1 outline-offset-1 transition-all hover:outline",
           )}
         />
@@ -46,7 +46,7 @@ const ItemImageDialog: React.FC<Props> = (props) => {
           id="image-form"
           onSubmit={(e) => {
             e.preventDefault();
-            updateItem.mutate({ itemId: item.id, data: { image: value } });
+            updateItem.mutate({ itemId: item.id, data: { imageUrl: value } });
             setIsOpen(false);
           }}
         >
@@ -72,7 +72,7 @@ const ItemImageDialog: React.FC<Props> = (props) => {
             disabled={updateItem.isPending}
             onClick={() => {
               setValue("");
-              updateItem.mutate({ itemId: item.id, data: { image: null } });
+              updateItem.mutate({ itemId: item.id, data: { imageUrl: null } });
               setIsOpen(false);
             }}
           >

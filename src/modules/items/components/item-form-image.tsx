@@ -72,11 +72,11 @@ const FileDropzone: React.FC<{ onFile: (file: File) => void }> = ({
 
 const ItemFormImage: React.FC = ({}) => {
   const { watch, setValue, control } = useFormContext<ItemInsert>();
-  const imageUrl = watch("image");
+  const imageUrl = watch("imageUrl");
   const s3ImageUrl = watch("imageS3");
 
   const uploadImageMutation = useMutation({
-    mutationFn: (file: File) => {
+    mutationFn: async (file: File) => {
       const formData = new FormData();
       formData.append("file", file);
       return fetch("/upload-to-s3", {
@@ -132,7 +132,7 @@ const ItemFormImage: React.FC = ({}) => {
             </div>
             <Controller
               control={control}
-              name="image"
+              name="imageUrl"
               render={({ field }) => (
                 <Text
                   as="label"
@@ -156,7 +156,7 @@ const ItemFormImage: React.FC = ({}) => {
               type="button"
               variant="soft"
               color="red"
-              onClick={() => setValue("image", null)}
+              onClick={() => setValue("imageUrl", null)}
             >
               Remove Image
             </Button>

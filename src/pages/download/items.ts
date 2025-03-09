@@ -18,7 +18,7 @@ export const GET: APIRoute = async ({ locals }) => {
       Description: Item.description,
       Weight: Item.weight,
       "Weight Unit": Item.weightUnit,
-      "Image Url": Item.image,
+      "Image Url": Item.imageUrl,
     })
     .from(Item)
     .where(eq(Item.userId, userId))
