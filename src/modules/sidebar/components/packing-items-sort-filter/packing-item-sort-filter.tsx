@@ -59,7 +59,7 @@ const PackingItemsSortFilter: React.FC = () => {
               Sort
             </Heading>
             <RadioGroup.Root
-              className="grid grid-cols-2"
+              className="grid grid-cols-2 gap-x-2"
               value={sortOption}
               onValueChange={(value) => {
                 setSortOption(value as SortOptions);
