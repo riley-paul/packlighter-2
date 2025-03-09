@@ -78,12 +78,11 @@ export const update = defineAction({
   }),
   handler: async ({ itemId, data }, c) => {
     const userId = isAuthorized(c).id;
-    const updated = await db
+    const [updated] = await db
       .update(Item)
       .set(data)
       .where(idAndUserIdFilter(Item, { userId, id: itemId }))
-      .returning()
-      .then((rows) => rows[0]);
+      .returning();
     return updated;
   },
 });

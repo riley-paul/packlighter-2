@@ -66,6 +66,7 @@ export const Item = sqliteTable("item", {
   weight: integer().notNull().default(0),
   weightUnit: text({ enum: weightUnits }).notNull().default("g"),
   image: text(),
+  imageS3: text(),
   ...timeStamps,
 });
 export const zItemSelect = createSelectSchema(Item);

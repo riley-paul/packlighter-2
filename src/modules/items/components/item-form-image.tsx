@@ -1,20 +1,14 @@
 import { type ItemInsert } from "@/db/schema";
-import {
-  Button,
-  Card,
-  Heading,
-  Tabs,
-  Text,
-  TextField,
-} from "@radix-ui/themes";
+import { Button, Card, Heading, Tabs, Text, TextField } from "@radix-ui/themes";
 import React from "react";
 import { Controller, useFormContext } from "react-hook-form";
 import ItemImage from "./item-image";
 import { useState } from "react";
 import { cn } from "@/lib/utils";
+import { useMutation } from "@tanstack/react-query";
 
-const FileDropzone: React.FC<{ onFiles: (files: File[]) => void }> = ({
-  onFiles,
+const FileDropzone: React.FC<{ onFile: (file: File) => void }> = ({
+  onFile,
 }) => {
   const [isDragging, setIsDragging] = useState(false);
 
@@ -35,17 +29,13 @@ const FileDropzone: React.FC<{ onFiles: (files: File[]) => void }> = ({
     e.stopPropagation();
     setIsDragging(false);
 
-    const files = Array.from(e.dataTransfer.files);
-    if (files.length) {
-      onFiles(files);
-    }
+    const [file] = Array.from(e.dataTransfer.files);
+    if (file) onFile(file);
   };
 
   const handleFileSelect: React.ChangeEventHandler<HTMLInputElement> = (e) => {
-    const files = Array.from(e.target.files ?? []);
-    if (files.length) {
-      onFiles(files);
-    }
+    const [file] = Array.from(e.target.files ?? []);
+    if (file) onFile(file);
   };
 
   return (
@@ -81,8 +71,20 @@ const FileDropzone: React.FC<{ onFiles: (files: File[]) => void }> = ({
 };
 
 const ItemFormImage: React.FC = ({}) => {
-  const { watch, resetField, control } = useFormContext<ItemInsert>();
+  const { watch, setValue, control } = useFormContext<ItemInsert>();
   const imageUrl = watch("image");
+  const s3ImageUrl = watch("imageS3");
+
+  const uploadImageMutation = useMutation({
+    mutationFn: (file: File) => {
+      const formData = new FormData();
+      formData.append("file", file);
+      return fetch("/upload-to-s3", {
+        method: "POST",
+        body: formData,
+      }).then((res) => res.json());
+    },
+  });
 
   return (
     <Card size="2" className="grid gap-3">
@@ -99,15 +101,31 @@ const ItemFormImage: React.FC = ({}) => {
           <Tabs.Trigger value="upload">Upload</Tabs.Trigger>
           <Tabs.Trigger value="url">URL</Tabs.Trigger>
         </Tabs.List>
-        <Tabs.Content value="upload">
+        <Tabs.Content value="upload" className="grid gap-3">
           <section className="flex gap-3">
             <div className="size-24 shrink-0">
-              <ItemImage url={imageUrl} />
+              <ItemImage url={s3ImageUrl} />
             </div>
-            <FileDropzone onFiles={() => {}} />
+            <FileDropzone
+              onFile={async (file) => {
+                const result = await uploadImageMutation.mutateAsync(file);
+                setValue("imageS3", result.imageUrl);
+                console.log(result);
+              }}
+            />
           </section>
+          {s3ImageUrl && (
+            <Button
+              type="button"
+              variant="soft"
+              color="red"
+              onClick={() => setValue("imageS3", null)}
+            >
+              Remove Image
+            </Button>
+          )}
         </Tabs.Content>
-        <Tabs.Content value="url">
+        <Tabs.Content value="url" className="grid gap-3">
           <section className="flex gap-3">
             <div className="size-24 shrink-0">
               <ItemImage url={imageUrl} />
@@ -133,19 +151,18 @@ const ItemFormImage: React.FC = ({}) => {
               )}
             />
           </section>
+          {imageUrl && (
+            <Button
+              type="button"
+              variant="soft"
+              color="red"
+              onClick={() => setValue("image", null)}
+            >
+              Remove Image
+            </Button>
+          )}
         </Tabs.Content>
       </Tabs.Root>
-      {imageUrl && (
-        <Button
-          type="button"
-          variant="soft"
-          color="red"
-          size="1"
-          onClick={() => resetField("image")}
-        >
-          Remove Image
-        </Button>
-      )}
     </Card>
   );
 };
