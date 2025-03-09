@@ -20,6 +20,7 @@ const zItemInit = zItemSelect.extend({
   weight: zItemSelect.shape.weight.default(0),
   weightUnit: zItemSelect.shape.weightUnit.default("g"),
   image: zItemSelect.shape.image.default(""),
+  imageS3: zItemSelect.shape.imageS3.default(""),
   createdAt: zItemSelect.shape.createdAt.default(currentTime),
   updatedAt: zItemSelect.shape.updatedAt.default(currentTime),
 });
