@@ -14,7 +14,7 @@ export const getS3ObjectUrl = (key: string) => {
   return `https://${env.AWS_S3_BUCKET}.s3.${env.AWS_REGION}.amazonaws.com/${key}`;
 };
 
-export default async function uploadImageToS3(file: File) {
+export const uploadImageToS3 = async (file: File) => {
   // Prepare file for S3 upload
   const fileExt = path.extname(file.name);
   const fileName = `${crypto.randomUUID()}${fileExt}`;
@@ -39,4 +39,4 @@ export default async function uploadImageToS3(file: File) {
     const error = e as Error;
     return { success: false, error };
   }
-}
+};
