@@ -72,8 +72,9 @@ const FileDropzone: React.FC<{ onFile: (file: File) => void }> = ({
 
 const ItemFormImage: React.FC = ({}) => {
   const { watch, setValue, control } = useFormContext<ItemInsert>();
-  const imageUrl = watch("imageUrl");
-  const s3ImageUrl = watch("imageS3");
+  const imageUrl = watch("imageUrl")!;
+  const imageS3 = watch("imageS3")!;
+  const imageType = watch("imageType")!;
 
   const uploadImageMutation = useMutation({
     mutationFn: async (file: File) => {
@@ -96,7 +97,13 @@ const ItemFormImage: React.FC = ({}) => {
           Upload an image or provide a URL
         </Text>
       </header>
-      <Tabs.Root defaultValue="upload" className="grid gap-3">
+      <Tabs.Root
+        value={imageType}
+        onValueChange={(value) =>
+          setValue("imageType", value as "url" | "upload")
+        }
+        className="grid gap-3"
+      >
         <Tabs.List size="1">
           <Tabs.Trigger value="upload">Upload</Tabs.Trigger>
           <Tabs.Trigger value="url">URL</Tabs.Trigger>
@@ -104,7 +111,7 @@ const ItemFormImage: React.FC = ({}) => {
         <Tabs.Content value="upload" className="grid gap-3">
           <section className="flex gap-3">
             <div className="size-24 shrink-0">
-              <ItemImage url={s3ImageUrl} />
+              <ItemImage item={{ imageS3, imageType, imageUrl }} />
             </div>
             <FileDropzone
               onFile={async (file) => {
@@ -114,7 +121,7 @@ const ItemFormImage: React.FC = ({}) => {
               }}
             />
           </section>
-          {s3ImageUrl && (
+          {imageS3 && (
             <Button
               type="button"
               variant="soft"
@@ -128,7 +135,7 @@ const ItemFormImage: React.FC = ({}) => {
         <Tabs.Content value="url" className="grid gap-3">
           <section className="flex gap-3">
             <div className="size-24 shrink-0">
-              <ItemImage url={imageUrl} />
+              <ItemImage item={{ imageS3, imageType, imageUrl }} />
             </div>
             <Controller
               control={control}

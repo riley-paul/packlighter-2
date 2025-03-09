@@ -25,7 +25,7 @@ const ItemImageDialog: React.FC<Props> = (props) => {
         onClick={() => setIsOpen((prev) => !prev)}
       >
         <ItemImage
-          url={item.imageUrl}
+          item={item}
           size="sm"
           className={cn(
             "w-16",
@@ -62,7 +62,11 @@ const ItemImageDialog: React.FC<Props> = (props) => {
             </TextField.Slot>
           </TextField.Root>
         </form>
-        <ItemImage url={value} size="lg" className="aspect-square" />
+        <ItemImage
+          item={{ imageUrl: value, imageType: "url", imageS3: null }}
+          size="lg"
+          className="aspect-square"
+        />
 
         <div className="grid gap-2 sm:flex sm:justify-end">
           <Button

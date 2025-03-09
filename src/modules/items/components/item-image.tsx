@@ -1,8 +1,17 @@
 import React from "react";
 import { cn } from "@/lib/utils";
+import type { ItemSelect } from "@/db/schema";
+
+type ImageInfo = Pick<ItemSelect, "imageS3" | "imageType" | "imageUrl">;
+
+const getImageUrl = ({ imageS3, imageType, imageUrl }: ImageInfo) => {
+  if (imageType === "upload") return imageS3;
+  if (imageType === "url") return imageUrl;
+  return "";
+};
 
 interface Props {
-  url: string | undefined | null;
+  item: ImageInfo;
   size?: "lg" | "sm";
   className?: string;
 }
@@ -13,23 +22,9 @@ const NoImage: React.FC<Props> = (props) => {
   return "No Image";
 };
 
-// const InvalidUrl: React.FC<Props> = (props) => {
-//   const { size } = props;
-//   if (size === "sm") {
-//     return (
-//       <i className="fa-solid fa-exclamation-triangle text-xl text-destructive"></i>
-//     );
-//   }
-//   return (
-//     <div className="flex flex-col items-center gap-1 text-destructive">
-//       <i className="fa-solid fa-exclamation-triangle text-xl" />
-//       <span>Invalid URL</span>
-//     </div>
-//   );
-// };
-
 const ItemImage: React.FC<Props> = (props) => {
-  const { url, size = "sm", className } = props;
+  const { item, size = "sm", className } = props;
+  const url = getImageUrl(item);
 
   return (
     <div
