@@ -1,8 +1,8 @@
 import { type ItemInsert } from "@/db/schema";
 import {
+  Button,
   Card,
   Heading,
-  IconButton,
   Tabs,
   Text,
   TextField,
@@ -52,7 +52,7 @@ const FileDropzone: React.FC<{ onFiles: (files: File[]) => void }> = ({
     <div
       className={cn(
         "flex w-full cursor-pointer items-center justify-center rounded-2 border-2 border-dashed",
-        isDragging ? "bg-accent-2 border-accent-6" : "bg-gray-3 border-gray-6",
+        isDragging ? "border-accent-6 bg-accent-2" : "border-gray-6 bg-gray-3",
       )}
       onDragOver={handleDragOver}
       onDragLeave={handleDragLeave}
@@ -81,7 +81,7 @@ const FileDropzone: React.FC<{ onFiles: (files: File[]) => void }> = ({
 };
 
 const ItemFormImage: React.FC = ({}) => {
-  const { watch, control } = useFormContext<ItemInsert>();
+  const { watch, resetField, control } = useFormContext<ItemInsert>();
   const imageUrl = watch("image");
 
   return (
@@ -100,7 +100,7 @@ const ItemFormImage: React.FC = ({}) => {
           <Tabs.Trigger value="url">URL</Tabs.Trigger>
         </Tabs.List>
         <Tabs.Content value="upload">
-          <section className="flex gap-4">
+          <section className="flex gap-3">
             <div className="size-24 shrink-0">
               <ItemImage url={imageUrl} />
             </div>
@@ -108,7 +108,7 @@ const ItemFormImage: React.FC = ({}) => {
           </section>
         </Tabs.Content>
         <Tabs.Content value="url">
-          <section className="flex gap-4">
+          <section className="flex gap-3">
             <div className="size-24 shrink-0">
               <ItemImage url={imageUrl} />
             </div>
@@ -128,27 +128,24 @@ const ItemFormImage: React.FC = ({}) => {
                     placeholder="https://example.com/image.jpg"
                     {...field}
                     value={field.value || ""}
-                  >
-                    {field.value && (
-                      <TextField.Slot side="right">
-                        <IconButton
-                          type="button"
-                          size="1"
-                          variant="soft"
-                          color="red"
-                          onClick={() => field.onChange("")}
-                        >
-                          <i className="fa-solid fa-xmark" />
-                        </IconButton>
-                      </TextField.Slot>
-                    )}
-                  </TextField.Root>
+                  />
                 </Text>
               )}
             />
           </section>
         </Tabs.Content>
       </Tabs.Root>
+      {imageUrl && (
+        <Button
+          type="button"
+          variant="soft"
+          color="red"
+          size="1"
+          onClick={() => resetField("image")}
+        >
+          Remove Image
+        </Button>
+      )}
     </Card>
   );
 };
