@@ -26,7 +26,6 @@ export const uploadImageToS3 = async ({
   fileName,
   fileType,
 }: UploadImageToS3Props) => {
-  // Prepare file for S3 upload
   const fileExt = path.extname(fileName);
   const fileKey = `uploads/${crypto.randomUUID()}${fileExt}`;
 
@@ -38,11 +37,8 @@ export const uploadImageToS3 = async ({
   });
 
   try {
-    // Upload to S3
     await s3.send(putCommand);
     return { success: true, imageUrl: getS3ObjectUrl(fileKey), fileKey };
-
-    // Return the public URL of the uploaded file
   } catch (e) {
     const error = e as Error;
     console.error("Error uploading image to S3", error);

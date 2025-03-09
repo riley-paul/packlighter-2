@@ -9,5 +9,6 @@ test("Upload image to S3", async () => {
     fileName: "test-file.png",
     fileType: "image/png",
   });
+  console.log(result)
   expect(result.success).toBe(true);
 });
