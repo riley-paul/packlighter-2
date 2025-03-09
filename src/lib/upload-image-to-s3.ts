@@ -1,31 +1,38 @@
 import env from "@/envs";
-import AWS from "aws-sdk";
 import path from "path";
+import { PutObjectCommand, S3Client } from "@aws-sdk/client-s3";
 
-const s3 = new AWS.S3({
+const s3 = new S3Client({
   region: env.AWS_REGION,
-  accessKeyId: env.AWS_ACCESS_KEY_ID,
-  secretAccessKey: env.AWS_ACCESS_SECRET,
+  credentials: {
+    accessKeyId: env.AWS_ACCESS_KEY_ID,
+    secretAccessKey: env.AWS_ACCESS_SECRET,
+  },
 });
+
+export const getS3ObjectUrl = (key: string) => {
+  return `https://${env.AWS_S3_BUCKET}.s3.${env.AWS_REGION}.amazonaws.com/${key}`;
+};
 
 export default async function uploadImageToS3(file: File) {
   // Prepare file for S3 upload
   const fileExt = path.extname(file.name);
   const fileName = `${crypto.randomUUID()}${fileExt}`;
-  const fileBuffer = await file.arrayBuffer();
+  const fileBlob = new Blob([file]);
+  const fileKey = `uploads/${fileName}`;
 
-  const params: AWS.S3.PutObjectRequest = {
+  const putCommand = new PutObjectCommand({
     Bucket: env.AWS_S3_BUCKET,
-    Key: `uploads/${fileName}`, // File path in S3 bucket
-    Body: fileBuffer,
+    Key: fileKey,
+    Body: fileBlob,
     ContentType: file.type,
     ACL: "public-read", // Make the file publicly accessible
-  };
+  });
 
   try {
     // Upload to S3
-    const { Location: imageUrl } = await s3.upload(params).promise();
-    return { success: true, imageUrl };
+    await s3.send(putCommand);
+    return { success: true, imageUrl: getS3ObjectUrl(fileKey) };
 
     // Return the public URL of the uploaded file
   } catch (e) {

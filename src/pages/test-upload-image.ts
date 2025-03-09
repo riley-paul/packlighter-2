@@ -1,18 +1,13 @@
-import env from "@/envs";
+import uploadImageToS3 from "@/lib/upload-image-to-s3";
 import type { APIRoute } from "astro";
-import AWS from "aws-sdk";
-
-const s3 = new AWS.S3({
-  region: env.AWS_REGION,
-  accessKeyId: env.AWS_ACCESS_KEY_ID,
-  secretAccessKey: env.AWS_ACCESS_SECRET,
-});
 
 export const POST: APIRoute = async ({ request }) => {
   const formData = await request.formData();
-  const file = formData.get("file") as File;
+  const file = formData.get("image") as File;
 
   console.log(file);
+
+  await uploadImageToS3(file);
 
   return new Response("Image uploaded");
 };
