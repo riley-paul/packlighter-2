@@ -1,7 +1,7 @@
 import { z } from "zod";
 import { idAndUserIdFilter } from "@/lib/validators.ts";
 import { ActionError, defineAction } from "astro:actions";
-import { getListItemIds, isAuthorized } from "@/lib/helpers";
+import { getListItemIds, isAuthorized } from "@/actions/helpers";
 import db from "@/db";
 import {
   CategoryItem,

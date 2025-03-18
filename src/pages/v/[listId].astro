@@ -1,6 +1,6 @@
 ---
 import RootLayout from "@/layouts/root-layout.astro";
-import { getExpandedList, getUser } from "@/lib/helpers";
+import { getExpandedList, getUser } from "@/actions/helpers";
 
 import ViewerList from "@/components/list-viewer/viewer-list";
 import RadixProvider from "@/components/base/radix-provider";
@@ -29,7 +29,9 @@ if (!listOwner) {
   <RadixProvider>
     <main class="overflow-auto h-full">
       <div class="container2 py-8 pb-20 grid gap-4">
-        <header class="flex flex-col sm:flex-row justify-between gap-2 sm:items-center">
+        <header
+          class="flex flex-col sm:flex-row justify-between gap-2 sm:items-center"
+        >
           <Badge className="w-fit">
             Created by {listOwner.name} using <Link href="/">LightTravel</Link>
           </Badge>

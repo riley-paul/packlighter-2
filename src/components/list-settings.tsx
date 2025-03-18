@@ -2,7 +2,7 @@ import React from "react";
 
 import useMutations from "@/hooks/use-mutations";
 import { useEventListener } from "usehooks-ts";
-import { getHasModifier, getIsTyping } from "@/lib/utils";
+import { getHasModifier, getIsTyping } from "@/lib/client/utils";
 import {
   Button,
   Kbd,

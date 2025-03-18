@@ -1,4 +1,4 @@
-import { MOBILE_BREAKPOINT } from "@/lib/constants";
+import { MOBILE_BREAKPOINT } from "@/lib/client/constants";
 import * as React from "react";
 
 export function useIsMobile(breakpoint: number = MOBILE_BREAKPOINT) {

@@ -1,6 +1,6 @@
 import React from "react";
 
-import { centerDragPreviewOnMouse, cn } from "@/lib/utils";
+import { centerDragPreviewOnMouse, cn } from "@/lib/client/utils";
 import useDraggableState from "@/hooks/use-draggable-state";
 import {
   attachClosestEdge,
@@ -17,7 +17,7 @@ import {
   DND_ENTITY_TYPE,
   DndEntityType,
   isDndEntityType,
-} from "@/lib/constants";
+} from "@/lib/client/constants";
 import {
   flexRender,
   getCoreRowModel,

@@ -1,6 +1,6 @@
 import React from "react";
 import { monitorForElements } from "@atlaskit/pragmatic-drag-and-drop/element/adapter";
-import { DndEntityType, isDndEntityType } from "@/lib/constants";
+import { DndEntityType, isDndEntityType } from "@/lib/client/constants";
 import { extractClosestEdge } from "@atlaskit/pragmatic-drag-and-drop-hitbox/closest-edge";
 import { reorderWithEdge } from "@atlaskit/pragmatic-drag-and-drop-hitbox/util/reorder-with-edge";
 import { z } from "zod";
@@ -9,7 +9,7 @@ import useMutations from "@/hooks/use-mutations";
 import { initCategoryItem } from "@/lib/init";
 import EditorCategory from "./editor-category";
 import AddCategoryPopover from "./add-category-popover";
-import { triggerElementFlash } from "@/lib/utils";
+import { triggerElementFlash } from "@/lib/client/utils";
 import type {
   ExpandedCategory,
   ExpandedCategoryItem,

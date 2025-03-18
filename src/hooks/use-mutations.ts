@@ -2,14 +2,14 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import {
   listQueryOptions,
   otherListCategoriesQueryOptions,
-} from "@/lib/queries";
+} from "@/lib/client/queries";
 import { produce } from "immer";
 import { initCategory, initCategoryItem, initItem } from "@/lib/init";
 import { actions } from "astro:actions";
 import useCurrentList from "./use-current-list";
 import useMutationHelpers from "./use-mutation-helpers";
 import { useNavigate } from "@tanstack/react-router";
-import { listLinkOptions } from "@/lib/links";
+import { listLinkOptions } from "@/lib/client/links";
 import {
   itemsQueryOptions,
   listsQueryOptions,

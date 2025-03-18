@@ -4,7 +4,7 @@ import { itemsQueryOptions } from "../sidebar/queries";
 import {
   listQueryOptions,
   otherListCategoriesQueryOptions,
-} from "@/lib/queries";
+} from "@/lib/client/queries";
 import { actions } from "astro:actions";
 import useCurrentList from "@/hooks/use-current-list";
 import type { ExpandedList } from "@/db/schema";

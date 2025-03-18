@@ -12,7 +12,7 @@ import {
 import useMutations from "@/hooks/use-mutations";
 import { v4 as uuidv4 } from "uuid";
 import { useQuery } from "@tanstack/react-query";
-import { otherListCategoriesQueryOptions } from "@/lib/queries";
+import { otherListCategoriesQueryOptions } from "@/lib/client/queries";
 import useCurrentList from "@/hooks/use-current-list";
 import { Button, Popover, Strong, Text } from "@radix-ui/themes";
 

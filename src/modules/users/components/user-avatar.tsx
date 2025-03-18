@@ -1,7 +1,7 @@
 import React from "react";
 
 import { useQuery } from "@tanstack/react-query";
-import { cn } from "@/lib/utils";
+import { cn } from "@/lib/client/utils";
 import ThemeToggle from "@/modules/theme/theme-toggle";
 import useConfirmDialog from "@/hooks/use-confirm-dialog";
 import { Avatar, Button, Link, Popover, Text } from "@radix-ui/themes";

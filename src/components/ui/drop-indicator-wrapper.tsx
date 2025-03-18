@@ -1,7 +1,7 @@
 import type { DraggableState } from "@/hooks/use-draggable-state";
 import React from "react";
 import { DropIndicator } from "./drop-indicator";
-import { cn } from "@/lib/utils";
+import { cn } from "@/lib/client/utils";
 
 type Props = React.PropsWithChildren<{
   draggableState: DraggableState;

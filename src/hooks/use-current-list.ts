@@ -1,4 +1,4 @@
-import { listQueryOptions } from "@/lib/queries";
+import { listQueryOptions } from "@/lib/client/queries";
 import { useQuery } from "@tanstack/react-query";
 import React from "react";
 import { useParams } from "@tanstack/react-router";

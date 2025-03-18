@@ -10,7 +10,7 @@ import { and, eq } from "drizzle-orm";
 
 import { idAndUserIdFilter } from "@/lib/validators.ts";
 import { ActionError, type ActionHandler } from "astro:actions";
-import { isAuthorized } from "@/lib/helpers";
+import { isAuthorized } from "@/actions/helpers";
 
 import { v4 as uuid } from "uuid";
 import type itemInputs from "./items.inputs";

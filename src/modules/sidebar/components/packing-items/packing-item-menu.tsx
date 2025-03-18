@@ -3,10 +3,10 @@ import { useSetAtom } from "jotai";
 import React from "react";
 import { openEditorAtom } from "@/modules/items/store";
 import useConfirmDialog from "@/hooks/use-confirm-dialog";
-import { itemListsIncludedOptions } from "@/lib/queries";
+import { itemListsIncludedOptions } from "@/lib/client/queries";
 import { useQuery } from "@tanstack/react-query";
 import { Link } from "@tanstack/react-router";
-import { listLinkOptions } from "@/lib/links";
+import { listLinkOptions } from "@/lib/client/links";
 import useItemsMutations from "@/modules/items/mutations";
 import type { ItemSelect } from "@/db/schema";
 

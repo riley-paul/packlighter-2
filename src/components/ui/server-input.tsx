@@ -1,7 +1,7 @@
 import React from "react";
 import { useUnmount } from "usehooks-ts";
 import { TextField } from "@radix-ui/themes";
-import { cn } from "@/lib/utils";
+import { cn } from "@/lib/client/utils";
 
 type Props = {
   currentValue: string | undefined | null;

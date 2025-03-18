@@ -1,4 +1,8 @@
-import { centerDragPreviewOnMouse, cn, triggerElementFlash } from "@/lib/utils";
+import {
+  centerDragPreviewOnMouse,
+  cn,
+  triggerElementFlash,
+} from "@/lib/client/utils";
 import React from "react";
 import invariant from "tiny-invariant";
 
@@ -20,7 +24,7 @@ import {
   DND_ENTITY_TYPE,
   DndEntityType,
   isDndEntityType,
-} from "@/lib/constants";
+} from "@/lib/client/constants";
 import useCurrentList from "@/hooks/use-current-list";
 import { DropdownMenu, IconButton, Portal, Text } from "@radix-ui/themes";
 import RadixProvider from "../../../../components/base/radix-provider";
@@ -29,7 +33,7 @@ import { useSetAtom } from "jotai";
 import { mobileSidebarOpenAtom } from "@/modules/sidebar/store";
 import DropIndicatorWrapper from "../../../../components/ui/drop-indicator-wrapper";
 import ConditionalForm from "../../../../components/base/conditional-form";
-import { listLinkOptions } from "@/lib/links";
+import { listLinkOptions } from "@/lib/client/links";
 import { Link } from "@tanstack/react-router";
 import type { ListSelect } from "@/db/schema";
 

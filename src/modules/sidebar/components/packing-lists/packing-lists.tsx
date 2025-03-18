@@ -1,7 +1,7 @@
 import React from "react";
 import { useQuery } from "@tanstack/react-query";
 import PackingList from "./packing-list";
-import { cn } from "@/lib/utils";
+import { cn } from "@/lib/client/utils";
 import { listsQueryOptions } from "@/modules/sidebar/queries";
 import useMutations from "@/hooks/use-mutations";
 
@@ -12,7 +12,7 @@ import { extractClosestEdge } from "@atlaskit/pragmatic-drag-and-drop-hitbox/clo
 import { reorderWithEdge } from "@atlaskit/pragmatic-drag-and-drop-hitbox/util/reorder-with-edge";
 import { flushSync } from "react-dom";
 import { z } from "zod";
-import { DndEntityType, isDndEntityType } from "@/lib/constants";
+import { DndEntityType, isDndEntityType } from "@/lib/client/constants";
 import SidebarSectionHeader from "@/modules/sidebar/components/sidebar-section-header";
 import useScrollShadow from "@/hooks/use-scroll-shadow";
 import { useVirtualizer } from "@tanstack/react-virtual";

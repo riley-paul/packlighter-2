@@ -1,4 +1,4 @@
-import { isAuthorized } from "@/lib/helpers";
+import { isAuthorized } from "@/actions/helpers";
 import { defineAction } from "astro:actions";
 import db from "@/db";
 import { z } from "zod";

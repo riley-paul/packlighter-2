@@ -1,5 +1,5 @@
 import React from "react";
-import { centerDragPreviewOnMouse, cn } from "@/lib/utils";
+import { centerDragPreviewOnMouse, cn } from "@/lib/client/utils";
 
 import useDraggableState from "@/hooks/use-draggable-state";
 import {
@@ -17,7 +17,7 @@ import {
   DND_ENTITY_TYPE,
   DndEntityType,
   isDndEntityType,
-} from "@/lib/constants";
+} from "@/lib/client/constants";
 import useCurrentList from "@/hooks/use-current-list";
 import { flexRender, type Row } from "@tanstack/react-table";
 import Gripper from "../base/gripper";

@@ -1,4 +1,4 @@
-import { cn } from "@/lib/utils";
+import { cn } from "@/lib/client/utils";
 import type { ButtonProps } from "@radix-ui/themes";
 import React from "react";
 import { useEventListener, useOnClickOutside } from "usehooks-ts";

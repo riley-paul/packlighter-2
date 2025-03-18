@@ -1,4 +1,4 @@
-import { cn } from "@/lib/utils";
+import { cn } from "@/lib/client/utils";
 import type { Edge } from "@atlaskit/pragmatic-drag-and-drop-hitbox/types";
 import type { CSSProperties, HTMLAttributes } from "react";
 

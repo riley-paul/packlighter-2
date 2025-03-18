@@ -1,6 +1,6 @@
 import React from "react";
 
-import { cn } from "@/lib/utils";
+import { cn } from "@/lib/client/utils";
 import ItemImage from "./item-image";
 import ResponsiveModal from "@/components/base/responsive-modal";
 import { Button, Heading, Text, TextField } from "@radix-ui/themes";

@@ -1,5 +1,5 @@
 import React from "react";
-import { cn } from "@/lib/utils";
+import { cn } from "@/lib/client/utils";
 import { dropTargetForElements } from "@atlaskit/pragmatic-drag-and-drop/element/adapter";
 import { combine } from "@atlaskit/pragmatic-drag-and-drop/combine";
 import invariant from "tiny-invariant";
@@ -7,7 +7,7 @@ import {
   DND_ENTITY_TYPE,
   DndEntityType,
   isDndEntityType,
-} from "@/lib/constants";
+} from "@/lib/client/constants";
 import useCurrentList from "@/hooks/use-current-list";
 import Placeholder from "../base/placeholder";
 import { Separator } from "@radix-ui/themes";

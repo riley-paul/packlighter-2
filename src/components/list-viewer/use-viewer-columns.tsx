@@ -1,6 +1,6 @@
 import { createColumnHelper } from "@tanstack/react-table";
 import React from "react";
-import { cn, formatWeight, getCheckboxState } from "@/lib/utils";
+import { cn, formatWeight, getCheckboxState } from "@/lib/client/utils";
 import CellWrapper from "../base/cell-wrapper";
 import ItemImage from "../../modules/items/components/item-image";
 import { Checkbox } from "@radix-ui/themes";

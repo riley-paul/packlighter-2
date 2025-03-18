@@ -7,7 +7,7 @@ import PackingItemsSortFilter from "../packing-items-sort-filter/packing-item-so
 import { usePackingItemsSortFilter } from "../packing-items-sort-filter/use-packing-item-sort-filter";
 import SidebarSectionHeader from "../sidebar-section-header";
 import useScrollShadow from "@/hooks/use-scroll-shadow";
-import { cn } from "@/lib/utils";
+import { cn } from "@/lib/client/utils";
 import { useVirtualizer } from "@tanstack/react-virtual";
 import useCurrentList from "@/hooks/use-current-list";
 import { ScrollArea } from "@radix-ui/themes";

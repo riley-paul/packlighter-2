@@ -1,5 +1,5 @@
 import useConfirmDialog from "@/hooks/use-confirm-dialog";
-import { ACCENT_COLOR } from "@/lib/constants";
+import { ACCENT_COLOR } from "@/lib/client/constants";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Button, IconButton, Text, TextField, Tooltip } from "@radix-ui/themes";
 import React from "react";

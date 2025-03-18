@@ -4,7 +4,7 @@ import { List, Category, CategoryItem, zListInsert } from "@/db/schema";
 import { and, eq, inArray, max } from "drizzle-orm";
 import { idAndUserIdFilter } from "@/lib/validators.ts";
 import { ActionError, defineAction } from "astro:actions";
-import { getExpandedList, isAuthorized } from "@/lib/helpers";
+import { getExpandedList, isAuthorized } from "@/actions/helpers";
 
 import { v4 as uuid } from "uuid";
 

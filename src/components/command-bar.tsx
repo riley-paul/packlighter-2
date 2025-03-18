@@ -12,12 +12,12 @@ import {
 import { useEventListener } from "usehooks-ts";
 import { useQuery } from "@tanstack/react-query";
 import useMutations from "@/hooks/use-mutations";
-import { cn } from "@/lib/utils";
-import { ACCENT_COLOR } from "@/lib/constants";
+import { cn } from "@/lib/client/utils";
+import { ACCENT_COLOR } from "@/lib/client/constants";
 import { atom, useAtom, useSetAtom } from "jotai";
 import { openEditorAtom } from "@/modules/items/store";
 import { useNavigate } from "@tanstack/react-router";
-import { listLinkOptions } from "@/lib/links";
+import { listLinkOptions } from "@/lib/client/links";
 import {
   listsQueryOptions,
   itemsQueryOptions,

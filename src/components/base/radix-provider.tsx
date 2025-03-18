@@ -1,4 +1,4 @@
-import { ACCENT_COLOR } from "@/lib/constants";
+import { ACCENT_COLOR } from "@/lib/client/constants";
 import { Theme } from "@radix-ui/themes";
 import React from "react";
 
