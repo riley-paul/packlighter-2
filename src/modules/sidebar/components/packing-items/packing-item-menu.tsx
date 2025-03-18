@@ -8,7 +8,7 @@ import { useQuery } from "@tanstack/react-query";
 import { Link } from "@tanstack/react-router";
 import { listLinkOptions } from "@/lib/client/links";
 import useItemsMutations from "@/modules/items/mutations";
-import type { ItemSelect } from "@/db/schema";
+import type { ItemSelect } from "@/lib/types";
 
 type Props = {
   item: ItemSelect;

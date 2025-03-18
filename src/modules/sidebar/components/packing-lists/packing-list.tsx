@@ -35,7 +35,7 @@ import DropIndicatorWrapper from "../../../../components/ui/drop-indicator-wrapp
 import ConditionalForm from "../../../../components/base/conditional-form";
 import { listLinkOptions } from "@/lib/client/links";
 import { Link } from "@tanstack/react-router";
-import type { ListSelect } from "@/db/schema";
+import type { ListSelect } from "@/lib/types";
 
 interface Props {
   list: ListSelect;

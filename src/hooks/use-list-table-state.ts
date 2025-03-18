@@ -1,4 +1,4 @@
-import type { ListSelect } from "@/db/schema";
+import type { ListSelect } from "@/lib/types";
 import type { VisibilityState } from "@tanstack/react-table";
 import React from "react";
 

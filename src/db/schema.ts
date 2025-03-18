@@ -1,6 +1,6 @@
 import { integer, sqliteTable, text } from "drizzle-orm/sqlite-core";
-import { createInsertSchema, createSelectSchema } from "drizzle-zod";
-import type { z } from "zod";
+
+export const weightUnits = ["g", "kg", "oz", "lb"] as const;
 
 const id = text("id")
   .primaryKey()
@@ -9,21 +9,6 @@ const id = text("id")
 const userId = text()
   .notNull()
   .references(() => User.id, { onDelete: "cascade" });
-
-export type Unit = {
-  symbol: string;
-  multiplier: number;
-  name: string;
-};
-
-export const weightUnits = ["g", "kg", "oz", "lb"] as const;
-export type WeightUnit = (typeof weightUnits)[number];
-export const weightUnitsInfo: Unit[] = [
-  { symbol: "g", multiplier: 1, name: "grams" },
-  { symbol: "kg", multiplier: 1000, name: "kilograms" },
-  { symbol: "oz", multiplier: 28.3495, name: "ounces" },
-  { symbol: "lb", multiplier: 453.592, name: "pounds" },
-];
 
 const timeStamps = {
   createdAt: text()
@@ -46,10 +31,6 @@ export const User = sqliteTable("user", {
   githubUsername: text().unique(),
   ...timeStamps,
 });
-export const zUserSelect = createSelectSchema(User);
-export const zUserInsert = createInsertSchema(User);
-export type UserSelect = z.infer<typeof zUserSelect>;
-export type UserInsert = z.infer<typeof zUserInsert>;
 
 export const UserSession = sqliteTable("userSession", {
   id,
@@ -68,10 +49,6 @@ export const Item = sqliteTable("item", {
   image: text(),
   ...timeStamps,
 });
-export const zItemSelect = createSelectSchema(Item);
-export const zItemInsert = createInsertSchema(Item);
-export type ItemSelect = z.infer<typeof zItemSelect>;
-export type ItemInsert = z.infer<typeof zItemInsert>;
 
 export const List = sqliteTable("list", {
   id,
@@ -89,10 +66,6 @@ export const List = sqliteTable("list", {
   isPublic: integer({ mode: "boolean" }).notNull().default(false),
   ...timeStamps,
 });
-export const zListSelect = createSelectSchema(List);
-export const zListInsert = createInsertSchema(List);
-export type ListSelect = z.infer<typeof zListSelect>;
-export type ListInsert = z.infer<typeof zListInsert>;
 
 export const Category = sqliteTable("category", {
   id,
@@ -104,10 +77,6 @@ export const Category = sqliteTable("category", {
   sortOrder: integer().notNull().default(0),
   ...timeStamps,
 });
-export const zCategorySelect = createSelectSchema(Category);
-export const zCategoryInsert = createInsertSchema(Category);
-export type CategorySelect = z.infer<typeof zCategorySelect>;
-export type CategoryInsert = z.infer<typeof zCategoryInsert>;
 
 export const CategoryItem = sqliteTable("categoryItem", {
   id,
@@ -127,10 +96,6 @@ export const CategoryItem = sqliteTable("categoryItem", {
   consWeight: integer({ mode: "boolean" }).notNull().default(false),
   ...timeStamps,
 });
-export const zCategoryItemSelect = createSelectSchema(CategoryItem);
-export const zCategoryItemInsert = createInsertSchema(CategoryItem);
-export type CategoryItemSelect = z.infer<typeof zCategoryItemSelect>;
-export type CategoryItemInsert = z.infer<typeof zCategoryItemInsert>;
 
 export const AppFeedback = sqliteTable("appFeedback", {
   id,
@@ -138,23 +103,6 @@ export const AppFeedback = sqliteTable("appFeedback", {
   feedback: text().notNull(),
   ...timeStamps,
 });
-export const zAppFeedbackSelect = createSelectSchema(AppFeedback);
-export const zAppFeedbackInsert = createInsertSchema(AppFeedback);
-export type AppFeedbackSelect = z.infer<typeof zAppFeedbackSelect>;
-export type AppFeedbackInsert = z.infer<typeof zAppFeedbackInsert>;
-
-export type ExpandedCategoryItem = CategoryItemSelect & {
-  itemData: ItemSelect;
-};
-
-export type ExpandedCategory = CategorySelect & {
-  items: ExpandedCategoryItem[];
-  packed: boolean;
-};
-
-export type ExpandedList = ListSelect & {
-  categories: ExpandedCategory[];
-};
 
 export type AllTables =
   | typeof Item

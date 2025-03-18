@@ -13,7 +13,7 @@ import { DND_ENTITY_TYPE, DndEntityType } from "@/lib/client/constants";
 import { Portal, Text } from "@radix-ui/themes";
 import RadixProvider from "@/components/base/radix-provider";
 import PackingItemMenu from "./packing-item-menu";
-import type { ItemSelect } from "@/db/schema";
+import type { ItemSelect } from "@/lib/types";
 
 interface Props {
   item: ItemSelect;

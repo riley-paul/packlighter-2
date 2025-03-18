@@ -5,7 +5,7 @@ import {
   type ExpandedCategory,
   type ExpandedCategoryItem,
   type ItemSelect,
-} from "@/db/schema";
+} from "@/lib/types";
 import { v4 as uuid } from "uuid";
 import { z } from "zod";
 

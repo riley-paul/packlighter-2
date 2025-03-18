@@ -15,11 +15,11 @@ import {
   listsQueryOptions,
 } from "@/modules/sidebar/queries";
 import type {
-  ExpandedCategory,
-  ExpandedCategoryItem,
   ExpandedList,
+  ExpandedCategoryItem,
   ListSelect,
-} from "@/db/schema";
+  ExpandedCategory,
+} from "@/lib/types";
 
 export default function useMutations() {
   const { listId } = useCurrentList();

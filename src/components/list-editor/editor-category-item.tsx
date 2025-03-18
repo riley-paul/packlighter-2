@@ -24,7 +24,7 @@ import Gripper from "../base/gripper";
 import { Portal, Separator } from "@radix-ui/themes";
 import RadixProvider from "../base/radix-provider";
 import DropIndicatorWrapper from "../ui/drop-indicator-wrapper";
-import type { ExpandedCategoryItem } from "@/db/schema";
+import type { ExpandedCategoryItem } from "@/lib/types";
 
 interface Props {
   row: Row<ExpandedCategoryItem>;

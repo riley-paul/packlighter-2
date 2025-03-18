@@ -18,7 +18,7 @@ import { usePackingItemsSortFilter } from "../../modules/sidebar/components/pack
 import { v4 as uuidv4 } from "uuid";
 import { Button, Popover, Spinner } from "@radix-ui/themes";
 import { itemsQueryOptions } from "@/modules/sidebar/queries";
-import type { ExpandedCategory } from "@/db/schema";
+import type { ExpandedCategory } from "@/lib/types";
 
 type Props = {
   category: ExpandedCategory;

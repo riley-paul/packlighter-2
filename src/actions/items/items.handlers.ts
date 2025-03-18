@@ -1,10 +1,4 @@
-import {
-  Category,
-  CategoryItem,
-  Item,
-  List,
-  type ItemSelect,
-} from "@/db/schema";
+import { Category, CategoryItem, Item, List } from "@/db/schema";
 import db from "@/db";
 import { and, eq } from "drizzle-orm";
 
@@ -14,7 +8,7 @@ import { isAuthorized } from "@/actions/helpers";
 
 import { v4 as uuid } from "uuid";
 import type itemInputs from "./items.inputs";
-import type { IncludedList } from "@/lib/types";
+import type { IncludedList, ItemSelect } from "@/lib/types";
 
 const getAll: ActionHandler<typeof itemInputs.getAll, ItemSelect[]> = async (
   _,

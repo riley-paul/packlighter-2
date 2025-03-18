@@ -14,7 +14,7 @@ import {
   TextField,
   Tooltip,
 } from "@radix-ui/themes";
-import type { ListSelect } from "@/db/schema";
+import type { ListSelect } from "@/lib/types";
 
 type Props = {
   list: ListSelect;

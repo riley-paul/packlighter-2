@@ -32,7 +32,7 @@ import { Portal } from "@radix-ui/themes";
 import RadixProvider from "../base/radix-provider";
 import Gripper from "../base/gripper";
 import DropIndicatorWrapper from "../ui/drop-indicator-wrapper";
-import type { ExpandedCategory } from "@/db/schema";
+import type { ExpandedCategory } from "@/lib/types";
 
 interface Props {
   category: ExpandedCategory;

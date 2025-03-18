@@ -1,4 +1,4 @@
-import { zItemInsert } from "@/db/schema";
+import { zItemInsert } from "@/lib/types";
 import { z } from "zod";
 
 const itemInputs = {

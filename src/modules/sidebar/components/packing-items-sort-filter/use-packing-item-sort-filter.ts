@@ -8,7 +8,7 @@ import {
 } from "@/modules/sidebar/store";
 import { FilterOptions, SortOptions } from "@/modules/sidebar/types";
 import { useAtomValue } from "jotai";
-import type { ItemSelect } from "@/db/schema";
+import type { ItemSelect } from "@/lib/types";
 
 type FilteringFn = (item: ItemSelect) => boolean;
 type SortingFn = (a: ItemSelect, b: ItemSelect) => number;

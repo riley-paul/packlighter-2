@@ -3,15 +3,10 @@ import { idAndUserIdFilter } from "@/lib/validators.ts";
 import { ActionError, defineAction } from "astro:actions";
 import { getListItemIds, isAuthorized } from "@/actions/helpers";
 import db from "@/db";
-import {
-  CategoryItem,
-  Item,
-  Category,
-  zItemInsert,
-  zCategoryItemInsert,
-} from "@/db/schema";
+import { CategoryItem, Item, Category } from "@/db/schema";
 import { and, eq, max } from "drizzle-orm";
 import { v4 as uuid } from "uuid";
+import { zCategoryItemInsert, zItemInsert } from "@/lib/types";
 
 export const create = defineAction({
   input: z.object({

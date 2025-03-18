@@ -1,16 +1,9 @@
 import type { ActionAPIContext } from "astro/actions/runtime/utils.js";
 import { ActionError } from "astro:actions";
-import {
-  Category,
-  CategoryItem,
-  Item,
-  List,
-  User,
-  type ExpandedCategory,
-  type ExpandedList,
-} from "@/db/schema";
+import { Category, CategoryItem, Item, List, User } from "@/db/schema";
 import db from "@/db";
 import { eq, sql, inArray } from "drizzle-orm";
+import type { ExpandedList, ExpandedCategory } from "@/lib/types";
 
 export const isAuthorized = (context: ActionAPIContext) => {
   const user = context.locals.user;

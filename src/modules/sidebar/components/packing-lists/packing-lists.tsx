@@ -11,14 +11,13 @@ import { monitorForElements } from "@atlaskit/pragmatic-drag-and-drop/element/ad
 import { extractClosestEdge } from "@atlaskit/pragmatic-drag-and-drop-hitbox/closest-edge";
 import { reorderWithEdge } from "@atlaskit/pragmatic-drag-and-drop-hitbox/util/reorder-with-edge";
 import { flushSync } from "react-dom";
-import { z } from "zod";
 import { DndEntityType, isDndEntityType } from "@/lib/client/constants";
 import SidebarSectionHeader from "@/modules/sidebar/components/sidebar-section-header";
 import useScrollShadow from "@/hooks/use-scroll-shadow";
 import { useVirtualizer } from "@tanstack/react-virtual";
 import useCurrentList from "@/hooks/use-current-list";
 import { ScrollArea } from "@radix-ui/themes";
-import type { ListSelect } from "@/db/schema";
+import { zListSelect } from "@/lib/types";
 
 export default function PackingLists(): ReturnType<React.FC> {
   const listsQuery = useQuery(listsQueryOptions);
@@ -36,8 +35,8 @@ export default function PackingLists(): ReturnType<React.FC> {
           return;
         }
 
-        const sourceData = z.custom<ListSelect>().safeParse(source.data);
-        const targetData = z.custom<ListSelect>().safeParse(target.data);
+        const sourceData = zListSelect.safeParse(source.data);
+        const targetData = zListSelect.safeParse(target.data);
 
         if (!sourceData.success || !targetData.success) {
           return;

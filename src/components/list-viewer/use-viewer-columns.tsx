@@ -10,7 +10,7 @@ import type {
   ExpandedCategory,
   ExpandedCategoryItem,
   ListSelect,
-} from "@/db/schema";
+} from "@/lib/types";
 
 const columnHelper = createColumnHelper<ExpandedCategoryItem>();
 

@@ -5,7 +5,7 @@ import { flushSync } from "react-dom";
 import invariant from "tiny-invariant";
 import { useEventListener, useOnClickOutside } from "usehooks-ts";
 import { Button, Link, Text, TextArea } from "@radix-ui/themes";
-import type { ListSelect } from "@/db/schema";
+import type { ListSelect } from "@/lib/types";
 
 const focusInputAtEnd = (inputElement: HTMLTextAreaElement) => {
   if (inputElement) {

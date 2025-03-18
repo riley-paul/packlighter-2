@@ -1,4 +1,5 @@
-import { weightUnitsInfo, type Unit } from "@/db/schema";
+import { weightUnitsInfo } from "./client/constants";
+import type { Unit } from "./types";
 
 class Convertible {
   units: Unit[] = [];

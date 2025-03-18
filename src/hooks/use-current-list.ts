@@ -2,7 +2,7 @@ import { listQueryOptions } from "@/lib/client/queries";
 import { useQuery } from "@tanstack/react-query";
 import React from "react";
 import { useParams } from "@tanstack/react-router";
-import type { ExpandedList } from "@/db/schema";
+import type { ExpandedList } from "@/lib/types";
 
 const getItemsIds = (list: ExpandedList | undefined) => {
   if (!list) return [];

@@ -11,11 +11,8 @@ import {
   Switch,
   Text,
 } from "@radix-ui/themes";
-import {
-  weightUnitsInfo,
-  type ExpandedList,
-  type WeightUnit,
-} from "@/db/schema";
+import { type WeightUnit, weightUnitsInfo } from "@/lib/client/constants";
+import type { ExpandedList } from "@/lib/types";
 
 interface Props {
   list: ExpandedList;

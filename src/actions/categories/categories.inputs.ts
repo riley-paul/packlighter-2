@@ -1,4 +1,4 @@
-import { zCategoryInsert } from "@/db/schema";
+import { zCategoryInsert } from "@/lib/types";
 import { z } from "zod";
 
 const categoryInputs = {

@@ -14,7 +14,7 @@ import type {
   ExpandedCategory,
   ExpandedCategoryItem,
   ItemSelect,
-} from "@/db/schema";
+} from "@/lib/types";
 
 type Props = {
   categories: ExpandedCategory[];

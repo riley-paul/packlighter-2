@@ -8,7 +8,8 @@ import { Button, IconButton, Select, Text, TextField } from "@radix-ui/themes";
 import { useAtomValue, useSetAtom } from "jotai";
 import { closeEditorAtom, editorItemAtom } from "../store";
 import useItemsMutations from "../mutations";
-import { weightUnitsInfo, type ItemSelect } from "@/db/schema";
+import type { ItemSelect } from "@/lib/types";
+import { weightUnitsInfo } from "@/lib/client/constants";
 
 const ItemForm: React.FC = () => {
   const item = useAtomValue(editorItemAtom);
