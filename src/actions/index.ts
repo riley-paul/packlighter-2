@@ -1,4 +1,4 @@
-import * as items from "./items";
+import * as items from "./items/items.actions";
 import * as lists from "./lists";
 import * as categories from "./categories";
 import * as categoryItems from "./category-items";
