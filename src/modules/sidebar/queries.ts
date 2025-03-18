@@ -8,5 +8,5 @@ export const itemsQueryOptions = queryOptions({
 
 export const listsQueryOptions = queryOptions({
   queryKey: ["lists"],
-  queryFn: () => actions.lists.getAll.orThrow(),
+  queryFn: () => actions.lists.getAll.orThrow({}),
 });
