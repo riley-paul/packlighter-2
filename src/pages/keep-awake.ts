@@ -1,9 +1,10 @@
 import type { APIRoute } from "astro";
-import db from "@/db";
+import { createDb } from "@/db";
 import { User } from "@/db/schema";
 import { count } from "drizzle-orm";
 
-export const GET: APIRoute = async () => {
+export const GET: APIRoute = async ({ locals }) => {
+  const db = createDb(locals.runtime.env);
   const numUsers = await db
     .select({ count: count() })
     .from(User)

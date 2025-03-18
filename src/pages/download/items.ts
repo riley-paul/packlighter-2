@@ -1,11 +1,12 @@
 import type { APIRoute } from "astro";
-import db from "@/db";
 import { Item } from "@/db/schema";
 import { eq } from "drizzle-orm";
 import { desc } from "drizzle-orm";
 import { stringify } from "csv/sync";
+import { createDb } from "@/db";
 
 export const GET: APIRoute = async ({ locals }) => {
+  const db = createDb(locals.runtime.env);
   const userId = locals.user?.id;
 
   if (!userId) {

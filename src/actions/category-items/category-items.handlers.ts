@@ -1,17 +1,18 @@
 import { idAndUserIdFilter } from "@/actions/filters";
 import { ActionError, type ActionHandler } from "astro:actions";
 import { getListItemIds, isAuthorized } from "@/actions/helpers";
-import db from "@/db";
 import { CategoryItem, Item, Category } from "@/db/schema";
 import { and, eq, max } from "drizzle-orm";
 import { v4 as uuid } from "uuid";
 import type { CategoryItemInsert } from "@/lib/types";
 import type categoryItemInputs from "./category-items.inputs";
+import { createDb } from "@/db";
 
 const create: ActionHandler<
   typeof categoryItemInputs.create,
   CategoryItemInsert
 > = async ({ itemId, categoryId, reorderIds, data }, c) => {
+  const db = createDb(c.locals.runtime.env);
   const userId = isAuthorized(c).id;
 
   const { listId } = await db
@@ -27,7 +28,7 @@ const create: ActionHandler<
     });
   }
 
-  const listItemIds = await getListItemIds(listId);
+  const listItemIds = await getListItemIds(c, listId);
 
   if (listItemIds.has(itemId)) {
     throw new ActionError({
@@ -73,6 +74,7 @@ const createAndAddToCategory: ActionHandler<
   typeof categoryItemInputs.createAndAddToCategory,
   CategoryItemInsert
 > = async ({ categoryId, itemData, categoryItemData }, c) => {
+  const db = createDb(c.locals.runtime.env);
   const userId = isAuthorized(c).id;
 
   const newItem = await db
@@ -107,6 +109,7 @@ const reorder: ActionHandler<typeof categoryItemInputs.reorder, null> = async (
   { ids, categoryId },
   c,
 ) => {
+  const db = createDb(c.locals.runtime.env);
   const userId = isAuthorized(c).id;
   await Promise.all(
     ids.map((id, index) =>
@@ -123,6 +126,7 @@ const update: ActionHandler<
   typeof categoryItemInputs.update,
   CategoryItemInsert
 > = async ({ categoryItemId, data }, c) => {
+  const db = createDb(c.locals.runtime.env);
   const userId = isAuthorized(c).id;
   const updated = await db
     .update(CategoryItem)
@@ -137,6 +141,7 @@ const remove: ActionHandler<typeof categoryItemInputs.remove, null> = async (
   { categoryItemId },
   c,
 ) => {
+  const db = createDb(c.locals.runtime.env);
   const userId = isAuthorized(c).id;
   const deleted = await db
     .delete(CategoryItem)

@@ -1,4 +1,4 @@
-import db from "@/db";
+import { createDb } from "@/db";
 import { List, Category, CategoryItem } from "@/db/schema";
 import { and, eq, inArray, max } from "drizzle-orm";
 import { idAndUserIdFilter } from "@/actions/filters";
@@ -13,6 +13,7 @@ const getAll: ActionHandler<typeof listInputs.getAll, ListSelect[]> = async (
   _,
   c,
 ) => {
+  const db = createDb(c.locals.runtime.env);
   const userId = isAuthorized(c).id;
   const lists = await db
     .select()
@@ -26,6 +27,7 @@ const getOne: ActionHandler<typeof listInputs.getOne, ExpandedList> = async (
   { listId },
   c,
 ) => {
+  const db = createDb(c.locals.runtime.env);
   const userId = isAuthorized(c).id;
 
   const list = await db
@@ -41,13 +43,14 @@ const getOne: ActionHandler<typeof listInputs.getOne, ExpandedList> = async (
     });
   }
 
-  return await getExpandedList(listId);
+  return await getExpandedList(c, listId);
 };
 
 const create: ActionHandler<typeof listInputs.create, ListSelect> = async (
   { data },
   c,
 ) => {
+  const db = createDb(c.locals.runtime.env);
   const userId = isAuthorized(c).id;
 
   const { max: maxSortOrder } = await db
@@ -73,6 +76,7 @@ const reorder: ActionHandler<typeof listInputs.reorder, string[]> = async (
   ids,
   c,
 ) => {
+  const db = createDb(c.locals.runtime.env);
   const userId = isAuthorized(c).id;
   await Promise.all(
     ids.map((id, idx) =>
@@ -89,6 +93,7 @@ const update: ActionHandler<typeof listInputs.update, ListSelect> = async (
   { listId, data },
   c,
 ) => {
+  const db = createDb(c.locals.runtime.env);
   const userId = isAuthorized(c).id;
   const updated = await db
     .update(List)
@@ -103,6 +108,7 @@ const remove: ActionHandler<typeof listInputs.remove, null> = async (
   { listId },
   c,
 ) => {
+  const db = createDb(c.locals.runtime.env);
   const userId = isAuthorized(c).id;
   const listCategories = await db
     .select()
@@ -130,6 +136,7 @@ const unpack: ActionHandler<typeof listInputs.unpack, null> = async (
   { listId },
   c,
 ) => {
+  const db = createDb(c.locals.runtime.env);
   const userId = isAuthorized(c).id;
   const categoryItems = await db
     .select({ id: CategoryItem.id })
@@ -148,6 +155,7 @@ const duplicate: ActionHandler<
   typeof listInputs.duplicate,
   { listId: string }
 > = async ({ listId }, c) => {
+  const db = createDb(c.locals.runtime.env);
   const userId = isAuthorized(c).id;
   const list = await db
     .select()

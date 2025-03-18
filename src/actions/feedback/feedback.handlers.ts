@@ -1,5 +1,5 @@
 import { isAuthorized } from "@/actions/helpers";
-import db from "@/db";
+import { createDb } from "@/db";
 import { v4 as uuid } from "uuid";
 import { AppFeedback } from "@/db/schema";
 import type { ActionHandler } from "astro:actions";
@@ -10,6 +10,7 @@ const create: ActionHandler<
   typeof feedbackInputs.create,
   AppFeedbackSelect
 > = async ({ feedback }, c) => {
+  const db = createDb(c.locals.runtime.env);
   const userId = isAuthorized(c).id;
   return await db
     .insert(AppFeedback)

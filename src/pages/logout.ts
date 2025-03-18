@@ -1,4 +1,7 @@
-import { lucia } from "@/modules/users/helpers/lucia";
+import {
+  deleteSessionTokenCookie,
+  invalidateSession,
+} from "@/lib/server/lucia";
 import type { APIContext } from "astro";
 
 export async function GET(context: APIContext): Promise<Response> {
@@ -8,14 +11,8 @@ export async function GET(context: APIContext): Promise<Response> {
     });
   }
 
-  await lucia.invalidateSession(context.locals.session.id);
-
-  const sessionCookie = lucia.createBlankSessionCookie();
-  context.cookies.set(
-    sessionCookie.name,
-    sessionCookie.value,
-    sessionCookie.attributes,
-  );
+  invalidateSession(context, context.locals.session.id);
+  deleteSessionTokenCookie(context);
 
   return context.redirect("/");
 }

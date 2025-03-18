@@ -12,9 +12,11 @@ import { itemNamesDescs } from "./item-names-descs";
 import { listNamesDescs } from "./list-names-descs";
 import { imageLinks } from "./image-links";
 
-import db from "@/db";
+import env from "@/envs-runtime";
+import { createDb } from "..";
 
 export default async function seed() {
+  const db = createDb(env);
   const [{ id: userId }] = await db
     .insert(User)
     .values({

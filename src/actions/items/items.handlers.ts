@@ -1,5 +1,5 @@
 import { Category, CategoryItem, Item, List } from "@/db/schema";
-import db from "@/db";
+import  { createDb } from "@/db";
 import { and, eq } from "drizzle-orm";
 
 import { idAndUserIdFilter } from "@/actions/filters";
@@ -14,6 +14,7 @@ const getAll: ActionHandler<typeof itemInputs.getAll, ItemSelect[]> = async (
   _,
   c,
 ) => {
+  const db = createDb(c.locals.runtime.env);
   const userId = isAuthorized(c).id;
   const items = await db.select().from(Item).where(eq(Item.userId, userId));
   return items;
@@ -23,6 +24,7 @@ const create: ActionHandler<typeof itemInputs.create, ItemSelect> = async (
   { data },
   c,
 ) => {
+  const db = createDb(c.locals.runtime.env);
   const userId = isAuthorized(c).id;
   const [newItem] = await db
     .insert(Item)
@@ -35,6 +37,7 @@ const duplicate: ActionHandler<
   typeof itemInputs.duplicate,
   ItemSelect
 > = async ({ itemId }, c) => {
+  const db = createDb(c.locals.runtime.env);
   const userId = isAuthorized(c).id;
   const [item] = await db
     .select()
@@ -60,6 +63,7 @@ const remove: ActionHandler<typeof itemInputs.remove, null> = async (
   { itemId },
   c,
 ) => {
+  const db = createDb(c.locals.runtime.env);
   const userId = isAuthorized(c).id;
   await db.delete(CategoryItem).where(eq(CategoryItem.itemId, itemId));
   await db.delete(Item).where(idAndUserIdFilter(Item, { userId, id: itemId }));
@@ -70,6 +74,7 @@ const update: ActionHandler<typeof itemInputs.update, ItemSelect> = async (
   { itemId, data },
   c,
 ) => {
+  const db = createDb(c.locals.runtime.env);
   const userId = isAuthorized(c).id;
   const updated = await db
     .update(Item)
@@ -84,6 +89,7 @@ const getListsIncluded: ActionHandler<
   typeof itemInputs.getListsIncluded,
   IncludedList[]
 > = async ({ itemId }, c) => {
+  const db = createDb(c.locals.runtime.env);
   const userId = isAuthorized(c).id;
   const result = await db
     .select({

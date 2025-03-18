@@ -1,6 +1,5 @@
 import { Category, CategoryItem, List } from "@/db/schema";
 import { eq, max, and, ne, desc, notInArray } from "drizzle-orm";
-import db from "@/db";
 import { idAndUserIdFilter } from "@/actions/filters";
 import { ActionError, type ActionHandler } from "astro:actions";
 import { isAuthorized } from "@/actions/helpers";
@@ -12,11 +11,13 @@ import type {
   CategorySelect,
   OtherCategory,
 } from "@/lib/types";
+import { createDb } from "@/db";
 
 const getFromOtherLists: ActionHandler<
   typeof categoryInputs.getFromOtherLists,
   OtherCategory[]
 > = async ({ listId }, c) => {
+  const db = createDb(c.locals.runtime.env);
   const userId = isAuthorized(c).id;
   const categories = await db
     .select({
@@ -36,6 +37,7 @@ const copyToList: ActionHandler<
   typeof categoryInputs.copyToList,
   CategorySelect
 > = async ({ categoryId, listId }, c) => {
+  const db = createDb(c.locals.runtime.env);
   const userId = isAuthorized(c).id;
   const { max: maxSortOrder } = await db
     .select({ max: max(Category.sortOrder) })
@@ -116,6 +118,7 @@ const create: ActionHandler<
   typeof categoryInputs.create,
   CategorySelect
 > = async ({ listId, data }, c) => {
+  const db = createDb(c.locals.runtime.env);
   const userId = isAuthorized(c).id;
   const { max: maxSortOrder } = await db
     .select({ max: max(Category.sortOrder) })
@@ -141,6 +144,7 @@ const reorder: ActionHandler<typeof categoryInputs.reorder, null> = async (
   { listId, ids },
   c,
 ) => {
+  const db = createDb(c.locals.runtime.env);
   const userId = isAuthorized(c).id;
   await Promise.all(
     ids.map((id, idx) =>
@@ -157,6 +161,7 @@ const remove: ActionHandler<typeof categoryInputs.remove, null> = async (
   { categoryId },
   c,
 ) => {
+  const db = createDb(c.locals.runtime.env);
   const userId = isAuthorized(c).id;
   await db.delete(CategoryItem).where(eq(CategoryItem.categoryId, categoryId));
   await db
@@ -169,6 +174,7 @@ const update: ActionHandler<
   typeof categoryInputs.update,
   CategorySelect
 > = async ({ categoryId, data }, c) => {
+  const db = createDb(c.locals.runtime.env);
   const userId = isAuthorized(c).id;
   const [updated] = await db
     .update(Category)
@@ -182,6 +188,7 @@ const togglePacked: ActionHandler<
   typeof categoryInputs.togglePacked,
   CategoryItemSelect[]
 > = async ({ categoryId }, c) => {
+  const db = createDb(c.locals.runtime.env);
   const userId = isAuthorized(c).id;
   const categoryItems = await db
     .select()

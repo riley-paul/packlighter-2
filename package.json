@@ -81,6 +81,8 @@
     "@types/bun": "^1.1.2",
     "@types/node": "^20.12.11",
     "@types/uuid": "^9.0.8",
+    "dotenv": "^16.4.7",
+    "dotenv-expand": "^12.0.1",
     "drizzle-kit": "^0.30.5",
     "prettier": "^3.2.5",
     "prettier-plugin-tailwindcss": "^0.6.1",

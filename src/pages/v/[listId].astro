@@ -7,7 +7,7 @@ import RadixProvider from "@/components/base/radix-provider";
 import { Badge, Button, Link } from "@radix-ui/themes";
 
 const { listId = "" } = Astro.params;
-const list = await getExpandedList(listId);
+const list = await getExpandedList(Astro, listId);
 
 if (!list) {
   return new Response("List not found", { status: 404 });
@@ -17,7 +17,7 @@ if (!list.isPublic) {
   return new Response("List is not public", { status: 403 });
 }
 
-const listOwner = await getUser(list.userId);
+const listOwner = await getUser(Astro, list.userId);
 const isListOwner = Astro.locals.user?.id === list.userId;
 
 if (!listOwner) {

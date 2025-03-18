@@ -1,9 +1,9 @@
 import type { ActionAPIContext } from "astro/actions/runtime/utils.js";
 import { ActionError } from "astro:actions";
 import { Category, CategoryItem, Item, List, User } from "@/db/schema";
-import db from "@/db";
 import { eq, sql, inArray } from "drizzle-orm";
 import type { ExpandedList, ExpandedCategory } from "@/lib/types";
+import { createDb } from "@/db";
 
 export const isAuthorized = (context: ActionAPIContext) => {
   const user = context.locals.user;
@@ -17,8 +17,10 @@ export const isAuthorized = (context: ActionAPIContext) => {
 };
 
 export const getExpandedList = async (
+  context: ActionAPIContext,
   listId: string,
 ): Promise<ExpandedList> => {
+  const db = createDb(context.locals.runtime.env);
   const list = await db
     .select()
     .from(List)
@@ -57,7 +59,8 @@ export const getExpandedList = async (
   return result;
 };
 
-export const getListItemIds = async (listId: string) => {
+export const getListItemIds = async (context: ActionAPIContext, listId: string) => {
+  const db = createDb(context.locals.runtime.env);
   const categoryIds = await db
     .select({ id: Category.id })
     .from(Category)
@@ -73,7 +76,8 @@ export const getListItemIds = async (listId: string) => {
   return new Set(categoryItems.map((categoryItem) => categoryItem.id));
 };
 
-export const getUser = async (userId: string) => {
+export const getUser = async (context: ActionAPIContext, userId: string) => {
+  const db = createDb(context.locals.runtime.env);
   const user = await db
     .select()
     .from(User)
