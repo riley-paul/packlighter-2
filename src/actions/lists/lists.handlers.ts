@@ -1,7 +1,7 @@
 import db from "@/db";
 import { List, Category, CategoryItem } from "@/db/schema";
 import { and, eq, inArray, max } from "drizzle-orm";
-import { idAndUserIdFilter } from "@/lib/validators.ts";
+import { idAndUserIdFilter } from "@/actions/filters";
 import { ActionError, type ActionHandler } from "astro:actions";
 import { getExpandedList, isAuthorized } from "@/actions/helpers";
 

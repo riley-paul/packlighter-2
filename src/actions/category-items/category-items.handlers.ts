@@ -1,4 +1,4 @@
-import { idAndUserIdFilter } from "@/lib/validators.ts";
+import { idAndUserIdFilter } from "@/actions/filters";
 import { ActionError, type ActionHandler } from "astro:actions";
 import { getListItemIds, isAuthorized } from "@/actions/helpers";
 import db from "@/db";

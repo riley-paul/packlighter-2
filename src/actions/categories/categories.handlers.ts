@@ -1,17 +1,17 @@
-import {
-  Category,
-  CategoryItem,
-  List,
-} from "@/db/schema";
+import { Category, CategoryItem, List } from "@/db/schema";
 import { eq, max, and, ne, desc, notInArray } from "drizzle-orm";
 import db from "@/db";
-import { idAndUserIdFilter } from "@/lib/validators.ts";
+import { idAndUserIdFilter } from "@/actions/filters";
 import { ActionError, type ActionHandler } from "astro:actions";
 import { isAuthorized } from "@/actions/helpers";
 
 import { v4 as uuid } from "uuid";
 import type categoryInputs from "./categories.inputs";
-import type { CategoryItemSelect, CategorySelect, OtherCategory } from "@/lib/types";
+import type {
+  CategoryItemSelect,
+  CategorySelect,
+  OtherCategory,
+} from "@/lib/types";
 
 const getFromOtherLists: ActionHandler<
   typeof categoryInputs.getFromOtherLists,
