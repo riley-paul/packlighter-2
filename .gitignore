@@ -164,3 +164,9 @@ sketch
 .astro
 
 # End of https://www.toptal.com/developers/gitignore/api/node,react,vercel
+
+dev.db*
+test.db
+
+.wrangler
+.dev.vars
