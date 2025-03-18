@@ -35,7 +35,7 @@ export const User = sqliteTable("user", {
 export const UserSession = sqliteTable("userSession", {
   id,
   userId,
-  expiresAt: text(),
+  expiresAt: integer({ mode: "timestamp_ms" }).notNull(),
   ...timeStamps,
 });
 

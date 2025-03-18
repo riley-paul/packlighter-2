@@ -1,18 +1,16 @@
 /// <reference path="../.astro/types.d.ts" />
-/// <reference path="../.astro/db-types.d.ts" />
+/// <reference path="../.astro/env.d.ts" />
+/// <reference path="../.astro/actions.d.ts" />
 /// <reference types="astro/client" />
 
-// import "@tanstack/react-table";
+type KVNamespace = import("@cloudflare/workers-types").KVNamespace;
+type ENV = {} & import("./envs").Environment;
 
-// declare module "@tanstack/react-table" {
-//   interface ColumnMeta<TData extends RowData, TValue> {
-//     isGripper?: boolean;
-//   }
-// }
-
+// use a default runtime configuration (advanced mode).
+type Runtime = import("@astrojs/cloudflare").Runtime<ENV>;
 declare namespace App {
-  interface Locals {
-    session: import("lucia").Session | null;
-    user: import("lucia").User | null;
+  interface Locals extends Runtime {
+    session: import("./lib/types").UserSessionInfo | null;
+    user: import("./lib/types").UserSelect | null;
   }
 }

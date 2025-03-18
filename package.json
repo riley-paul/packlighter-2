@@ -16,6 +16,7 @@
   },
   "dependencies": {
     "@astrojs/check": "^0.9.4",
+    "@astrojs/cloudflare": "^12.2.4",
     "@astrojs/node": "^9.1.2",
     "@astrojs/react": "^4.2.1",
     "@astrojs/tailwind": "^6.0.0",
@@ -39,19 +40,16 @@
     "@tanstack/virtual-core": "^3.10.4",
     "@types/react": "^18.3.2",
     "@types/react-dom": "^18.3.0",
-    "arctic": "^1.9.2",
+    "arctic": "^3.5.0",
     "astro": "^5.4.2",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.1",
     "cmdk": "^1.0.0",
     "csv": "^6.3.10",
-    "dotenv": "^16.4.7",
-    "dotenv-expand": "^12.0.1",
     "drizzle-orm": "^0.40.0",
     "drizzle-zod": "^0.7.0",
     "immer": "^10.1.1",
     "jotai": "^2.9.3",
-    "lucia": "^3.2.0",
     "lucide-react": "^0.378.0",
     "postcss-import": "^16.1.0",
     "radix-themes-tw": "^0.2.3",
@@ -75,6 +73,7 @@
     "zod": "^3.23.8"
   },
   "devDependencies": {
+    "@cloudflare/workers-types": "^4.20250317.0",
     "@tailwindcss/typography": "^0.5.13",
     "@tanstack/router-devtools": "^1.112.6",
     "@tanstack/router-plugin": "^1.112.3",
@@ -85,6 +84,7 @@
     "drizzle-kit": "^0.30.5",
     "prettier": "^3.2.5",
     "prettier-plugin-tailwindcss": "^0.6.1",
-    "tsx": "^4.10.2"
+    "tsx": "^4.10.2",
+    "wrangler": "^4.1.0"
   }
 }

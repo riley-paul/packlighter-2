@@ -33,6 +33,12 @@ export const zUserInsert = createInsertSchema(User);
 export type UserSelect = z.infer<typeof zUserSelect>;
 export type UserInsert = z.infer<typeof zUserInsert>;
 
+export type UserSessionInfo = {
+  id: string;
+  userId: string;
+  expiresAt: Date;
+};
+
 export const zItemSelect = createSelectSchema(Item);
 export const zItemInsert = createInsertSchema(Item);
 export type ItemSelect = z.infer<typeof zItemSelect>;
