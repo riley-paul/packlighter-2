@@ -5,10 +5,11 @@
   "scripts": {
     "dev": "npm-run-all --parallel dev:db dev:server",
     "build": "astro check && astro build --remote",
-    "preview": "astro build && wrangler pages dev --port 4321",
+    "preview": "npm-run-all --parallel dev:db dev:preview",
     "test": "vitest",
     "dev:db": "turso dev --db-file dev.db",
     "dev:server": "astro dev --host",
+    "dev:preview": "astro build && wrangler pages dev --port 4321",
     "cf-typegen": "wrangler types",
     "db:push": "drizzle-kit push",
     "db:push:prod": "NODE_ENV=production drizzle-kit push",
