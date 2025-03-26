@@ -30,8 +30,6 @@ const ItemForm: React.FC = () => {
     closeEditor();
   });
 
-  const imageUrl = watch("image");
-
   return (
     <FormProvider {...methods}>
       <form className="grid gap-4" onSubmit={onSubmit}>
@@ -138,9 +136,7 @@ const ItemForm: React.FC = () => {
           )}
         />
 
-        {imageUrl && (
-          <ItemImage url={imageUrl} size="sm" className="mx-auto size-32" />
-        )}
+        <ItemImage item={watch()} size="sm" className="mx-auto size-32" />
 
         <div className="grid w-full gap-2 pt-8">
           <Button

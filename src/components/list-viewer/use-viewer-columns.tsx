@@ -67,11 +67,11 @@ export default function useViewerColumns(
       columnHelper.accessor("itemData.image", {
         id: "image",
         header: () => null,
-        cell: ({ getValue }) => {
+        cell: ({ getValue, row }) => {
           const imageUrl = getValue();
           return (
             <ItemImage
-              url={imageUrl}
+              item={row.original.itemData}
               size="sm"
               className={cn(
                 "w-16",

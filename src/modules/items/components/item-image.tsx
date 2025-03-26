@@ -1,6 +1,7 @@
 import React from "react";
 import { cn } from "@/lib/client/utils";
 import { cva, type VariantProps } from "class-variance-authority";
+import type { ItemSelect } from "@/lib/types";
 
 const imageVariants = cva(
   "flex shrink-0 items-center justify-center text-gray-10",
@@ -18,7 +19,7 @@ const imageVariants = cva(
 );
 
 type Props = {
-  url: string | undefined | null;
+  item: Partial<Pick<ItemSelect, "image" | "imageUploaded" | "imageType">>;
 } & VariantProps<typeof imageVariants> &
   React.HTMLAttributes<HTMLDivElement>;
 
@@ -29,17 +30,18 @@ const NoImage: React.FC<Props> = (props) => {
 };
 
 const ItemImage: React.FC<Props> = (props) => {
-  const { url, size, className } = props;
+  const { item, size, className } = props;
+  const imageUrl = item.imageType === "url" ? item.image : item.imageUploaded;
 
   return (
     <div
       className={cn(
         imageVariants({ size, className }),
-        url ? "bg-[white]" : "bg-gray-4",
+        imageUrl ? "bg-[white]" : "bg-gray-4",
       )}
     >
-      {url ? (
-        <img src={url} className="h-full w-full object-contain" />
+      {imageUrl ? (
+        <img src={imageUrl} className="h-full w-full object-contain" />
       ) : (
         <NoImage {...props} />
       )}

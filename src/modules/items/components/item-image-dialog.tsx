@@ -35,9 +35,6 @@ const ItemImageDialog: React.FC<Props> = (props) => {
 
   const { handleSubmit, control, watch, getValues, setValue } = methods;
 
-  const imageUrl =
-    watch("imageType") === "url" ? watch("image") : watch("imageUploaded");
-
   const onSubmit = handleSubmit((data) => {
     updateItem.mutate({ itemId: item.id, data });
     setIsOpen(false);
@@ -50,7 +47,7 @@ const ItemImageDialog: React.FC<Props> = (props) => {
         onClick={() => setIsOpen((prev) => !prev)}
       >
         <ItemImage
-          url={item.image}
+          item={item}
           size="sm"
           className={cn(
             "w-16",
@@ -85,7 +82,7 @@ const ItemImageDialog: React.FC<Props> = (props) => {
                     <Controller
                       control={control}
                       name="imageUploaded"
-                      render={({ field }) => (
+                      render={({  }) => (
                         <div className="rounded-2 bg-accent-3 p-4">
                           File upload coming soon
                         </div>
@@ -114,7 +111,7 @@ const ItemImageDialog: React.FC<Props> = (props) => {
               )}
             />
 
-            <ItemImage url={imageUrl} size="lg" className="aspect-square" />
+            <ItemImage item={watch()} size="lg" className="aspect-square" />
 
             <div className="grid gap-2 sm:flex sm:justify-end">
               <Button
