@@ -11,9 +11,14 @@ const imageVariants = cva(
         sm: "rounded-2 p-0.5",
         lg: "rounded-3 p-2",
       },
+      hasImage: {
+        true: "bg-[white]",
+        false: "bg-gray-4",
+      },
     },
     defaultVariants: {
       size: "sm",
+      hasImage: false,
     },
   },
 );
@@ -36,8 +41,7 @@ const ItemImage: React.FC<Props> = (props) => {
   return (
     <div
       className={cn(
-        imageVariants({ size, className }),
-        imageUrl ? "bg-[white]" : "bg-gray-4",
+        imageVariants({ size, hasImage: Boolean(imageUrl), className }),
       )}
     >
       {imageUrl ? (
