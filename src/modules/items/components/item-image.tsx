@@ -4,7 +4,7 @@ import { cva, type VariantProps } from "class-variance-authority";
 import type { ItemSelect } from "@/lib/types";
 
 const imageVariants = cva(
-  "flex shrink-0 items-center justify-center text-gray-10",
+  "flex shrink-0 items-center justify-center text-gray-10 min-h-4",
   {
     variants: {
       size: {

@@ -68,15 +68,11 @@ export default function useViewerColumns(
         id: "image",
         header: () => null,
         cell: ({ getValue, row }) => {
-          const imageUrl = getValue();
           return (
             <ItemImage
               item={row.original.itemData}
               size="sm"
-              className={cn(
-                "w-16",
-                imageUrl ? "h-16" : "bg-muted/50 h-full min-h-6",
-              )}
+              className="w-16"
             />
           );
         },
