@@ -3,20 +3,45 @@ import React from "react";
 import { cn } from "@/lib/client/utils";
 import ItemImage from "./item-image";
 import ResponsiveModal from "@/components/base/responsive-modal";
-import { Button, Heading, Text, TextField } from "@radix-ui/themes";
+import { Button, Heading, Tabs, Text, TextField } from "@radix-ui/themes";
 import useItemsMutations from "../mutations";
-import type { ItemSelect } from "@/lib/types";
+import { zItemInsert, type ItemSelect } from "@/lib/types";
+import { Controller, FormProvider, useForm } from "react-hook-form";
+import type { z } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
 
 interface Props {
   item: ItemSelect;
 }
 
+const schema = zItemInsert.pick({
+  image: true,
+  imageType: true,
+  imageUploaded: true,
+});
+
+type Schema = z.infer<typeof schema>;
+
 const ItemImageDialog: React.FC<Props> = (props) => {
   const { item } = props;
 
   const [isOpen, setIsOpen] = React.useState(false);
-  const [value, setValue] = React.useState(item.image ?? "");
   const { updateItem } = useItemsMutations();
+
+  const methods = useForm<Schema>({
+    resolver: zodResolver(schema),
+    values: item,
+  });
+
+  const { handleSubmit, control, watch } = methods;
+
+  const imageUrl =
+    watch("imageType") === "url" ? watch("image") : watch("imageUploaded");
+
+  const onSubmit = handleSubmit((data) => {
+    updateItem.mutate({ itemId: item.id, data });
+    setIsOpen(false);
+  });
 
   return (
     <>
@@ -38,57 +63,76 @@ const ItemImageDialog: React.FC<Props> = (props) => {
         <header>
           <Heading size="3">Update {item.name} Image</Heading>
           <Text size="2" color="gray">
-            Provide a URL to an image
+            Either upload an image or provide an image URL
           </Text>
         </header>
+        <FormProvider {...methods}>
+          <form id="image-form" onSubmit={onSubmit} className="grid gap-4">
+            <Controller
+              control={control}
+              name="imageType"
+              render={({ field }) => (
+                <Tabs.Root
+                  value={field.value}
+                  onValueChange={field.onChange}
+                  className="grid gap-2"
+                >
+                  <Tabs.List>
+                    <Tabs.Trigger value="file">Upload</Tabs.Trigger>
+                    <Tabs.Trigger value="url">URL</Tabs.Trigger>
+                  </Tabs.List>
+                  <Tabs.Content value="file">File upload</Tabs.Content>
+                  <Tabs.Content value="url">
+                    <Controller
+                      control={control}
+                      name="image"
+                      render={({ field }) => (
+                        <TextField.Root
+                          type="url"
+                          placeholder="Image Url"
+                          {...field}
+                          value={field.value ?? undefined}
+                        >
+                          <TextField.Slot>
+                            <i className="fa-solid fa-link" />
+                          </TextField.Slot>
+                        </TextField.Root>
+                      )}
+                    />
+                  </Tabs.Content>
+                </Tabs.Root>
+              )}
+            />
 
-        <form
-          id="image-form"
-          onSubmit={(e) => {
-            e.preventDefault();
-            updateItem.mutate({ itemId: item.id, data: { image: value } });
-            setIsOpen(false);
-          }}
-        >
-          <TextField.Root
-            type="url"
-            placeholder="Image Url"
-            onChange={(e) => setValue(e.target.value)}
-            onFocus={(e) => e.target.select()}
-            value={value}
-          >
-            <TextField.Slot>
-              <i className="fa-solid fa-link" />
-            </TextField.Slot>
-          </TextField.Root>
-        </form>
-        <ItemImage url={value} size="lg" className="aspect-square" />
+            <ItemImage url={imageUrl} size="lg" className="aspect-square" />
 
-        <div className="grid gap-2 sm:flex sm:justify-end">
-          <Button
-            type="button"
-            variant="soft"
-            color="red"
-            disabled={updateItem.isPending}
-            onClick={() => {
-              setValue("");
-              updateItem.mutate({ itemId: item.id, data: { image: null } });
-              setIsOpen(false);
-            }}
-          >
-            <i className="fa-solid fa-trash" />
-            Delete Image
-          </Button>
-          <Button
-            type="submit"
-            form="image-form"
-            disabled={updateItem.isPending}
-          >
-            <i className="fa-solid fa-save" />
-            Save
-          </Button>
-        </div>
-        <input type="hidden" />
+            <div className="grid gap-2 sm:flex sm:justify-end">
+              {/* <Button
+                type="button"
+                variant="soft"
+                color="red"
+                disabled={updateItem.isPending}
+                onClick={() => {
+                  setValue("");
+                  updateItem.mutate({ itemId: item.id, data: { image: null } });
+                  setIsOpen(false);
+                }}
+              >
+                <i className="fa-solid fa-trash" />
+                Delete Image
+              </Button> */}
+              <Button
+                type="submit"
+                form="image-form"
+                disabled={updateItem.isPending}
+              >
+                <i className="fa-solid fa-save" />
+                Save
+              </Button>
+            </div>
+            <input type="hidden" />
+          </form>
+        </FormProvider>
       </ResponsiveModal>
     </>
   );
