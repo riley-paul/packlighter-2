@@ -33,7 +33,7 @@ const ItemImageDialog: React.FC<Props> = (props) => {
     values: item,
   });
 
-  const { handleSubmit, control, watch } = methods;
+  const { handleSubmit, control, watch, getValues, setValue } = methods;
 
   const imageUrl =
     watch("imageType") === "url" ? watch("image") : watch("imageUploaded");
@@ -81,7 +81,17 @@ const ItemImageDialog: React.FC<Props> = (props) => {
                     <Tabs.Trigger value="file">Upload</Tabs.Trigger>
                     <Tabs.Trigger value="url">URL</Tabs.Trigger>
                   </Tabs.List>
-                  <Tabs.Content value="file">File upload</Tabs.Content>
+                  <Tabs.Content value="file">
+                    <Controller
+                      control={control}
+                      name="imageUploaded"
+                      render={({ field }) => (
+                        <div className="rounded-2 bg-accent-3 p-4">
+                          File upload coming soon
+                        </div>
+                      )}
+                    />
+                  </Tabs.Content>
                   <Tabs.Content value="url">
                     <Controller
                       control={control}
@@ -107,20 +117,24 @@ const ItemImageDialog: React.FC<Props> = (props) => {
             <ItemImage url={imageUrl} size="lg" className="aspect-square" />
 
             <div className="grid gap-2 sm:flex sm:justify-end">
-              {/* <Button
+              <Button
                 type="button"
                 variant="soft"
                 color="red"
                 disabled={updateItem.isPending}
                 onClick={() => {
-                  setValue("");
-                  updateItem.mutate({ itemId: item.id, data: { image: null } });
-                  setIsOpen(false);
+                  if (getValues("imageType") === "url") {
+                    setValue("image", null);
+                  }
+                  if (getValues("imageType") === "file") {
+                    setValue("imageUploaded", null);
+                    // TODO - delete file from server
+                  }
                 }}
               >
                 <i className="fa-solid fa-trash" />
                 Delete Image
-              </Button> */}
+              </Button>
               <Button
                 type="submit"
                 form="image-form"
