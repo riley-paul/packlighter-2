@@ -1,15 +1,14 @@
 import React from "react";
 import { cn } from "@/lib/client/utils";
 import { cva, type VariantProps } from "class-variance-authority";
-import type { ItemSelect } from "@/lib/types";
 
 const imageVariants = cva(
   "flex shrink-0 items-center justify-center text-gray-10 min-h-4",
   {
     variants: {
       size: {
-        sm: "rounded-2 p-0.5",
-        lg: "rounded-3 p-2",
+        sm: "rounded-2 p-0.5 size-16",
+        lg: "rounded-3 p-2 size-32",
       },
       hasImage: {
         true: "bg-[white]",
@@ -24,14 +23,12 @@ const imageVariants = cva(
 );
 
 type Props = {
-  item: Partial<Pick<ItemSelect, "image" | "imageR2Key" | "imageType">>;
+  imageUrl: string | undefined;
 } & VariantProps<typeof imageVariants> &
   React.HTMLAttributes<HTMLDivElement>;
 
 const ItemImage = React.forwardRef<HTMLDivElement, Props>((props, ref) => {
-  const { item, size, className } = props;
-  const imageUrl =
-    item.imageType === "url" ? item.image : `/media/${item.imageR2Key}.jpg`;
+  const { imageUrl, size, className } = props;
 
   return (
     <div

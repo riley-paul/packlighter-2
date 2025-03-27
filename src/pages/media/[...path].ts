@@ -1,6 +1,8 @@
 import type { APIRoute } from "astro";
 
 export const GET: APIRoute = async (ctx) => {
+  if (!ctx.locals.user) return new Response("Unauthorized", { status: 401 });
+
   const path = new URL(ctx.request.url).pathname
     .replace("/media/", "")
     .replace(".jpg", "");

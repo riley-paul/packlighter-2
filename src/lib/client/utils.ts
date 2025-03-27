@@ -3,6 +3,7 @@ import type { CheckedState } from "@radix-ui/react-checkbox";
 import { type ClassValue, clsx } from "clsx";
 import { twMerge } from "tailwind-merge";
 import { z } from "zod";
+import type { ItemSelect } from "../types";
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -76,3 +77,15 @@ export const stringToJSONSchema = z.string().transform((str, ctx) => {
     return z.NEVER;
   }
 });
+
+export const getItemImageUrl = (
+  item: Partial<Pick<ItemSelect, "image" | "imageR2Key" | "imageType">>,
+): string | undefined => {
+  if (item.imageType === "url") {
+    if (!item.image) return undefined;
+    return item.image;
+  }
+
+  if (!item.imageR2Key) return undefined;
+  return `/media/${item.imageR2Key}.jpg`;
+};
