@@ -80,7 +80,8 @@ const update: ActionHandler<typeof itemInputs.update, ItemSelect> = async (
   if (itemImageFile && itemImageFile.size > 0) {
     const key = crypto.randomUUID();
     await c.locals.runtime.env.R2_BUCKET.put(key, itemImageFile);
-    data = { ...data, imageR2Key: key };
+    data.imageR2Key = key;
+    data.imageType = "file";
   }
 
   const [updated] = await db

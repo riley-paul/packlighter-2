@@ -30,7 +30,8 @@ type Props = {
 
 const ItemImage = React.forwardRef<HTMLDivElement, Props>((props, ref) => {
   const { item, size, className } = props;
-  const imageUrl = item.imageType === "url" ? item.image : item.imageR2Key;
+  const imageUrl =
+    item.imageType === "url" ? item.image : `/media/${item.imageR2Key}.jpg`;
 
   return (
     <div
