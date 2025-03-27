@@ -1,5 +1,5 @@
 import { Category, CategoryItem, Item, List } from "@/db/schema";
-import  { createDb } from "@/db";
+import { createDb } from "@/db";
 import { and, eq } from "drizzle-orm";
 
 import { idAndUserIdFilter } from "@/actions/filters";
@@ -76,12 +76,11 @@ const update: ActionHandler<typeof itemInputs.update, ItemSelect> = async (
 ) => {
   const db = createDb(c.locals.runtime.env);
   const userId = isAuthorized(c).id;
-  const updated = await db
+  const [updated] = await db
     .update(Item)
     .set(data)
     .where(idAndUserIdFilter(Item, { userId, id: itemId }))
-    .returning()
-    .then((rows) => rows[0]);
+    .returning();
   return updated;
 };
 

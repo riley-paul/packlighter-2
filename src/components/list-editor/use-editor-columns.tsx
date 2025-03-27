@@ -22,6 +22,7 @@ import { z } from "zod";
 import useItemsMutations from "@/modules/items/mutations";
 import { type ExpandedCategory, type ExpandedCategoryItem } from "@/lib/types";
 import { weightUnitsInfo, type WeightUnit } from "@/lib/client/constants";
+import ItemImageDroppable from "@/modules/items/components/item-image-droppable";
 
 const columnHelper = createColumnHelper<ExpandedCategoryItem>();
 
@@ -84,7 +85,12 @@ export default function useEditorColumns({
       columnHelper.accessor("itemData.image", {
         id: "image",
         header: () => null,
-        cell: (props) => <ItemImageDialog item={props.row.original.itemData} />,
+        cell: (props) => (
+          <ItemImageDroppable
+            item={props.row.original.itemData}
+            className="size-16"
+          />
+        ),
       }),
 
       columnHelper.accessor(

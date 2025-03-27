@@ -13,11 +13,11 @@ import {
 import { preventUnhandled } from "@atlaskit/pragmatic-drag-and-drop/prevent-unhandled";
 
 type Props = {
-  upload: File | null | undefined;
-  setUpload: (file: File | null) => void;
+  upload?: File | null;
+  handleUpload: (file: File | null) => void;
 };
 
-export default function useImageDropzone({ upload, setUpload }: Props) {
+export default function useImageDropzone({ upload, handleUpload }: Props) {
   const ref = React.useRef<HTMLDivElement | null>(null);
   const [state, setState] = React.useState<"idle" | "potential" | "over">(
     "idle",
@@ -31,7 +31,7 @@ export default function useImageDropzone({ upload, setUpload }: Props) {
   const addUpload = React.useCallback((file: File | null) => {
     if (!file) return;
     if (!file.type.startsWith("image/")) return;
-    setUpload(file);
+    handleUpload(file);
   }, []);
 
   const onFileInputChange = React.useCallback(
@@ -53,7 +53,7 @@ export default function useImageDropzone({ upload, setUpload }: Props) {
         onDragLeave: () => setState("potential"),
         onDrop: async ({ source }) => {
           const files = getFiles({ source });
-          setUpload(files[0]);
+          handleUpload(files[0]);
         },
       }),
       monitorForExternal({

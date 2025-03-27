@@ -28,18 +28,13 @@ type Props = {
 } & VariantProps<typeof imageVariants> &
   React.HTMLAttributes<HTMLDivElement>;
 
-const NoImage: React.FC<Props> = (props) => {
-  const { size } = props;
-  if (size === "sm") return null;
-  return "No Image";
-};
-
-const ItemImage: React.FC<Props> = (props) => {
+const ItemImage = React.forwardRef<HTMLDivElement, Props>((props, ref) => {
   const { item, size, className } = props;
   const imageUrl = item.imageType === "url" ? item.image : item.imageUploaded;
 
   return (
     <div
+      ref={ref}
       className={cn(
         imageVariants({ size, hasImage: Boolean(imageUrl), className }),
       )}
@@ -47,10 +42,10 @@ const ItemImage: React.FC<Props> = (props) => {
       {imageUrl ? (
         <img src={imageUrl} className="h-full w-full object-contain" />
       ) : (
-        <NoImage {...props} />
+        size === "lg" && "No Image"
       )}
     </div>
   );
-};
+});
 
 export default ItemImage;
