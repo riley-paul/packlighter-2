@@ -96,16 +96,23 @@ const ItemImageDialog: React.FC<Props> = (props) => {
                       control={control}
                       name="image"
                       render={({ field }) => (
-                        <TextField.Root
-                          type="url"
-                          placeholder="Image Url"
-                          {...field}
-                          value={field.value ?? undefined}
-                        >
-                          <TextField.Slot>
-                            <i className="fa-solid fa-link" />
-                          </TextField.Slot>
-                        </TextField.Root>
+                        <section className="grid gap-2">
+                          <TextField.Root
+                            type="url"
+                            placeholder="Image Url"
+                            {...field}
+                            value={field.value ?? undefined}
+                          >
+                            <TextField.Slot>
+                              <i className="fa-solid fa-link" />
+                            </TextField.Slot>
+                          </TextField.Root>
+                          <ItemImage
+                            item={{ image: field.value, imageType: "url" }}
+                            size="lg"
+                            className="aspect-square"
+                          />
+                        </section>
                       )}
                     />
                   </Tabs.Content>
