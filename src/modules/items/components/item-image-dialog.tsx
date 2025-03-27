@@ -17,7 +17,7 @@ interface Props {
 const schema = zItemInsert.pick({
   image: true,
   imageType: true,
-  imageUploaded: true,
+  imageUploadedFile: true,
 });
 
 type Schema = z.infer<typeof schema>;
@@ -81,9 +81,10 @@ const ItemImageDialog: React.FC<Props> = (props) => {
                   <Tabs.Content value="file">
                     <Controller
                       control={control}
-                      name="imageUploaded"
-                      render={({  }) => (
+                      name="imageUploadedFile"
+                      render={({ field }) => (
                         <div className="rounded-2 bg-accent-3 p-4">
+                          
                           File upload coming soon
                         </div>
                       )}
@@ -124,7 +125,7 @@ const ItemImageDialog: React.FC<Props> = (props) => {
                     setValue("image", null);
                   }
                   if (getValues("imageType") === "file") {
-                    setValue("imageUploaded", null);
+                    setValue("imageUploadedFile", null);
                     // TODO - delete file from server
                   }
                 }}

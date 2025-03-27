@@ -40,7 +40,9 @@ export type UserSessionInfo = {
 };
 
 export const zItemSelect = createSelectSchema(Item);
-export const zItemInsert = createInsertSchema(Item);
+export const zItemInsert = createInsertSchema(Item)
+  .omit({ imageUploaded: true })
+  .extend({ imageUploadedFile: z.instanceof(File).nullish() });
 export type ItemSelect = z.infer<typeof zItemSelect>;
 export type ItemInsert = z.infer<typeof zItemInsert>;
 
