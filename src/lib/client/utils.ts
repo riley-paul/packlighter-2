@@ -13,6 +13,12 @@ export const formatWeight = (value: number): string => {
   return Math.round(value).toLocaleString("en");
 };
 
+export const formatFileSize = (bytes: number) => {
+  if (bytes < 1024) return `${bytes} B`;
+  if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(1)} KB`;
+  return `${(bytes / (1024 * 1024)).toFixed(1)} MB`;
+};
+
 export const getCheckboxState = (values: boolean[]): CheckedState => {
   if (values.length === 0) return false;
   if (values.every((v) => v)) return true;

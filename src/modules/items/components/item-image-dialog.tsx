@@ -9,6 +9,7 @@ import { zItemInsert, type ItemSelect } from "@/lib/types";
 import { Controller, FormProvider, useForm } from "react-hook-form";
 import type { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
+import ImageDropzone from "@/components/ui/image-dropzone";
 
 interface Props {
   item: ItemSelect;
@@ -83,10 +84,10 @@ const ItemImageDialog: React.FC<Props> = (props) => {
                       control={control}
                       name="imageUploadedFile"
                       render={({ field }) => (
-                        <div className="rounded-2 bg-accent-3 p-4">
-                          
-                          File upload coming soon
-                        </div>
+                        <ImageDropzone
+                          upload={field.value}
+                          setUpload={(file) => field.onChange(file)}
+                        />
                       )}
                     />
                   </Tabs.Content>
@@ -112,7 +113,7 @@ const ItemImageDialog: React.FC<Props> = (props) => {
               )}
             />
 
-            <ItemImage item={watch()} size="lg" className="aspect-square" />
+            {/* <ItemImage item={watch()} size="lg" className="aspect-square" /> */}
 
             <div className="grid gap-2 sm:flex sm:justify-end">
               <Button

@@ -81,3 +81,11 @@ export const zExpandedList = zListSelect.extend({
   categories: z.array(zExpandedCategory),
 });
 export type ExpandedList = z.infer<typeof zExpandedList>;
+
+export type UserFileUpload = {
+  type: string;
+  dataUrl: string;
+  file: File;
+  name: string;
+  size: number;
+};
