@@ -25,7 +25,7 @@ const zEnv = z
     }
   });
 
-export type Environment = z.infer<typeof zEnv>;
+export type Environment = z.infer<typeof zEnv> & Env;
 
 export function parseEnv(data: any) {
   const { data: env, error } = zEnv.safeParse(data);

@@ -2,6 +2,7 @@ import type { DragLocationHistory } from "@atlaskit/pragmatic-drag-and-drop/dist
 import type { CheckedState } from "@radix-ui/react-checkbox";
 import { type ClassValue, clsx } from "clsx";
 import { twMerge } from "tailwind-merge";
+import { z } from "zod";
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -66,3 +67,12 @@ export const centerDragPreviewOnMouse = (
 
   return () => ({ x: leftOffset, y: topOffset });
 };
+
+export const stringToJSONSchema = z.string().transform((str, ctx) => {
+  try {
+    return JSON.parse(str);
+  } catch (e) {
+    ctx.addIssue({ code: "custom", message: "Invalid JSON" });
+    return z.NEVER;
+  }
+});

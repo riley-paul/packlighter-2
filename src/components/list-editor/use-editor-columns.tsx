@@ -4,7 +4,6 @@ import useMutations from "@/hooks/use-mutations";
 import React from "react";
 import DeleteButton from "../base/delete-button";
 import { cn, formatWeight, getCheckboxState } from "@/lib/client/utils";
-import ItemImageDialog from "@/modules/items/components/item-image-dialog";
 import AddItemPopover from "./add-item-popover";
 import useCurrentList from "@/hooks/use-current-list";
 import CellWrapper from "../base/cell-wrapper";

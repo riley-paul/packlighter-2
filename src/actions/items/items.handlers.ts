@@ -71,11 +71,18 @@ const remove: ActionHandler<typeof itemInputs.remove, null> = async (
 };
 
 const update: ActionHandler<typeof itemInputs.update, ItemSelect> = async (
-  { itemId, data },
+  { itemId, data, itemImageFile },
   c,
 ) => {
   const db = createDb(c.locals.runtime.env);
   const userId = isAuthorized(c).id;
+
+  if (itemImageFile && itemImageFile.size > 0) {
+    const key = crypto.randomUUID();
+    await c.locals.runtime.env.R2_BUCKET.put(key, itemImageFile);
+    data = { ...data, imageR2Key: key };
+  }
+
   const [updated] = await db
     .update(Item)
     .set(data)

@@ -24,13 +24,13 @@ const imageVariants = cva(
 );
 
 type Props = {
-  item: Partial<Pick<ItemSelect, "image" | "imageUploaded" | "imageType">>;
+  item: Partial<Pick<ItemSelect, "image" | "imageR2Key" | "imageType">>;
 } & VariantProps<typeof imageVariants> &
   React.HTMLAttributes<HTMLDivElement>;
 
 const ItemImage = React.forwardRef<HTMLDivElement, Props>((props, ref) => {
   const { item, size, className } = props;
-  const imageUrl = item.imageType === "url" ? item.image : item.imageUploaded;
+  const imageUrl = item.imageType === "url" ? item.image : item.imageR2Key;
 
   return (
     <div

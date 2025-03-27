@@ -7,7 +7,7 @@ import {
 } from "@/lib/client/queries";
 import { actions } from "astro:actions";
 import useCurrentList from "@/hooks/use-current-list";
-import type { ExpandedList } from "@/lib/types";
+import type { ExpandedList, ItemInsert } from "@/lib/types";
 
 export default function useItemsMutations() {
   const { listId } = useCurrentList();
@@ -21,7 +21,22 @@ export default function useItemsMutations() {
   } = useMutationHelpers();
 
   const updateItem = useMutation({
-    mutationFn: actions.items.update.orThrow,
+    mutationFn: async ({
+      itemId,
+      data,
+      itemImageFile,
+    }: {
+      itemId: string;
+      data: Partial<ItemInsert>;
+      itemImageFile?: File | null;
+    }) => {
+      const formData = new FormData();
+      formData.append("itemId", itemId);
+      formData.append("data", JSON.stringify(data));
+      formData.append("itemImageFile", itemImageFile || "");
+
+      await actions.items.update.orThrow(formData);
+    },
     onSuccess: () => {
       invalidateQueries([
         listQueryOptions(listId).queryKey,

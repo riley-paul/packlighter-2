@@ -23,6 +23,7 @@ export const remove = defineAction({
 });
 
 export const update = defineAction({
+  accept: "form",
   input: itemInputs.update,
   handler: itemHandlers.update,
 });
