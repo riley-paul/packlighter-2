@@ -2,7 +2,7 @@ import React from "react";
 import { Controller, FormProvider, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { initItem } from "@/lib/init";
-import { Button, IconButton, Select, Text, TextField } from "@radix-ui/themes";
+import { Button, Select, Text, TextField } from "@radix-ui/themes";
 import { useAtomValue, useSetAtom } from "jotai";
 import { closeEditorAtom, editorItemAtom } from "../store";
 import useItemsMutations from "../mutations";
@@ -104,39 +104,12 @@ const ItemForm: React.FC = () => {
           )}
         />
 
-        <Controller
-          control={control}
-          name="image"
-          render={({ field }) => (
-            <div className="grid gap-2">
-              <Text as="label" size="2" weight="medium">
-                Image URL
-              </Text>
-              <TextField.Root
-                type="url"
-                placeholder="https://example.com/image.jpg"
-                {...field}
-                value={field.value || ""}
-              >
-                {field.value && (
-                  <TextField.Slot side="right">
-                    <IconButton
-                      type="button"
-                      size="1"
-                      variant="soft"
-                      color="red"
-                      onClick={() => field.onChange("")}
-                    >
-                      <i className="fa-solid fa-xmark" />
-                    </IconButton>
-                  </TextField.Slot>
-                )}
-              </TextField.Root>
-            </div>
-          )}
-        />
-
-        <ItemFormImageInput />
+        <div className="grid">
+          <Text as="label" size="2" weight="medium">
+            Image
+          </Text>
+          <ItemFormImageInput />
+        </div>
 
         <div className="grid w-full gap-2 pt-8">
           <Button
