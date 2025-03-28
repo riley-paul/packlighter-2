@@ -1,29 +1,29 @@
 import React from "react";
 import { Controller, FormProvider, useForm } from "react-hook-form";
-import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { initItem } from "@/lib/init";
-import ItemImage from "@/modules/items/components/item-image";
 import { Button, IconButton, Select, Text, TextField } from "@radix-ui/themes";
 import { useAtomValue, useSetAtom } from "jotai";
 import { closeEditorAtom, editorItemAtom } from "../store";
 import useItemsMutations from "../mutations";
-import type { ItemSelect } from "@/lib/types";
+import { zItemInsert, type ItemInsert } from "@/lib/types";
 import { weightUnitsInfo } from "@/lib/client/constants";
+import ItemFormImageInput from "./item-form-image-input";
 
 const ItemForm: React.FC = () => {
   const item = useAtomValue(editorItemAtom);
   const closeEditor = useSetAtom(closeEditorAtom);
 
-  const methods = useForm<ItemSelect>({
-    defaultValues: initItem(item),
-    resolver: zodResolver(z.custom<ItemSelect>()),
+  const methods = useForm<ItemInsert>({
+    values: initItem(item),
+    resolver: zodResolver(zItemInsert),
   });
 
-  const { control, handleSubmit, watch } = methods;
+  const { control, handleSubmit } = methods;
   const { updateItem, addItem } = useItemsMutations();
 
   const onSubmit = handleSubmit((data) => {
+    console.log(data);
     item
       ? updateItem.mutate({ itemId: item.id, data })
       : addItem.mutate({ data });
@@ -136,7 +136,7 @@ const ItemForm: React.FC = () => {
           )}
         />
 
-        <ItemImage item={watch()} size="sm" className="mx-auto size-32" />
+        <ItemFormImageInput />
 
         <div className="grid w-full gap-2 pt-8">
           <Button
