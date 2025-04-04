@@ -85,7 +85,7 @@ export default function useImageDropzone({ upload, handleUpload }: Props) {
     inputRef.current?.click();
   }, []);
 
-  const HiddenInput = (
+  const HiddenInput = () => (
     <input
       ref={inputRef}
       className="hidden"

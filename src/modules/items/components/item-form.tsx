@@ -9,6 +9,7 @@ import useItemsMutations from "../mutations";
 import { zItemInsert, type ItemInsert } from "@/lib/types";
 import { weightUnitsInfo } from "@/lib/client/constants";
 import ItemFormImageInput from "./item-form-image-input";
+import { toast } from "sonner";
 
 const ItemForm: React.FC = () => {
   const item = useAtomValue(editorItemAtom);
@@ -25,9 +26,26 @@ const ItemForm: React.FC = () => {
   const onSubmit = handleSubmit((data) => {
     console.log(data);
     item
-      ? updateItem.mutate({ itemId: item.id, data })
-      : addItem.mutate({ data });
-    closeEditor();
+      ? updateItem.mutate(
+          { itemId: item.id, data },
+          {
+            onSuccess: () => {
+              closeEditor();
+              toast.success("Item updated");
+            },
+            onError: () => toast.error("Failed to update item"),
+          },
+        )
+      : addItem.mutate(
+          { data },
+          {
+            onSuccess: () => {
+              closeEditor();
+              toast.success("Item added");
+            },
+            onError: () => toast.error("Failed to add item"),
+          },
+        );
   });
 
   return (
@@ -87,7 +105,7 @@ const ItemForm: React.FC = () => {
                         onValueChange={field.onChange}
                         value={field.value}
                       >
-                        <Select.Trigger variant="ghost" placeholder="Unit" />
+                        <Select.Trigger variant="soft" placeholder="Unit" />
                         <Select.Content>
                           {weightUnitsInfo.map(({ symbol, name }) => (
                             <Select.Item key={symbol} value={symbol}>

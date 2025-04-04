@@ -33,5 +33,5 @@ export function parseEnv(data: any) {
     const errorMessage = `Invalid environment variables: ${error.flatten().fieldErrors}`;
     throw new Error(errorMessage);
   }
-  return env;
+  return env as Environment;
 }

@@ -1,6 +1,11 @@
 import { createColumnHelper } from "@tanstack/react-table";
 import React from "react";
-import { cn, formatWeight, getCheckboxState } from "@/lib/client/utils";
+import {
+  cn,
+  formatWeight,
+  getCheckboxState,
+  getItemImageUrl,
+} from "@/lib/client/utils";
 import CellWrapper from "../base/cell-wrapper";
 import ItemImage from "../../modules/items/components/item-image";
 import { Checkbox } from "@radix-ui/themes";
@@ -67,10 +72,10 @@ export default function useViewerColumns(
       columnHelper.accessor("itemData.image", {
         id: "image",
         header: () => null,
-        cell: ({ getValue, row }) => {
+        cell: ({ row }) => {
           return (
             <ItemImage
-              item={row.original.itemData}
+              imageUrl={getItemImageUrl(row.original.itemData)}
               size="sm"
               className="w-16"
             />
