@@ -65,6 +65,23 @@ const remove: ActionHandler<typeof itemInputs.remove, null> = async (
 ) => {
   const db = createDb(c.locals.runtime.env);
   const userId = isAuthorized(c).id;
+
+  const [item] = await db
+    .select()
+    .from(Item)
+    .where(idAndUserIdFilter(Item, { userId, id: itemId }));
+
+  if (!item) {
+    throw new ActionError({
+      code: "NOT_FOUND",
+      message: "Item not found",
+    });
+  }
+
+  if (item.imageR2Key) {
+    await c.locals.runtime.env.R2_BUCKET.delete(item.imageR2Key);
+  }
+
   await db.delete(CategoryItem).where(eq(CategoryItem.itemId, itemId));
   await db.delete(Item).where(idAndUserIdFilter(Item, { userId, id: itemId }));
   return null;
@@ -77,10 +94,27 @@ const update: ActionHandler<typeof itemInputs.update, ItemSelect> = async (
   const db = createDb(c.locals.runtime.env);
   const userId = isAuthorized(c).id;
 
+  const [item] = await db
+    .select()
+    .from(Item)
+    .where(idAndUserIdFilter(Item, { userId, id: itemId }));
+
+  if (!item) {
+    throw new ActionError({
+      code: "NOT_FOUND",
+      message: "Item not found",
+    });
+  }
+
   if (itemImageFile && itemImageFile.size > 0) {
     const key = crypto.randomUUID();
     await c.locals.runtime.env.R2_BUCKET.put(key, itemImageFile);
     data.imageR2Key = key;
+  }
+
+  if (itemImageFile === null && item.imageR2Key) {
+    await c.locals.runtime.env.R2_BUCKET.delete(item.imageR2Key);
+    data.imageR2Key = null;
   }
 
   const [updated] = await db

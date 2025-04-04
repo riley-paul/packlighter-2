@@ -6,7 +6,7 @@ import { Button, Select, Text, TextField } from "@radix-ui/themes";
 import { useAtomValue, useSetAtom } from "jotai";
 import { closeEditorAtom, editorItemAtom } from "../store";
 import useItemsMutations from "../mutations";
-import { zItemInsert, type ItemInsert } from "@/lib/types";
+import { zItemInsertWithFile, type ItemInsertWithFile } from "@/lib/types";
 import { weightUnitsInfo } from "@/lib/client/constants";
 import ItemFormImageInput from "./item-form-image-input";
 import { toast } from "sonner";
@@ -15,38 +15,44 @@ const ItemForm: React.FC = () => {
   const item = useAtomValue(editorItemAtom);
   const closeEditor = useSetAtom(closeEditorAtom);
 
-  const methods = useForm<ItemInsert>({
+  const methods = useForm<ItemInsertWithFile>({
     values: initItem(item),
-    resolver: zodResolver(zItemInsert),
+    resolver: zodResolver(zItemInsertWithFile),
   });
 
   const { control, handleSubmit } = methods;
   const { updateItem, addItem } = useItemsMutations();
 
-  const onSubmit = handleSubmit((data) => {
-    console.log(data);
-    item
-      ? updateItem.mutate(
-          { itemId: item.id, data },
-          {
-            onSuccess: () => {
-              closeEditor();
-              toast.success("Item updated");
+  const onSubmit = handleSubmit(
+    (data) => {
+      console.log(data);
+      item
+        ? updateItem.mutate(
+            { itemId: item.id, data, itemImageFile: data.imageFile },
+            {
+              onSuccess: () => {
+                closeEditor();
+                toast.success("Item updated");
+              },
+              onError: () => toast.error("Failed to update item"),
             },
-            onError: () => toast.error("Failed to update item"),
-          },
-        )
-      : addItem.mutate(
-          { data },
-          {
-            onSuccess: () => {
-              closeEditor();
-              toast.success("Item added");
+          )
+        : addItem.mutate(
+            { data },
+            {
+              onSuccess: () => {
+                closeEditor();
+                toast.success("Item added");
+              },
+              onError: () => toast.error("Failed to add item"),
             },
-            onError: () => toast.error("Failed to add item"),
-          },
-        );
-  });
+          );
+    },
+    (errors) => {
+      console.log(errors);
+      toast.error(errors.description?.message || "Form errors");
+    },
+  );
 
   return (
     <FormProvider {...methods}>

@@ -4,7 +4,7 @@ import React from "react";
 import { Controller, useFormContext } from "react-hook-form";
 import ItemImage from "./item-image";
 import useImageDropzone from "@/hooks/use-image-dropzone";
-import { cn } from "@/lib/client/utils";
+import { cn, getItemImageUrl } from "@/lib/client/utils";
 
 const UrlImageInput: React.FC = () => {
   const { control } = useFormContext<ItemInsert>();
@@ -42,7 +42,8 @@ const UrlImageInput: React.FC = () => {
 };
 
 const UploadImageInput: React.FC = () => {
-  const { control } = useFormContext<ItemInsertWithFile>();
+  const { control, watch, setValue } = useFormContext<ItemInsertWithFile>();
+  const hasUploadedImage = Boolean(watch("imageR2Key"));
   return (
     <Controller
       control={control}
@@ -62,16 +63,25 @@ const UploadImageInput: React.FC = () => {
             })}
           >
             <HiddenInput />
-            {field.value ? (
+            {field.value || hasUploadedImage ? (
               <>
-                <ItemImage imageUrl={URL.createObjectURL(field.value)} />
+                <ItemImage
+                  imageUrl={
+                    field.value
+                      ? URL.createObjectURL(field.value)
+                      : getItemImageUrl(watch())
+                  }
+                />
                 <div className="flex w-full items-center justify-center">
                   <Button
                     variant="soft"
                     type="button"
                     color="red"
                     className="gap-2"
-                    onClick={() => field.onChange(null)}
+                    onClick={() => {
+                      field.onChange(null);
+                      setValue("imageR2Key", null);
+                    }}
                   >
                     <i className="fas fa-trash"></i>
                     Remove

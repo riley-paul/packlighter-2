@@ -9,7 +9,7 @@ const itemInputs = {
   remove: z.object({ itemId: z.string() }),
   update: z.object({
     itemId: z.string(),
-    itemImageFile: z.instanceof(File).optional(),
+    itemImageFile: z.instanceof(File).nullish(),
     data: stringToJSONSchema.pipe(zItemInsert.partial()),
   }),
   getListsIncluded: z.object({ itemId: z.string() }),
