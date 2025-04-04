@@ -102,7 +102,7 @@ const AppSideBar: React.FC = () => {
           <button
             onClick={() => setIsOpen((prev) => !prev)}
             className={cn(
-              "group absolute -right-2 bottom-8 top-8 flex w-4 justify-center",
+              "group absolute -right-2 bottom-4 top-4 flex w-4 justify-center",
               !isOpen && "-right-3",
             )}
           >
