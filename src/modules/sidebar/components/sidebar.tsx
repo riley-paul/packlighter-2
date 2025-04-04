@@ -18,12 +18,43 @@ import { useIsMobile } from "@/hooks/use-is-mobile";
 import { Button, IconButton, Kbd, Tooltip } from "@radix-ui/themes";
 import { commandBarOpenAtom } from "@/components/command-bar";
 
+const AppSidebarHeader: React.FC = () => {
+  const setCommandBarOpen = useSetAtom(commandBarOpenAtom);
+  return (
+    <header
+      className="flex items-center justify-between border-b px-4"
+      style={{ height: NAVBAR_HEIGHT }}
+    >
+      <Logo />
+      <div className="flex items-center gap-2">
+        <Tooltip
+          content={
+            <>
+              Search <Kbd>⌘ K</Kbd>
+            </>
+          }
+          side="bottom"
+        >
+          <IconButton
+            size="1"
+            radius="full"
+            variant="soft"
+            onClick={() => setCommandBarOpen(true)}
+          >
+            <i className="fa-solid fa-search text-1" />
+          </IconButton>
+        </Tooltip>
+        <UserAvatar />
+      </div>
+    </header>
+  );
+};
+
 const AppSideBar: React.FC = () => {
   const isMobile = useIsMobile();
   const [isOpen, setIsOpen] = useAtom(
     isMobile ? mobileSidebarOpenAtom : desktopSidebarOpenAtom,
   );
-  const setCommandBarOpen = useSetAtom(commandBarOpenAtom);
 
   useEventListener("keydown", (e) => {
     if (getIsTyping() || getHasModifier(e)) return;
@@ -58,32 +89,7 @@ const AppSideBar: React.FC = () => {
         )}
       >
         <div className="relative flex h-full w-full flex-col rounded-4 border bg-panel-solid">
-          <header
-            className="flex items-center justify-between border-b px-4"
-            style={{ height: NAVBAR_HEIGHT }}
-          >
-            <Logo />
-            <div className="flex items-center gap-2">
-              <Tooltip
-                content={
-                  <>
-                    Search <Kbd>⌘ K</Kbd>
-                  </>
-                }
-                side="bottom"
-              >
-                <IconButton
-                  size="1"
-                  radius="full"
-                  variant="soft"
-                  onClick={() => setCommandBarOpen(true)}
-                >
-                  <i className="fa-solid fa-search text-1" />
-                </IconButton>
-              </Tooltip>
-              <UserAvatar />
-            </div>
-          </header>
+          <AppSidebarHeader />
           <ResizablePanelGroup autoSaveId="sidebar-panels" direction="vertical">
             <ResizablePanel defaultSize={40}>
               <PackingLists />
