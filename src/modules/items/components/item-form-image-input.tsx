@@ -56,8 +56,9 @@ const UploadImageInput: React.FC = () => {
         return (
           <Card
             ref={ref}
-            className={cn("flex", {
-              "border-red-5": state === "over",
+            className={cn("flex transition-colors ease-out", {
+              "bg-gray-4": state === "over",
+              "bg-gray-3": state === "potential",
             })}
           >
             <HiddenInput />
