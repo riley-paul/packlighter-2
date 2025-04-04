@@ -105,6 +105,7 @@ const AppSideBar: React.FC = () => {
               "group absolute -right-2 bottom-4 top-4 flex w-4 justify-center",
               !isOpen && "-right-3",
             )}
+            title="Toggle sidebar"
           >
             <div
               className={cn(
