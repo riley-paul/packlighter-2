@@ -39,7 +39,9 @@ export type UserSessionInfo = {
   expiresAt: Date;
 };
 
-export const zItemSelect = createSelectSchema(Item);
+export const zItemSelect = createSelectSchema(Item).extend({
+  weight: z.coerce.number(),
+});
 export const zItemInsert = createInsertSchema(Item).extend({
   weight: z.coerce.number().optional(),
 });

@@ -13,10 +13,10 @@ import AddCategoryPopover from "./add-category-popover";
 import { triggerElementFlashByDragId } from "@/lib/client/utils";
 import {
   type ExpandedList,
-  zExpandedCategory,
   type ExpandedCategory,
   zExpandedCategoryItem,
   zItemSelect,
+  zCategorySelect,
 } from "@/lib/types";
 import { useQueryClient } from "@tanstack/react-query";
 import { listQueryOptions } from "@/lib/client/queries";
@@ -52,8 +52,8 @@ const EditorCategories: React.FC<Props> = (props) => {
 
         // sorting categories
         if (isDndEntityType(source.data, DndEntityType.Category)) {
-          const sourceData = zExpandedCategory.safeParse(source.data);
-          const targetData = zExpandedCategory.safeParse(target.data);
+          const sourceData = zCategorySelect.safeParse(source.data);
+          const targetData = zCategorySelect.safeParse(target.data);
 
           if (!sourceData.success || !targetData.success) {
             console.log("could not parse data");
