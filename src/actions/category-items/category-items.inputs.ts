@@ -3,10 +3,7 @@ import { z } from "zod";
 
 const categoryItemInputs = {
   create: z.object({
-    itemId: z.string(),
-    categoryId: z.string(),
-    reorderIds: z.array(z.string()).optional(),
-    data: zCategoryItemInsert.optional(),
+    data: zCategoryItemInsert.omit({ userId: true }),
   }),
   createAndAddToCategory: z.object({
     categoryId: z.string(),

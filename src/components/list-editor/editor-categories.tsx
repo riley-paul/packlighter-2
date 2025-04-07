@@ -10,16 +10,13 @@ import useMutations from "@/hooks/use-mutations";
 import { initCategoryItem } from "@/lib/init";
 import EditorCategory from "./editor-category";
 import AddCategoryPopover from "./add-category-popover";
-import {
-  triggerElementFlash,
-  triggerElementFlashByDragId,
-} from "@/lib/client/utils";
+import { triggerElementFlashByDragId } from "@/lib/client/utils";
 import {
   type ExpandedList,
   zExpandedCategory,
   type ExpandedCategory,
-  type ItemSelect,
   zExpandedCategoryItem,
+  zItemSelect,
 } from "@/lib/types";
 import { useQueryClient } from "@tanstack/react-query";
 import { listQueryOptions } from "@/lib/client/queries";
@@ -31,7 +28,7 @@ type Props = {
 
 const EditorCategories: React.FC<Props> = (props) => {
   const { categories } = props;
-  const { updateCategoryItem, addItemToCategory, updateCategory } =
+  const { updateCategoryItem, updateCategory, addItemToCategory } =
     useMutations();
 
   const queryClient = useQueryClient();
@@ -107,7 +104,7 @@ const EditorCategories: React.FC<Props> = (props) => {
 
         // adding item
         if (isDndEntityType(source.data, DndEntityType.Item)) {
-          const sourceData = z.custom<ItemSelect>().safeParse(source.data);
+          const sourceData = zItemSelect.safeParse(source.data);
           const targetData = z
             .object({ id: z.string(), categoryId: z.string() })
             .safeParse(target.data);
@@ -122,43 +119,67 @@ const EditorCategories: React.FC<Props> = (props) => {
           );
           if (!targetCategory) return;
 
+          const targetId = targetData.data.id;
+
           const newCategoryItem = initCategoryItem({
+            itemId: sourceData.data.id,
             itemData: sourceData.data,
             categoryId: targetCategoryId,
           });
 
-          const items = [...targetCategory.items, newCategoryItem];
+          const items = [newCategoryItem, ...targetCategory.items];
 
-          const indexOfSource = items.findIndex(
-            (i) => i.id === newCategoryItem.id,
-          );
-          const indexOfTarget = items.findIndex(
-            (i) => i.id === targetData.data.id,
-          );
+          const indexOfSource = 0;
+          const indexOfTarget = items.findIndex((i) => i.id === targetId);
 
           const closestEdgeOfTarget = extractClosestEdge(target.data);
 
-          flushSync(() => {
-            addItemToCategory.mutate({
-              categoryId: targetCategoryId,
-              categoryItems: reorderWithEdge({
-                list: items,
-                startIndex: indexOfSource,
-                indexOfTarget,
-                closestEdgeOfTarget,
-                axis: "vertical",
-              }),
-              categoryItemData: newCategoryItem,
-              itemId: sourceData.data.id,
-            });
+          const sortOrder = getReorderDestinationIndex({
+            startIndex: indexOfSource,
+            indexOfTarget,
+            closestEdgeOfTarget,
+            axis: "vertical",
           });
 
-          const element = document.querySelector(
+          const newCategoryItems = reorderWithEdge({
+            list: items,
+            startIndex: indexOfSource,
+            indexOfTarget,
+            closestEdgeOfTarget,
+            axis: "vertical",
+          }).map((item, index) => ({
+            ...item,
+            sortOrder: index,
+          }));
+
+          addItemToCategory.mutate({
+            data: {
+              itemId: sourceData.data.id,
+              categoryId: targetCategoryId,
+              sortOrder,
+            },
+          });
+
+          queryClient.setQueryData<ExpandedList>(
+            listQueryOptions(listId).queryKey,
+            (prev) => {
+              if (!prev) return prev;
+              return {
+                ...prev,
+                categories: prev.categories.map((category) => ({
+                  ...category,
+                  items:
+                    category.id === targetCategoryId
+                      ? newCategoryItems
+                      : category.items,
+                })),
+              };
+            },
+          );
+
+          triggerElementFlashByDragId(
             `[data-category-item-id="${sourceData.data.id}"]`,
           );
-          if (element instanceof HTMLElement) {
-            triggerElementFlash(element);
-          }
 
           return;
         }
@@ -212,7 +233,7 @@ const EditorCategories: React.FC<Props> = (props) => {
           }).map((item, index) => ({
             ...item,
             categoryId: targetCategoryId,
-            sortOrder: index + 1,
+            sortOrder: index,
           }));
 
           updateCategoryItem.mutate({
@@ -220,22 +241,26 @@ const EditorCategories: React.FC<Props> = (props) => {
             categoryItemId: sourceId,
           });
 
-          queryClient.setQueryData<ExpandedList>(
-            listQueryOptions(listId).queryKey,
-            (prev) => {
-              if (!prev) return prev;
-              return {
-                ...prev,
-                categories: prev.categories.map((category) =>
-                  category.id === targetCategoryId
-                    ? { ...category, items: newCategoryItems }
-                    : {
-                        ...category,
-                        items: category.items.filter((i) => i.id !== sourceId),
-                      },
-                ),
-              };
-            },
+          flushSync(() =>
+            queryClient.setQueryData<ExpandedList>(
+              listQueryOptions(listId).queryKey,
+              (prev) => {
+                if (!prev) return prev;
+                return {
+                  ...prev,
+                  categories: prev.categories.map((category) =>
+                    category.id === targetCategoryId
+                      ? { ...category, items: newCategoryItems }
+                      : {
+                          ...category,
+                          items: category.items.filter(
+                            (i) => i.id !== sourceId,
+                          ),
+                        },
+                  ),
+                };
+              },
+            ),
           );
 
           triggerElementFlashByDragId(

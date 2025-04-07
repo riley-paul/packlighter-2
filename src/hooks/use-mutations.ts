@@ -1,4 +1,4 @@
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useMutation } from "@tanstack/react-query";
 import {
   listQueryOptions,
   otherListCategoriesQueryOptions,
@@ -14,11 +14,10 @@ import {
   itemsQueryOptions,
   listsQueryOptions,
 } from "@/modules/sidebar/queries";
-import type { ExpandedList, ExpandedCategoryItem } from "@/lib/types";
+import type { ExpandedList } from "@/lib/types";
 
 export default function useMutations() {
   const { listId } = useCurrentList();
-  const queryClient = useQueryClient();
   const navigate = useNavigate();
 
   const {
@@ -165,43 +164,13 @@ export default function useMutations() {
   });
 
   const addItemToCategory = useMutation({
-    mutationFn: (props: {
-      itemId: string;
-      categoryId: string;
-      categoryItemData?: Partial<ExpandedCategoryItem>;
-      categoryItems: ExpandedCategoryItem[];
-    }) =>
-      actions.categoryItems.create.orThrow({
-        ...props,
-        reorderIds: props.categoryItems.map((i) => i.id),
-      }),
-    onMutate: async ({ categoryId, itemId, categoryItems }) => {
-      const { queryKey } = listQueryOptions(listId);
-      const item = queryClient
-        .getQueryData(itemsQueryOptions.queryKey)
-        ?.find((i) => i.id === itemId);
-      if (!item) return;
-      return optimisticUpdate<ExpandedList>(queryKey, (prev) =>
-        produce(prev, (draft) => {
-          const categoryIdx = draft.categories.findIndex(
-            (i) => i.id === categoryId,
-          );
-          if (categoryIdx === -1) return draft;
-          draft.categories[categoryIdx].items = categoryItems;
-        }),
-      );
-    },
+    mutationFn: actions.categoryItems.create.orThrow,
     onSuccess: () => {
       invalidateQueries([
         listQueryOptions(listId).queryKey,
         otherListCategoriesQueryOptions(listId).queryKey,
         itemsQueryOptions.queryKey,
       ]);
-    },
-    onError: (error, __, context) => {
-      const { queryKey } = listQueryOptions(listId);
-      onErrorOptimistic(queryKey, context);
-      onError(error);
     },
   });
 

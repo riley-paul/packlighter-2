@@ -12,7 +12,6 @@ import {
 import { useQuery } from "@tanstack/react-query";
 import { CommandLoading } from "cmdk";
 import useMutations from "@/hooks/use-mutations";
-import { initCategoryItem } from "@/lib/init";
 import useCurrentList from "@/hooks/use-current-list";
 import { usePackingItemsSortFilter } from "../../modules/sidebar/components/packing-items-sort-filter/use-packing-item-sort-filter";
 import { v4 as uuidv4 } from "uuid";
@@ -102,15 +101,11 @@ const AddItemPopover = React.forwardRef<HTMLButtonElement, Props>(
                     disabled={listItemIds.has(item.id)}
                     value={`${item.name}~${item.id}~${item.description}`}
                     onSelect={() => {
-                      const newCategoryItem = initCategoryItem({
-                        itemData: item,
-                        categoryId: category.id,
-                      });
                       addItemToCategory.mutate({
-                        categoryId: category.id,
-                        itemId: item.id,
-                        categoryItems: [...category.items, newCategoryItem],
-                        categoryItemData: newCategoryItem,
+                        data: {
+                          itemId: item.id,
+                          categoryId: category.id,
+                        },
                       });
                       setIsOpen(false);
                     }}
