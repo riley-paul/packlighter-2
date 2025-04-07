@@ -3,10 +3,10 @@ import { z } from "zod";
 
 const itemInputs = {
   getAll: z.any(),
-  create: zItemInsert.omit({ userId: true }),
+  create: zItemInsert,
+  update: zItemInsert.partial().required({ id: true }),
   duplicate: z.object({ itemId: z.string() }),
   remove: z.object({ itemId: z.string() }),
-  update: zItemInsert.partial().omit({ userId: true }).required({ id: true }),
   getListsIncluded: z.object({ itemId: z.string() }),
 };
 export default itemInputs;

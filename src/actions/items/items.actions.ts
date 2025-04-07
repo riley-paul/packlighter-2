@@ -8,6 +8,7 @@ export const getAll = defineAction({
 });
 
 export const create = defineAction({
+  accept: "form",
   input: itemInputs.create,
   handler: itemHandlers.create,
 });

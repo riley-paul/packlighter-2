@@ -1,7 +1,6 @@
 import React from "react";
 import { Controller, FormProvider, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { initItem } from "@/lib/init";
 import { Button, Select, Text, TextField } from "@radix-ui/themes";
 import { useAtomValue, useSetAtom } from "jotai";
 import { closeEditorAtom, editorItemAtom } from "../store";
@@ -16,7 +15,12 @@ const ItemForm: React.FC = () => {
   const closeEditor = useSetAtom(closeEditorAtom);
 
   const methods = useForm<ItemInsert>({
-    values: initItem(item),
+    values: item || {
+      name: "",
+      weight: 0,
+      weightUnit: "g",
+      imageType: "file",
+    },
     resolver: zodResolver(zItemInsert),
   });
 

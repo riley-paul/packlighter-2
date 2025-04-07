@@ -9,7 +9,10 @@ import { actions } from "astro:actions";
 import useCurrentList from "@/hooks/use-current-list";
 import type { ExpandedList } from "@/lib/types";
 import { toFormData } from "@/lib/client/utils";
-import type { ItemUpdateInput } from "@/actions/items/items.inputs";
+import type {
+  ItemCreateInput,
+  ItemUpdateInput,
+} from "@/actions/items/items.inputs";
 
 export default function useItemsMutations() {
   const { listId } = useCurrentList();
@@ -55,7 +58,10 @@ export default function useItemsMutations() {
   });
 
   const addItem = useMutation({
-    mutationFn: actions.items.create.orThrow,
+    mutationFn: (data: ItemCreateInput) => {
+      const formData = toFormData(data);
+      return actions.items.create.orThrow(formData);
+    },
     onSuccess: () => {
       invalidateQueries([itemsQueryOptions.queryKey]);
     },
