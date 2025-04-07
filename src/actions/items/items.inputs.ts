@@ -8,6 +8,11 @@ const itemInputs = {
   duplicate: z.object({ itemId: z.string() }),
   remove: z.object({ itemId: z.string() }),
   getListsIncluded: z.object({ itemId: z.string() }),
+  imageUpload: z.object({
+    itemId: z.string(),
+    imageFile: z.instanceof(File).optional(),
+    remove: z.boolean().optional(),
+  }),
 };
 export default itemInputs;
 

@@ -8,7 +8,6 @@ export const getAll = defineAction({
 });
 
 export const create = defineAction({
-  accept: "form",
   input: itemInputs.create,
   handler: itemHandlers.create,
 });
@@ -24,7 +23,6 @@ export const remove = defineAction({
 });
 
 export const update = defineAction({
-  accept: "form",
   input: itemInputs.update,
   handler: itemHandlers.update,
 });
@@ -32,4 +30,10 @@ export const update = defineAction({
 export const getListsIncluded = defineAction({
   input: itemInputs.getListsIncluded,
   handler: itemHandlers.getListsIncluded,
+});
+
+export const imageUpload = defineAction({
+  accept: "form",
+  input: itemInputs.imageUpload,
+  handler: itemHandlers.imageUpload,
 });

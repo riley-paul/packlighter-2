@@ -9,7 +9,6 @@ import { isAuthorized } from "@/actions/helpers";
 import { v4 as uuid } from "uuid";
 import type itemInputs from "./items.inputs";
 import type { IncludedList, ItemSelect } from "@/lib/types";
-import { fromFormData } from "@/lib/form-data";
 
 const getAll: ActionHandler<typeof itemInputs.getAll, ItemSelect[]> = async (
   _,
@@ -22,20 +21,11 @@ const getAll: ActionHandler<typeof itemInputs.getAll, ItemSelect[]> = async (
 };
 
 const create: ActionHandler<typeof itemInputs.create, ItemSelect> = async (
-  formData,
+  data,
   c,
 ) => {
-  const data = fromFormData(formData);
   const db = createDb(c.locals.runtime.env);
   const userId = isAuthorized(c).id;
-
-  const { imageFile } = data;
-
-  if (imageFile && imageFile.size > 0) {
-    const key = crypto.randomUUID();
-    await c.locals.runtime.env.R2_BUCKET.put(key, imageFile);
-    data.imageR2Key = key;
-  }
 
   const [newItem] = await db
     .insert(Item)
@@ -99,15 +89,13 @@ const remove: ActionHandler<typeof itemInputs.remove, null> = async (
 };
 
 const update: ActionHandler<typeof itemInputs.update, ItemSelect> = async (
-  formData,
+  data,
   c,
 ) => {
-  const data = fromFormData(formData);
-  console.log("updateItem", data);
   const db = createDb(c.locals.runtime.env);
   const userId = isAuthorized(c).id;
 
-  const { id: itemId, imageFile } = data;
+  const { id: itemId } = data;
 
   const [item] = await db
     .select()
@@ -119,17 +107,6 @@ const update: ActionHandler<typeof itemInputs.update, ItemSelect> = async (
       code: "NOT_FOUND",
       message: "Item not found",
     });
-  }
-
-  if (imageFile && imageFile.size > 0) {
-    const key = crypto.randomUUID();
-    await c.locals.runtime.env.R2_BUCKET.put(key, imageFile);
-    data.imageR2Key = key;
-  }
-
-  if (imageFile === null && item.imageR2Key) {
-    await c.locals.runtime.env.R2_BUCKET.delete(item.imageR2Key);
-    data.imageR2Key = null;
   }
 
   const [updated] = await db
@@ -159,6 +136,49 @@ const getListsIncluded: ActionHandler<
   return result;
 };
 
+const imageUpload: ActionHandler<typeof itemInputs.imageUpload, null> = async (
+  { itemId, imageFile, remove },
+  c,
+) => {
+  const db = createDb(c.locals.runtime.env);
+  const userId = isAuthorized(c).id;
+
+  const [item] = await db
+    .select({ id: Item.id, userId: Item.userId, imageKey: Item.imageR2Key })
+    .from(Item)
+    .where(idAndUserIdFilter(Item, { userId, id: itemId }));
+
+  if (!item) {
+    throw new ActionError({
+      code: "NOT_FOUND",
+      message: "Item not found",
+    });
+  }
+
+  if (item.userId !== userId) {
+    throw new ActionError({
+      code: "UNAUTHORIZED",
+      message: "You are not authorized to update this item",
+    });
+  }
+
+  if (imageFile && imageFile.size > 0) {
+    const key = crypto.randomUUID();
+    await c.locals.runtime.env.R2_BUCKET.put(key, imageFile);
+    await db
+      .update(Item)
+      .set({ imageR2Key: key, imageType: "file" })
+      .where(eq(Item.id, itemId));
+  }
+
+  if (remove && item.imageKey) {
+    await c.locals.runtime.env.R2_BUCKET.delete(item.imageKey);
+    await db.update(Item).set({ imageR2Key: null }).where(eq(Item.id, itemId));
+  }
+
+  return null;
+};
+
 const itemHandlers = {
   getAll,
   create,
@@ -166,6 +186,7 @@ const itemHandlers = {
   remove,
   update,
   getListsIncluded,
+  imageUpload,
 };
 
 export default itemHandlers;
