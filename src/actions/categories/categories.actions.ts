@@ -17,11 +17,6 @@ export const create = defineAction({
   handler: categoryHandlers.create,
 });
 
-export const reorder = defineAction({
-  input: categoryInputs.reorder,
-  handler: categoryHandlers.reorder,
-});
-
 export const remove = defineAction({
   input: categoryInputs.remove,
   handler: categoryHandlers.remove,

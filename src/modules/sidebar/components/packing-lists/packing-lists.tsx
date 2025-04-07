@@ -71,8 +71,6 @@ export default function PackingLists(): ReturnType<React.FC> {
           axis: "vertical",
         });
 
-        console.log("newSortOrder", newSortOrder);
-
         updateList.mutate({
           data: { sortOrder: newSortOrder },
           listId: sourceId,

@@ -2,6 +2,7 @@ import React from "react";
 import { monitorForElements } from "@atlaskit/pragmatic-drag-and-drop/element/adapter";
 import { DndEntityType, isDndEntityType } from "@/lib/client/constants";
 import { extractClosestEdge } from "@atlaskit/pragmatic-drag-and-drop-hitbox/closest-edge";
+import { getReorderDestinationIndex } from "@atlaskit/pragmatic-drag-and-drop-hitbox/util/get-reorder-destination-index";
 import { reorderWithEdge } from "@atlaskit/pragmatic-drag-and-drop-hitbox/util/reorder-with-edge";
 import { z } from "zod";
 import { flushSync } from "react-dom";
@@ -10,11 +11,16 @@ import { initCategoryItem } from "@/lib/init";
 import EditorCategory from "./editor-category";
 import AddCategoryPopover from "./add-category-popover";
 import { triggerElementFlash } from "@/lib/client/utils";
-import type {
-  ExpandedCategory,
-  ExpandedCategoryItem,
-  ItemSelect,
+import {
+  type ExpandedList,
+  zExpandedCategory,
+  type ExpandedCategory,
+  type ExpandedCategoryItem,
+  type ItemSelect,
 } from "@/lib/types";
+import { useQueryClient } from "@tanstack/react-query";
+import { listQueryOptions } from "@/lib/client/queries";
+import useCurrentList from "@/hooks/use-current-list";
 
 type Props = {
   categories: ExpandedCategory[];
@@ -22,8 +28,11 @@ type Props = {
 
 const EditorCategories: React.FC<Props> = (props) => {
   const { categories } = props;
-  const { reorderCategories, reorderCategoryItems, addItemToCategory } =
+  const { reorderCategoryItems, addItemToCategory, updateCategory } =
     useMutations();
+
+  const queryClient = useQueryClient();
+  const { listId } = useCurrentList();
 
   React.useEffect(() => {
     return monitorForElements({
@@ -43,23 +52,18 @@ const EditorCategories: React.FC<Props> = (props) => {
 
         // sorting categories
         if (isDndEntityType(source.data, DndEntityType.Category)) {
-          const sourceData = z
-            .custom<ExpandedCategory>()
-            .safeParse(source.data);
-          const targetData = z
-            .custom<ExpandedCategory>()
-            .safeParse(target.data);
+          const sourceData = zExpandedCategory.safeParse(source.data);
+          const targetData = zExpandedCategory.safeParse(target.data);
 
           if (!sourceData.success || !targetData.success) {
             return;
           }
 
-          const indexOfSource = categories.findIndex(
-            (i) => i.id === sourceData.data.id,
-          );
-          const indexOfTarget = categories.findIndex(
-            (i) => i.id === targetData.data.id,
-          );
+          const sourceId = sourceData.data.id;
+          const targetId = targetData.data.id;
+
+          const indexOfSource = categories.findIndex((i) => i.id === sourceId);
+          const indexOfTarget = categories.findIndex((i) => i.id === targetId);
 
           if (indexOfTarget < 0 || indexOfSource < 0) {
             return;
@@ -67,24 +71,33 @@ const EditorCategories: React.FC<Props> = (props) => {
 
           const closestEdgeOfTarget = extractClosestEdge(target.data);
 
-          flushSync(() => {
-            reorderCategories.mutate(
-              reorderWithEdge({
-                list: categories,
-                startIndex: indexOfSource,
-                indexOfTarget,
-                closestEdgeOfTarget,
-                axis: "vertical",
-              }),
-            );
+          const newSortOrder = getReorderDestinationIndex({
+            startIndex: indexOfSource,
+            indexOfTarget,
+            closestEdgeOfTarget,
+            axis: "vertical",
           });
 
-          const element = document.querySelector(
-            `[data-category-id="${sourceData.data.id}"]`,
+          const newCategories = reorderWithEdge({
+            list: categories,
+            startIndex: indexOfSource,
+            indexOfTarget,
+            closestEdgeOfTarget,
+            axis: "vertical",
+          });
+
+          updateCategory.mutate({
+            data: { sortOrder: newSortOrder },
+            categoryId: sourceId,
+          });
+
+          queryClient.setQueryData<ExpandedList>(
+            listQueryOptions(listId).queryKey,
+            (prev) => {
+              if (prev) return { ...prev, categories: newCategories };
+            },
           );
-          if (element instanceof HTMLElement) {
-            triggerElementFlash(element);
-          }
+
           return;
         }
 

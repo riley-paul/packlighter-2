@@ -11,12 +11,7 @@ const listInputs = {
   }),
   update: z.object({
     listId: z.string(),
-    data: zListInsert
-      .omit({
-        id: true,
-        userId: true,
-      })
-      .partial(),
+    data: zListInsert.omit({ id: true, userId: true }).partial(),
   }),
   remove: z.object({ listId: z.string() }),
   unpack: z.object({ listId: z.string() }),

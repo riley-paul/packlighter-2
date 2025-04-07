@@ -1,6 +1,10 @@
 import React from "react";
 
-import { centerDragPreviewOnMouse, cn } from "@/lib/client/utils";
+import {
+  centerDragPreviewOnMouse,
+  cn,
+  triggerElementFlash,
+} from "@/lib/client/utils";
 import useDraggableState from "@/hooks/use-draggable-state";
 import {
   attachClosestEdge,
@@ -76,6 +80,7 @@ const EditorCategory: React.FC<Props> = (props) => {
         },
         onDrop() {
           setDraggableIdle();
+          triggerElementFlash(element);
         },
       }),
       dropTargetForElements({

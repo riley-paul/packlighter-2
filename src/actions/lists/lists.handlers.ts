@@ -88,13 +88,13 @@ const update: ActionHandler<typeof listInputs.update, ListSelect> = async (
     .returning();
 
   if (sortOrder !== undefined) {
-    const listsFromDb = await db
-      .select({ sortOrder: List.sortOrder, id: List.id })
+    const lists = await db
+      .select({ id: List.id })
       .from(List)
       .where(and(eq(List.userId, userId)))
       .orderBy(List.sortOrder);
 
-    const listIds = listsFromDb.map((l) => l.id);
+    const listIds = lists.map((l) => l.id);
     const indexOfList = listIds.indexOf(listId);
 
     const reordered = reorder({
