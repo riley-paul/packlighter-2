@@ -191,7 +191,7 @@ const update: ActionHandler<
 
   if (sortOrder !== undefined) {
     const categories = await db
-      .select()
+      .select({ id: Category.id })
       .from(Category)
       .where(and(eq(Category.listId, listId)))
       .orderBy(Category.sortOrder);

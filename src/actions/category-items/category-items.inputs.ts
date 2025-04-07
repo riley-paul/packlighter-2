@@ -13,10 +13,9 @@ const categoryItemInputs = {
     itemData: zItemInsert.partial().optional(),
     categoryItemData: zCategoryItemInsert.partial().optional(),
   }),
-  reorder: z.object({ ids: z.string().array(), categoryId: z.string() }),
   update: z.object({
     categoryItemId: z.string(),
-    data: zCategoryItemInsert.partial(),
+    data: zCategoryItemInsert.omit({ userId: true }).partial(),
   }),
   remove: z.object({ categoryItemId: z.string() }),
 };

@@ -7,6 +7,7 @@ import { v4 as uuid } from "uuid";
 import type { CategoryItemInsert } from "@/lib/types";
 import type categoryItemInputs from "./category-items.inputs";
 import { createDb } from "@/db";
+import { reorder } from "@atlaskit/pragmatic-drag-and-drop/reorder";
 
 const create: ActionHandler<
   typeof categoryItemInputs.create,
@@ -105,35 +106,52 @@ const createAndAddToCategory: ActionHandler<
   return created;
 };
 
-const reorder: ActionHandler<typeof categoryItemInputs.reorder, null> = async (
-  { ids, categoryId },
-  c,
-) => {
-  const db = createDb(c.locals.runtime.env);
-  const userId = isAuthorized(c).id;
-  await Promise.all(
-    ids.map((id, index) =>
-      db
-        .update(CategoryItem)
-        .set({ sortOrder: index + 1, categoryId })
-        .where(idAndUserIdFilter(CategoryItem, { userId, id })),
-    ),
-  );
-  return null;
-};
-
 const update: ActionHandler<
   typeof categoryItemInputs.update,
   CategoryItemInsert
 > = async ({ categoryItemId, data }, c) => {
   const db = createDb(c.locals.runtime.env);
   const userId = isAuthorized(c).id;
-  const updated = await db
+
+  const [updated] = await db
     .update(CategoryItem)
     .set(data)
     .where(idAndUserIdFilter(CategoryItem, { userId, id: categoryItemId }))
-    .returning()
-    .then((rows) => rows[0]);
+    .returning();
+
+  const { categoryId, sortOrder } = data;
+
+  if (sortOrder !== undefined) {
+    const categoryItems = await db
+      .select()
+      .from(CategoryItem)
+      .where(
+        and(
+          eq(CategoryItem.categoryId, categoryId || updated.categoryId),
+          eq(CategoryItem.userId, userId),
+        ),
+      )
+      .orderBy(CategoryItem.sortOrder);
+
+    const categoryItemIds = categoryItems.map((i) => i.id);
+    const indexOfCategoryItem = categoryItemIds.indexOf(categoryItemId);
+
+    const reordered = reorder({
+      list: categoryItemIds,
+      startIndex: indexOfCategoryItem,
+      finishIndex: sortOrder,
+    });
+
+    await Promise.all(
+      reordered.map((id, index) =>
+        db
+          .update(CategoryItem)
+          .set({ sortOrder: index })
+          .where(idAndUserIdFilter(CategoryItem, { userId, id })),
+      ),
+    );
+  }
+
   return updated;
 };
 

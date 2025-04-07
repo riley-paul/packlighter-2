@@ -10,7 +10,10 @@ import useMutations from "@/hooks/use-mutations";
 import { initCategoryItem } from "@/lib/init";
 import EditorCategory from "./editor-category";
 import AddCategoryPopover from "./add-category-popover";
-import { triggerElementFlash } from "@/lib/client/utils";
+import {
+  triggerElementFlash,
+  triggerElementFlashByDragId,
+} from "@/lib/client/utils";
 import {
   type ExpandedList,
   zExpandedCategory,
@@ -28,7 +31,7 @@ type Props = {
 
 const EditorCategories: React.FC<Props> = (props) => {
   const { categories } = props;
-  const { reorderCategoryItems, addItemToCategory, updateCategory } =
+  const { updateCategoryItem, addItemToCategory, updateCategory } =
     useMutations();
 
   const queryClient = useQueryClient();
@@ -94,7 +97,8 @@ const EditorCategories: React.FC<Props> = (props) => {
           queryClient.setQueryData<ExpandedList>(
             listQueryOptions(listId).queryKey,
             (prev) => {
-              if (prev) return { ...prev, categories: newCategories };
+              if (!prev) return prev;
+              return { ...prev, categories: newCategories };
             },
           );
 
@@ -176,6 +180,9 @@ const EditorCategories: React.FC<Props> = (props) => {
           const targetCategoryId = targetData.data.categoryId;
           const sourceCategoryId = sourceData.data.categoryId;
 
+          const sourceId = sourceData.data.id;
+          const targetId = targetData.data.id;
+
           const targetCategory = categories.find(
             (i) => i.id === targetCategoryId,
           );
@@ -186,34 +193,56 @@ const EditorCategories: React.FC<Props> = (props) => {
             ? [...targetCategory.items, sourceData.data]
             : targetCategory.items;
 
-          const indexOfSource = items.findIndex(
-            (i) => i.id === sourceData.data.id,
-          );
-          const indexOfTarget = items.findIndex(
-            (i) => i.id === targetData.data.id,
-          );
+          const indexOfSource = items.findIndex((i) => i.id === sourceId);
+          const indexOfTarget = items.findIndex((i) => i.id === targetId);
 
           const closestEdgeOfTarget = extractClosestEdge(target.data);
 
-          flushSync(() => {
-            reorderCategoryItems.mutate({
-              categoryId: targetCategoryId,
-              categoryItems: reorderWithEdge({
-                list: items,
-                startIndex: indexOfSource,
-                indexOfTarget,
-                closestEdgeOfTarget,
-                axis: "vertical",
-              }),
-            });
+          const newSortOrder = getReorderDestinationIndex({
+            startIndex: indexOfSource,
+            indexOfTarget,
+            closestEdgeOfTarget,
+            axis: "vertical",
           });
 
-          const element = document.querySelector(
+          const newCategoryItems = reorderWithEdge({
+            list: items,
+            startIndex: indexOfSource,
+            indexOfTarget,
+            closestEdgeOfTarget,
+            axis: "vertical",
+          }).map((item, index) => ({
+            ...item,
+            categoryId: targetCategoryId,
+            sortOrder: index + 1,
+          }));
+
+          updateCategoryItem.mutate({
+            data: { sortOrder: newSortOrder, categoryId: targetCategoryId },
+            categoryItemId: sourceId,
+          });
+
+          queryClient.setQueryData<ExpandedList>(
+            listQueryOptions(listId).queryKey,
+            (prev) => {
+              if (!prev) return prev;
+              return {
+                ...prev,
+                categories: prev.categories.map((category) =>
+                  category.id === targetCategoryId
+                    ? { ...category, items: newCategoryItems }
+                    : {
+                        ...category,
+                        items: category.items.filter((i) => i.id !== sourceId),
+                      },
+                ),
+              };
+            },
+          );
+
+          triggerElementFlashByDragId(
             `[data-category-item-id="${targetData.data.id}"]`,
           );
-          if (element instanceof HTMLElement) {
-            triggerElementFlash(element);
-          }
           return;
         }
       },

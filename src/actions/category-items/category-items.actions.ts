@@ -12,11 +12,6 @@ export const createAndAddToCategory = defineAction({
   handler: categoryItemHandlers.createAndAddToCategory,
 });
 
-export const reorder = defineAction({
-  input: categoryItemInputs.reorder,
-  handler: categoryItemHandlers.reorder,
-});
-
 export const update = defineAction({
   input: categoryItemInputs.update,
   handler: categoryItemHandlers.update,

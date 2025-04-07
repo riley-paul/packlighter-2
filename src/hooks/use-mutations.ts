@@ -291,42 +291,6 @@ export default function useMutations() {
     },
   });
 
-  const reorderCategoryItems = useMutation({
-    mutationFn: (props: {
-      categoryId: string;
-      categoryItems: ExpandedCategoryItem[];
-    }) =>
-      actions.categoryItems.reorder.orThrow({
-        ...props,
-        ids: props.categoryItems.map((i) => i.id),
-      }),
-    onMutate: async ({ categoryId, categoryItems }) => {
-      const { queryKey } = listQueryOptions(listId);
-      return optimisticUpdate<ExpandedList>(queryKey, (prev) => ({
-        ...prev,
-        categories: prev.categories.map((category) =>
-          category.id === categoryId
-            ? { ...category, items: categoryItems }
-            : {
-                ...category,
-                items: category.items.filter(
-                  (i) => !categoryItems.map((i) => i.id).includes(i.id),
-                ),
-              },
-        ),
-      }));
-    },
-    onError: (error, __, context) => {
-      const { queryKey } = listQueryOptions(listId);
-      onErrorOptimistic(queryKey, context);
-      onError(error);
-    },
-    onSuccess: () => {
-      const { queryKey } = listQueryOptions(listId);
-      invalidateQueries([queryKey]);
-    },
-  });
-
   const unpackList = useMutation({
     mutationFn: actions.lists.unpack.orThrow,
     onSuccess: () => {
@@ -346,7 +310,6 @@ export default function useMutations() {
     addList,
     duplicateList,
     addCategory,
-    reorderCategoryItems,
     toggleCategoryPacked,
     copyCategoryToList,
     unpackList,
