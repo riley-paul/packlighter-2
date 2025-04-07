@@ -17,7 +17,6 @@ import {
 import type {
   ExpandedList,
   ExpandedCategoryItem,
-  ListSelect,
   ExpandedCategory,
 } from "@/lib/types";
 
@@ -296,25 +295,6 @@ export default function useMutations() {
     },
   });
 
-  const reorderLists = useMutation({
-    mutationFn: (lists: ListSelect[]) =>
-      actions.lists.reorder.orThrow(lists.map((i) => i.id)),
-    onMutate: async (newLists) => {
-      return optimisticUpdate(listsQueryOptions.queryKey, newLists);
-    },
-    onError: (error, __, context) => {
-      const { queryKey } = listsQueryOptions;
-      onErrorOptimistic(queryKey, context);
-      onError(error);
-    },
-    onSuccess: () => {
-      invalidateQueries([
-        listsQueryOptions.queryKey,
-        otherListCategoriesQueryOptions(listId).queryKey,
-      ]);
-    },
-  });
-
   const reorderCategories = useMutation({
     mutationFn: (categories: ExpandedCategory[]) =>
       actions.categories.reorder.orThrow({
@@ -396,7 +376,6 @@ export default function useMutations() {
     addList,
     duplicateList,
     addCategory,
-    reorderLists,
     reorderCategories,
     reorderCategoryItems,
     toggleCategoryPacked,

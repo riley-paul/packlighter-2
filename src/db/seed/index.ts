@@ -17,6 +17,8 @@ import { createDb } from "..";
 
 export default async function seed() {
   const db = createDb(env);
+  await db.delete(User);
+
   const [{ id: userId }] = await db
     .insert(User)
     .values({
@@ -72,10 +74,10 @@ export default async function seed() {
   const categoryItems = await db
     .insert(CategoryItem)
     .values(
-      new Array(200).fill(0).map(() => ({
+      items.map((item) => ({
         userId,
         categoryId: randomItemFromArray(categories).id,
-        itemId: randomItemFromArray(items).id,
+        itemId: item.id,
         quantity: randomNumberWithinRange(1, 10),
       })),
     )

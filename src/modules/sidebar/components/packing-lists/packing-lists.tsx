@@ -1,5 +1,5 @@
-import React from "react";
-import { useQuery } from "@tanstack/react-query";
+import React, { startTransition } from "react";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import PackingList from "./packing-list";
 import { cn } from "@/lib/client/utils";
 import { listsQueryOptions } from "@/modules/sidebar/queries";
@@ -9,8 +9,8 @@ import ArrayQueryGuard from "@/components/base/array-query-guard";
 
 import { monitorForElements } from "@atlaskit/pragmatic-drag-and-drop/element/adapter";
 import { extractClosestEdge } from "@atlaskit/pragmatic-drag-and-drop-hitbox/closest-edge";
+import { getReorderDestinationIndex } from "@atlaskit/pragmatic-drag-and-drop-hitbox/util/get-reorder-destination-index";
 import { reorderWithEdge } from "@atlaskit/pragmatic-drag-and-drop-hitbox/util/reorder-with-edge";
-import { flushSync } from "react-dom";
 import { DndEntityType, isDndEntityType } from "@/lib/client/constants";
 import SidebarSectionHeader from "@/modules/sidebar/components/sidebar-section-header";
 import useScrollShadow from "@/hooks/use-scroll-shadow";
@@ -22,7 +22,9 @@ import { zListSelect } from "@/lib/types";
 export default function PackingLists(): ReturnType<React.FC> {
   const listsQuery = useQuery(listsQueryOptions);
   const lists = listsQuery.data ?? [];
-  const { addList, reorderLists } = useMutations();
+  const { addList, updateList } = useMutations();
+
+  const queryClient = useQueryClient();
 
   React.useEffect(() => {
     return monitorForElements({
@@ -42,12 +44,11 @@ export default function PackingLists(): ReturnType<React.FC> {
           return;
         }
 
-        const indexOfSource = lists.findIndex(
-          (list) => list.id === sourceData.data.id,
-        );
-        const indexOfTarget = lists.findIndex(
-          (list) => list.id === targetData.data.id,
-        );
+        const sourceId = sourceData.data.id;
+        const targetId = targetData.data.id;
+
+        const indexOfSource = lists.findIndex((i) => i.id === sourceId);
+        const indexOfTarget = lists.findIndex((i) => i.id === targetId);
 
         if (indexOfTarget < 0 || indexOfSource < 0) {
           return;
@@ -55,18 +56,29 @@ export default function PackingLists(): ReturnType<React.FC> {
 
         const closestEdgeOfTarget = extractClosestEdge(target.data);
 
-        // Using `flushSync` so we can query the DOM straight after this line
-        flushSync(() => {
-          reorderLists.mutate(
-            reorderWithEdge({
-              list: lists,
-              startIndex: indexOfSource,
-              indexOfTarget,
-              closestEdgeOfTarget,
-              axis: "vertical",
-            }),
-          );
+        const newSortOrder = getReorderDestinationIndex({
+          startIndex: indexOfSource,
+          indexOfTarget,
+          closestEdgeOfTarget,
+          axis: "vertical",
         });
+
+        const newLists = reorderWithEdge({
+          list: lists,
+          startIndex: indexOfSource,
+          indexOfTarget,
+          closestEdgeOfTarget,
+          axis: "vertical",
+        });
+
+        console.log("newSortOrder", newSortOrder);
+
+        updateList.mutate({
+          data: { sortOrder: newSortOrder },
+          listId: sourceId,
+        });
+
+        queryClient.setQueryData(listsQueryOptions.queryKey, newLists);
       },
     });
   }, [lists]);

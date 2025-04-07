@@ -5,6 +5,7 @@ import type {
   CategoryInsert,
   CategoryItemInsert,
   ItemInsert,
+  ListInsert,
 } from "@/lib/types";
 
 const getRandomArrayItem = <T>(arr: T[]): T => {
@@ -14,6 +15,7 @@ const getRandomArrayItem = <T>(arr: T[]): T => {
 
 export const USER_ID = crypto.randomUUID();
 export const LIST_ID = crypto.randomUUID();
+export const LIST_IDS = new Array(5).fill(0).map(() => crypto.randomUUID());
 export const ITEM_IDS = new Array(20).fill(0).map(() => crypto.randomUUID());
 export const CATEGORY_IDS = new Array(5).fill(0).map(() => crypto.randomUUID());
 
@@ -37,12 +39,17 @@ export const seedTestData = async () => {
     ),
   );
 
-  await db.insert(List).values({
-    id: LIST_ID,
-    userId: USER_ID,
-    name: "Test List",
-    description: "This is a test list",
-  });
+  await db.insert(List).values(
+    [LIST_ID, ...LIST_IDS].map(
+      (listId, idx): ListInsert => ({
+        id: listId,
+        userId: USER_ID,
+        name: "Test List",
+        sortOrder: idx + 1,
+        description: "This is a test list",
+      }),
+    ),
+  );
 
   await db.insert(Category).values(
     CATEGORY_IDS.map(
