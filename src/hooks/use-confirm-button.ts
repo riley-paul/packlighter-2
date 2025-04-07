@@ -18,7 +18,7 @@ export default function useConfirmButton(props: Props) {
     noConfirm,
     buttonVariantIdle = "ghost",
     buttonColorIdle = "gray",
-    buttonVariantConfirm = "solid",
+    buttonVariantConfirm = "ghost",
     buttonColorConfirm = "red",
   } = props;
 
@@ -52,7 +52,7 @@ export default function useConfirmButton(props: Props) {
     variant: isConfirming ? buttonVariantConfirm : buttonVariantIdle,
     color: isConfirming ? buttonColorConfirm : buttonColorIdle,
     onClick: handleClick,
-    className: cn("m-0 p-1.5"),
+    className: cn("m-0 size-4"),
   };
 
   return {
