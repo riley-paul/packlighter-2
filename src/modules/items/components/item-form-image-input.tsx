@@ -28,7 +28,7 @@ const UrlImageInput: React.FC = () => {
               size="1"
               color="red"
               className="gap-2"
-              onClick={() => field.onChange("")}
+              onClick={() => field.onChange(null)}
               disabled={field.value?.length === 0}
             >
               <i className="fas fa-trash"></i>

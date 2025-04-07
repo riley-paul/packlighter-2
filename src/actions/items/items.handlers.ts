@@ -9,6 +9,7 @@ import { isAuthorized } from "@/actions/helpers";
 import { v4 as uuid } from "uuid";
 import type itemInputs from "./items.inputs";
 import type { IncludedList, ItemSelect } from "@/lib/types";
+import { fromFormData } from "@/lib/form-data";
 
 const getAll: ActionHandler<typeof itemInputs.getAll, ItemSelect[]> = async (
   _,
@@ -21,9 +22,10 @@ const getAll: ActionHandler<typeof itemInputs.getAll, ItemSelect[]> = async (
 };
 
 const create: ActionHandler<typeof itemInputs.create, ItemSelect> = async (
-  data,
+  formData,
   c,
 ) => {
+  const data = fromFormData(formData);
   const db = createDb(c.locals.runtime.env);
   const userId = isAuthorized(c).id;
 
@@ -97,9 +99,11 @@ const remove: ActionHandler<typeof itemInputs.remove, null> = async (
 };
 
 const update: ActionHandler<typeof itemInputs.update, ItemSelect> = async (
-  data,
+  formData,
   c,
 ) => {
+  const data = fromFormData(formData);
+  console.log("updateItem", data);
   const db = createDb(c.locals.runtime.env);
   const userId = isAuthorized(c).id;
 

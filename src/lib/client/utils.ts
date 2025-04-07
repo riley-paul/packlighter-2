@@ -79,13 +79,3 @@ export const getItemImageUrl = (
   if (!item.imageR2Key) return undefined;
   return `/media/${item.imageR2Key}.jpg`;
 };
-
-export function toFormData(obj: Record<string, any>): FormData {
-  const formData = new FormData();
-  for (const key in obj) {
-    if (obj.hasOwnProperty(key)) {
-      formData.append(key, obj[key]);
-    }
-  }
-  return formData;
-}

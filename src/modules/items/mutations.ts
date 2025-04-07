@@ -8,11 +8,11 @@ import {
 import { actions } from "astro:actions";
 import useCurrentList from "@/hooks/use-current-list";
 import type { ExpandedList } from "@/lib/types";
-import { toFormData } from "@/lib/client/utils";
 import type {
   ItemCreateInput,
   ItemUpdateInput,
 } from "@/actions/items/items.inputs";
+import { toFormData } from "@/lib/form-data";
 
 export default function useItemsMutations() {
   const { listId } = useCurrentList();
