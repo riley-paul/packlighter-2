@@ -2,7 +2,6 @@ import type { DragLocationHistory } from "@atlaskit/pragmatic-drag-and-drop/dist
 import type { CheckedState } from "@radix-ui/react-checkbox";
 import { type ClassValue, clsx } from "clsx";
 import { twMerge } from "tailwind-merge";
-import { z } from "zod";
 import type { ItemSelect } from "../types";
 
 export function cn(...inputs: ClassValue[]) {
@@ -69,15 +68,6 @@ export const centerDragPreviewOnMouse = (
   return () => ({ x: leftOffset, y: topOffset });
 };
 
-export const stringToJSONSchema = z.string().transform((str, ctx) => {
-  try {
-    return JSON.parse(str);
-  } catch (e) {
-    ctx.addIssue({ code: "custom", message: "Invalid JSON" });
-    return z.NEVER;
-  }
-});
-
 export const getItemImageUrl = (
   item: Partial<Pick<ItemSelect, "image" | "imageR2Key" | "imageType">>,
 ): string | undefined => {
@@ -89,3 +79,13 @@ export const getItemImageUrl = (
   if (!item.imageR2Key) return undefined;
   return `/media/${item.imageR2Key}.jpg`;
 };
+
+export function toFormData(obj: Record<string, any>): FormData {
+  const formData = new FormData();
+  for (const key in obj) {
+    if (obj.hasOwnProperty(key)) {
+      formData.append(key, obj[key]);
+    }
+  }
+  return formData;
+}

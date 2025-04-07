@@ -138,8 +138,8 @@ export default function useEditorColumns({
                   value={props.getValue().name}
                   handleSubmit={(name) =>
                     updateItem.mutate({
-                      itemId: props.row.original.itemData.id,
-                      data: { name },
+                      id: props.row.original.itemData.id,
+                      name,
                     })
                   }
                   textFieldProps={{ placeholder: "Name" }}
@@ -156,8 +156,8 @@ export default function useEditorColumns({
                   value={props.getValue().description}
                   handleSubmit={(description) =>
                     updateItem.mutate({
-                      itemId: props.row.original.itemData.id,
-                      data: { description },
+                      id: props.row.original.itemData.id,
+                      description,
                     })
                   }
                   textFieldProps={{ placeholder: "Description" }}
@@ -209,8 +209,8 @@ export default function useEditorColumns({
                 selectOnFocus
                 onUpdate={(weight) =>
                   updateItem.mutate({
-                    itemId: props.row.original.itemId,
-                    data: { weight: Number(weight) },
+                    id: props.row.original.itemId,
+                    weight: Number(weight),
                   })
                 }
               >
@@ -220,8 +220,8 @@ export default function useEditorColumns({
                     value={props.getValue().weightUnit}
                     onValueChange={(weightUnit: WeightUnit) =>
                       updateItem.mutate({
-                        itemId: props.row.original.itemId,
-                        data: { weightUnit },
+                        id: props.row.original.itemId,
+                        weightUnit,
                       })
                     }
                   >

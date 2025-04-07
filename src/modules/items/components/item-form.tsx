@@ -28,7 +28,7 @@ const ItemForm: React.FC = () => {
       console.log(data);
       item
         ? updateItem.mutate(
-            { itemId: item.id, data, itemImageFile: data.imageFile },
+            { ...data, id: item.id },
             {
               onSuccess: () => {
                 closeEditor();
@@ -37,16 +37,13 @@ const ItemForm: React.FC = () => {
               onError: () => toast.error("Failed to update item"),
             },
           )
-        : addItem.mutate(
-            { data },
-            {
-              onSuccess: () => {
-                closeEditor();
-                toast.success("Item added");
-              },
-              onError: () => toast.error("Failed to add item"),
+        : addItem.mutate(data, {
+            onSuccess: () => {
+              closeEditor();
+              toast.success("Item added");
             },
-          );
+            onError: () => toast.error("Failed to add item"),
+          });
     },
     (errors) => {
       console.log(errors);

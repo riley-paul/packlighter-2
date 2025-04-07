@@ -18,9 +18,9 @@ const ItemImageDroppable: React.FC<Props> = ({ item, className }) => {
     handleUpload: (file) => {
       updateItem.mutate(
         {
-          itemId: item.id,
-          data: { imageType: "file" },
-          itemImageFile: file,
+          id: item.id,
+          imageType: "file",
+          imageFile: file,
         },
         {
           onSuccess: () => toast.success("Image uploaded successfully"),

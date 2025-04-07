@@ -21,11 +21,12 @@ const getAll: ActionHandler<typeof itemInputs.getAll, ItemSelect[]> = async (
 };
 
 const create: ActionHandler<typeof itemInputs.create, ItemSelect> = async (
-  { data },
+  data,
   c,
 ) => {
   const db = createDb(c.locals.runtime.env);
   const userId = isAuthorized(c).id;
+
   const [newItem] = await db
     .insert(Item)
     .values({ ...data, userId, id: uuid() })
@@ -88,11 +89,13 @@ const remove: ActionHandler<typeof itemInputs.remove, null> = async (
 };
 
 const update: ActionHandler<typeof itemInputs.update, ItemSelect> = async (
-  { itemId, data, itemImageFile },
+  data,
   c,
 ) => {
   const db = createDb(c.locals.runtime.env);
   const userId = isAuthorized(c).id;
+
+  const { id: itemId, imageFile } = data;
 
   const [item] = await db
     .select()
@@ -106,13 +109,13 @@ const update: ActionHandler<typeof itemInputs.update, ItemSelect> = async (
     });
   }
 
-  if (itemImageFile && itemImageFile.size > 0) {
+  if (imageFile && imageFile.size > 0) {
     const key = crypto.randomUUID();
-    await c.locals.runtime.env.R2_BUCKET.put(key, itemImageFile);
+    await c.locals.runtime.env.R2_BUCKET.put(key, imageFile);
     data.imageR2Key = key;
   }
 
-  if (itemImageFile === null && item.imageR2Key) {
+  if (imageFile === null && item.imageR2Key) {
     await c.locals.runtime.env.R2_BUCKET.delete(item.imageR2Key);
     data.imageR2Key = null;
   }
