@@ -9,7 +9,7 @@ import { setCustomNativeDragPreview } from "@atlaskit/pragmatic-drag-and-drop/el
 import useDraggableState, {
   type DraggableStateClassnames,
 } from "@/hooks/use-draggable-state";
-import { DND_ENTITY_TYPE, DndEntityType } from "@/lib/client/constants";
+import { DND_TYPE_KEY, DndEntityType } from "@/lib/client/constants";
 import { Portal, Text } from "@radix-ui/themes";
 import RadixProvider from "@/components/base/radix-provider";
 import PackingItemMenu from "./packing-item-menu";
@@ -46,7 +46,7 @@ const PackingItem: React.FC<Props> = (props) => {
       element: gripper,
       canDrag: () => !isIncludedInList,
       getInitialData: () => ({
-        [DND_ENTITY_TYPE]: DndEntityType.Item,
+        [DND_TYPE_KEY]: DndEntityType.Item,
         ...item,
       }),
       onGenerateDragPreview({ location, nativeSetDragImage }) {
@@ -74,7 +74,7 @@ const PackingItem: React.FC<Props> = (props) => {
         data-item-id={item.id}
         title={itemName || "Unnamed Gear"}
         className={cn(
-          "flex w-full items-center gap-2 pl-3 py-2 pr-4 text-left transition-colors ease-in-out hover:bg-accentA-2",
+          "flex w-full items-center gap-2 py-2 pl-3 pr-4 text-left transition-colors ease-in-out hover:bg-accentA-2",
           draggableStyles[draggableState.type],
           isOverlay && "w-64 rounded-2 border bg-gray-2",
           isIncludedInList && "opacity-50",

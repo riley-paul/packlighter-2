@@ -56,6 +56,7 @@ const EditorCategories: React.FC<Props> = (props) => {
           const targetData = zExpandedCategory.safeParse(target.data);
 
           if (!sourceData.success || !targetData.success) {
+            console.log("could not parse data");
             return;
           }
 
@@ -66,6 +67,7 @@ const EditorCategories: React.FC<Props> = (props) => {
           const indexOfTarget = categories.findIndex((i) => i.id === targetId);
 
           if (indexOfTarget < 0 || indexOfSource < 0) {
+            console.log("could not find category");
             return;
           }
 

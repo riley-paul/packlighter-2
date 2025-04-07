@@ -6,7 +6,7 @@ export const NAVBAR_HEIGHT = "4rem";
 export const MOBILE_BREAKPOINT = 768;
 export const TABLET_BREAKPOINT = 1024;
 
-export const DND_ENTITY_TYPE = "__entityType";
+export const DND_TYPE_KEY = "__entityType";
 export enum DndEntityType {
   Category = "category",
   CategoryPlaceholder = "category-placeholder",
@@ -19,7 +19,7 @@ export const isDndEntityType = (
   data: Record<string, unknown>,
   type: DndEntityType,
 ): boolean => {
-  return data[DND_ENTITY_TYPE] === type;
+  return data[DND_TYPE_KEY] === type;
 };
 
 export const ACCENT_COLOR = "green" as const;

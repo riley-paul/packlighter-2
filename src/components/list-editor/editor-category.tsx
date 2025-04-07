@@ -18,7 +18,7 @@ import { setCustomNativeDragPreview } from "@atlaskit/pragmatic-drag-and-drop/el
 import { combine } from "@atlaskit/pragmatic-drag-and-drop/combine";
 import invariant from "tiny-invariant";
 import {
-  DND_ENTITY_TYPE,
+  DND_TYPE_KEY,
   DndEntityType,
   isDndEntityType,
 } from "@/lib/client/constants";
@@ -63,7 +63,7 @@ const EditorCategory: React.FC<Props> = (props) => {
       draggable({
         element: gripper,
         getInitialData: () => ({
-          [DND_ENTITY_TYPE]: DndEntityType.Category,
+          [DND_TYPE_KEY]: DndEntityType.Category,
           ...category,
         }),
         onGenerateDragPreview({ location, nativeSetDragImage }) {
