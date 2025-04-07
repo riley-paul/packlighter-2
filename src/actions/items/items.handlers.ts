@@ -27,6 +27,14 @@ const create: ActionHandler<typeof itemInputs.create, ItemSelect> = async (
   const db = createDb(c.locals.runtime.env);
   const userId = isAuthorized(c).id;
 
+  const { imageFile } = data;
+
+  if (imageFile && imageFile.size > 0) {
+    const key = crypto.randomUUID();
+    await c.locals.runtime.env.R2_BUCKET.put(key, imageFile);
+    data.imageR2Key = key;
+  }
+
   const [newItem] = await db
     .insert(Item)
     .values({ ...data, userId, id: uuid() })

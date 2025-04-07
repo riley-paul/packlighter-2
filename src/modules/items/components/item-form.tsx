@@ -17,6 +17,7 @@ const ItemForm: React.FC = () => {
   const methods = useForm<ItemInsert>({
     values: item || {
       name: "",
+      description: "",
       weight: 0,
       weightUnit: "g",
       imageType: "file",
@@ -29,7 +30,6 @@ const ItemForm: React.FC = () => {
 
   const onSubmit = handleSubmit(
     (data) => {
-      console.log(data);
       item
         ? updateItem.mutate(
             { ...data, id: item.id },
