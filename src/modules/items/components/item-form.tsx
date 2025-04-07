@@ -6,18 +6,18 @@ import { Button, Select, Text, TextField } from "@radix-ui/themes";
 import { useAtomValue, useSetAtom } from "jotai";
 import { closeEditorAtom, editorItemAtom } from "../store";
 import useItemsMutations from "../mutations";
-import { zItemInsertWithFile, type ItemInsertWithFile } from "@/lib/types";
 import { weightUnitsInfo } from "@/lib/client/constants";
 import ItemFormImageInput from "./item-form-image-input";
 import { toast } from "sonner";
+import { zItemInsert, type ItemInsert } from "@/lib/types";
 
 const ItemForm: React.FC = () => {
   const item = useAtomValue(editorItemAtom);
   const closeEditor = useSetAtom(closeEditorAtom);
 
-  const methods = useForm<ItemInsertWithFile>({
+  const methods = useForm<ItemInsert>({
     values: initItem(item),
-    resolver: zodResolver(zItemInsertWithFile),
+    resolver: zodResolver(zItemInsert),
   });
 
   const { control, handleSubmit } = methods;

@@ -1,4 +1,4 @@
-import type { ItemInsert, ItemInsertWithFile } from "@/lib/types";
+import type { ItemInsert } from "@/lib/types";
 import { Button, Card, Tabs, TextField } from "@radix-ui/themes";
 import React from "react";
 import { Controller, useFormContext } from "react-hook-form";
@@ -42,7 +42,7 @@ const UrlImageInput: React.FC = () => {
 };
 
 const UploadImageInput: React.FC = () => {
-  const { control, watch, setValue } = useFormContext<ItemInsertWithFile>();
+  const { control, watch, setValue } = useFormContext<ItemInsert>();
   const hasUploadedImage = Boolean(watch("imageR2Key"));
   return (
     <Controller

@@ -44,6 +44,7 @@ export const zItemSelect = createSelectSchema(Item).extend({
 });
 export const zItemInsert = createInsertSchema(Item).extend({
   weight: z.coerce.number().optional(),
+  imageFile: z.instanceof(File).nullish(),
 });
 export type ItemSelect = z.infer<typeof zItemSelect>;
 export type ItemInsert = z.infer<typeof zItemInsert>;
