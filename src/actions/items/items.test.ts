@@ -9,4 +9,13 @@ describe("get all items", () => {
     expect(Array.isArray(items)).toBe(true);
     expect(items.length).toBe(ITEM_IDS.length);
   });
+
+  test("returns no items if user has no items", async () => {
+    const items = await itemHandlers.getAll(
+      null,
+      mockApiContext(crypto.randomUUID()),
+    );
+    expect(Array.isArray(items)).toBe(true);
+    expect(items.length).toBe(0);
+  });
 });

@@ -46,19 +46,20 @@ export const seedTestData = async () => {
 
   await db.insert(Category).values(
     CATEGORY_IDS.map(
-      (categoryId): CategoryInsert => ({
+      (categoryId, index): CategoryInsert => ({
         id: categoryId,
         name: "Test Category",
         listId: LIST_ID,
         userId: USER_ID,
+        sortOrder: index + 1,
       }),
     ),
   );
 
   await db.insert(CategoryItem).values(
     ITEM_IDS.map(
-      (item_id): CategoryItemInsert => ({
-        itemId: item_id,
+      (itemId): CategoryItemInsert => ({
+        itemId: itemId,
         categoryId: getRandomArrayItem(CATEGORY_IDS),
         userId: USER_ID,
       }),
