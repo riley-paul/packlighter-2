@@ -10,7 +10,7 @@ import ItemFormImageInput from "./item-form-image-input";
 import { toast } from "sonner";
 import { zItemForm, type ItemForm } from "@/lib/types";
 
-const ItemForm: React.FC = () => {
+const ItemFormComponent: React.FC = () => {
   const item = useAtomValue(editorItemAtom);
   const closeEditor = useSetAtom(closeEditorAtom);
 
@@ -156,4 +156,4 @@ const ItemForm: React.FC = () => {
   );
 };
 
-export default ItemForm;
+export default ItemFormComponent;
