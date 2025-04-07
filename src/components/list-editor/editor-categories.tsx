@@ -18,8 +18,8 @@ import {
   type ExpandedList,
   zExpandedCategory,
   type ExpandedCategory,
-  type ExpandedCategoryItem,
   type ItemSelect,
+  zExpandedCategoryItem,
 } from "@/lib/types";
 import { useQueryClient } from "@tanstack/react-query";
 import { listQueryOptions } from "@/lib/client/queries";
@@ -165,9 +165,7 @@ const EditorCategories: React.FC<Props> = (props) => {
 
         // sorting items
         if (isDndEntityType(source.data, DndEntityType.CategoryItem)) {
-          const sourceData = z
-            .custom<ExpandedCategoryItem>()
-            .safeParse(source.data);
+          const sourceData = zExpandedCategoryItem.safeParse(source.data);
           const targetData = z
             .object({ categoryId: z.string(), id: z.string() })
             .safeParse(target.data);
