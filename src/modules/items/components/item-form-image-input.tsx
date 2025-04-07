@@ -1,4 +1,4 @@
-import type { ItemInsert } from "@/lib/types";
+import type { ItemForm } from "@/lib/types";
 import { Button, Card, Tabs, TextField } from "@radix-ui/themes";
 import React from "react";
 import { Controller, useFormContext } from "react-hook-form";
@@ -7,7 +7,7 @@ import useImageDropzone from "@/hooks/use-image-dropzone";
 import { cn, getItemImageUrl } from "@/lib/client/utils";
 
 const UrlImageInput: React.FC = () => {
-  const { control } = useFormContext<ItemInsert>();
+  const { control } = useFormContext<ItemForm>();
   return (
     <Controller
       control={control}
@@ -42,7 +42,7 @@ const UrlImageInput: React.FC = () => {
 };
 
 const UploadImageInput: React.FC = () => {
-  const { control, watch, setValue } = useFormContext<ItemInsert>();
+  const { control, watch, setValue } = useFormContext<ItemForm>();
   const hasUploadedImage = Boolean(watch("imageR2Key"));
   return (
     <Controller
@@ -108,7 +108,7 @@ const UploadImageInput: React.FC = () => {
 };
 
 const ItemFormImageInput: React.FC = () => {
-  const { control } = useFormContext<ItemInsert>();
+  const { control } = useFormContext<ItemForm>();
 
   return (
     <Controller

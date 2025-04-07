@@ -137,7 +137,7 @@ const getListsIncluded: ActionHandler<
 };
 
 const imageUpload: ActionHandler<typeof itemInputs.imageUpload, null> = async (
-  { itemId, imageFile, remove },
+  { itemId, imageFile, removeImageFile },
   c,
 ) => {
   const db = createDb(c.locals.runtime.env);
@@ -163,6 +163,8 @@ const imageUpload: ActionHandler<typeof itemInputs.imageUpload, null> = async (
   }
 
   if (imageFile && imageFile.size > 0) {
+    // TODO: downsize and convert image
+
     const key = crypto.randomUUID();
     await c.locals.runtime.env.R2_BUCKET.put(key, imageFile);
     await db
@@ -171,7 +173,7 @@ const imageUpload: ActionHandler<typeof itemInputs.imageUpload, null> = async (
       .where(eq(Item.id, itemId));
   }
 
-  if (remove && item.imageKey) {
+  if (removeImageFile && item.imageKey) {
     await c.locals.runtime.env.R2_BUCKET.delete(item.imageKey);
     await db.update(Item).set({ imageR2Key: null }).where(eq(Item.id, itemId));
   }

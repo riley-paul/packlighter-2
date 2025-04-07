@@ -8,13 +8,13 @@ import useItemsMutations from "../mutations";
 import { weightUnitsInfo } from "@/lib/client/constants";
 import ItemFormImageInput from "./item-form-image-input";
 import { toast } from "sonner";
-import { zItemInsert, type ItemInsert } from "@/lib/types";
+import { zItemForm, type ItemForm } from "@/lib/types";
 
 const ItemForm: React.FC = () => {
   const item = useAtomValue(editorItemAtom);
   const closeEditor = useSetAtom(closeEditorAtom);
 
-  const methods = useForm<ItemInsert>({
+  const methods = useForm<ItemForm>({
     values: item || {
       name: "",
       description: "",
@@ -22,7 +22,7 @@ const ItemForm: React.FC = () => {
       weightUnit: "g",
       imageType: "file",
     },
-    resolver: zodResolver(zItemInsert),
+    resolver: zodResolver(zItemForm),
   });
 
   const { control, handleSubmit } = methods;

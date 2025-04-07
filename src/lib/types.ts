@@ -42,15 +42,19 @@ export type UserSessionInfo = {
 export const zItemSelect = createSelectSchema(Item).extend({
   weight: z.coerce.number(),
 });
-export const zItemInsert = createInsertSchema(Item)
-  .omit({ userId: true })
-  .extend({
-    name: z.string().min(1).max(100),
-    description: z.string().max(500).optional(),
-    weight: z.coerce.number().optional(),
-  });
+export const zItemInsert = createInsertSchema(Item).extend({
+  name: z.string().min(1).max(100),
+  description: z.string().max(500).optional(),
+  weight: z.coerce.number().optional(),
+});
 export type ItemSelect = z.infer<typeof zItemSelect>;
 export type ItemInsert = z.infer<typeof zItemInsert>;
+
+export const zItemForm = zItemInsert.omit({ userId: true }).extend({
+  imageFile: z.instanceof(File).optional(),
+  removeImageFile: z.boolean().optional(),
+});
+export type ItemForm = z.infer<typeof zItemForm>;
 
 export const zListSelect = createSelectSchema(List);
 export const zListInsert = createInsertSchema(List);

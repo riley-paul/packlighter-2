@@ -7,12 +7,7 @@ import {
 } from "@/lib/client/queries";
 import { actions } from "astro:actions";
 import useCurrentList from "@/hooks/use-current-list";
-import type { ExpandedList } from "@/lib/types";
-import type {
-  ItemCreateInput,
-  ItemUpdateInput,
-} from "@/actions/items/items.inputs";
-import { toFormData } from "@/lib/form-data";
+import type { ExpandedList, ItemForm } from "@/lib/types";
 
 export default function useItemsMutations() {
   const { listId } = useCurrentList();
@@ -26,9 +21,19 @@ export default function useItemsMutations() {
   } = useMutationHelpers();
 
   const updateItem = useMutation({
-    mutationFn: async (data: ItemUpdateInput) => {
-      const formData = toFormData(data);
-      await actions.items.update.orThrow(formData);
+    mutationFn: (data: ItemForm & { id: string }) => {
+      const formData = new FormData();
+      formData.append("itemId", data.id);
+      formData.append(
+        "removeImageFile",
+        data.removeImageFile ? "true" : "false",
+      );
+      if (data.imageFile) formData.append("imageFile", data.imageFile);
+
+      return Promise.all([
+        actions.items.update.orThrow(data),
+        actions.items.imageUpload.orThrow(formData),
+      ]);
     },
     onSuccess: () => {
       invalidateQueries([
@@ -58,9 +63,18 @@ export default function useItemsMutations() {
   });
 
   const addItem = useMutation({
-    mutationFn: (data: ItemCreateInput) => {
-      const formData = toFormData(data);
-      return actions.items.create.orThrow(formData);
+    mutationFn: async (data: ItemForm) => {
+      const response = await actions.items.create.orThrow(data);
+
+      const formData = new FormData();
+      formData.append("itemId", response.id);
+      formData.append(
+        "removeImageFile",
+        data.removeImageFile ? "true" : "false",
+      );
+      if (data.imageFile) formData.append("imageFile", data.imageFile);
+
+      await actions.items.imageUpload.orThrow(formData);
     },
     onSuccess: () => {
       invalidateQueries([itemsQueryOptions.queryKey]);
