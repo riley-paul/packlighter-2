@@ -11,14 +11,12 @@ const categoryInputs = {
     listId: z.string(),
     data: zCategoryInsert.partial().optional(),
   }),
-  reorder: z.object({
-    listId: z.string(),
-    ids: z.array(z.string()),
-  }),
   remove: z.object({ categoryId: z.string() }),
   update: z.object({
     categoryId: z.string(),
-    data: zCategoryInsert.partial(),
+    data: zCategoryInsert
+      .omit({ userId: true, listId: true, id: true })
+      .partial(),
   }),
   togglePacked: z.object({ categoryId: z.string() }),
 };

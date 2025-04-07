@@ -7,61 +7,86 @@ import { v4 as uuid } from "uuid";
 import type { CategoryItemInsert } from "@/lib/types";
 import type categoryItemInputs from "./category-items.inputs";
 import { createDb } from "@/db";
+import { reorder } from "@atlaskit/pragmatic-drag-and-drop/reorder";
 
 const create: ActionHandler<
   typeof categoryItemInputs.create,
   CategoryItemInsert
-> = async ({ itemId, categoryId, reorderIds, data }, c) => {
+> = async ({ data }, c) => {
   const db = createDb(c.locals.runtime.env);
   const userId = isAuthorized(c).id;
 
-  const { listId } = await db
-    .select({ listId: Category.listId })
-    .from(Category)
-    .where(and(eq(Category.id, categoryId), eq(Category.userId, userId)))
-    .then((rows) => rows[0]);
+  console.log("create category item", data);
 
-  if (!listId) {
+  const [category] = await db
+    .select({ listId: Category.listId, userId: Category.userId })
+    .from(Category)
+    .where(and(eq(Category.id, data.categoryId), eq(Category.userId, userId)));
+
+  if (!category.listId) {
     throw new ActionError({
       code: "NOT_FOUND",
       message: "Category not found",
     });
   }
 
-  const listItemIds = await getListItemIds(c, listId);
+  if (category.userId !== userId) {
+    throw new ActionError({
+      code: "FORBIDDEN",
+      message: "You do not have permission to access this category",
+    });
+  }
 
-  if (listItemIds.has(itemId)) {
+  const listItemIds = await getListItemIds(c, category.listId);
+
+  if (listItemIds.has(data.itemId)) {
     throw new ActionError({
       code: "CONFLICT",
       message: "Item already exists in the list",
     });
   }
 
-  const { max: maxSortOrder } = await db
+  const [{ max: maxSortOrder }] = await db
     .select({ max: max(CategoryItem.sortOrder) })
     .from(CategoryItem)
-    .where(eq(CategoryItem.categoryId, categoryId))
-    .then((rows) => rows[0]);
+    .where(eq(CategoryItem.categoryId, data.categoryId));
 
-  const created = await db
+  const [created] = await db
     .insert(CategoryItem)
     .values({
       id: uuid(),
       ...data,
-      sortOrder: maxSortOrder ?? 1,
-      categoryId,
-      itemId,
+      sortOrder: maxSortOrder ?? 0,
       userId,
     })
-    .returning()
-    .then((rows) => rows[0]);
+    .returning();
 
-  if (reorderIds) {
+  if (data.sortOrder !== undefined) {
+    const categoryItems = await db
+      .select()
+      .from(CategoryItem)
+      .where(
+        and(
+          eq(CategoryItem.categoryId, data.categoryId),
+          eq(CategoryItem.userId, userId),
+        ),
+      )
+      .orderBy(CategoryItem.sortOrder);
+
+    const categoryItemIds = categoryItems.map((i) => i.id);
+    const indexOfCategoryItem = categoryItemIds.indexOf(created.id);
+
+    const reordered = reorder({
+      list: categoryItemIds,
+      startIndex: indexOfCategoryItem,
+      finishIndex: data.sortOrder,
+    });
+
     await Promise.all(
-      reorderIds.map((id, index) =>
+      reordered.map((id, index) =>
         db
           .update(CategoryItem)
-          .set({ sortOrder: index + 1, categoryId })
+          .set({ sortOrder: index })
           .where(idAndUserIdFilter(CategoryItem, { userId, id })),
       ),
     );
@@ -105,35 +130,52 @@ const createAndAddToCategory: ActionHandler<
   return created;
 };
 
-const reorder: ActionHandler<typeof categoryItemInputs.reorder, null> = async (
-  { ids, categoryId },
-  c,
-) => {
-  const db = createDb(c.locals.runtime.env);
-  const userId = isAuthorized(c).id;
-  await Promise.all(
-    ids.map((id, index) =>
-      db
-        .update(CategoryItem)
-        .set({ sortOrder: index + 1, categoryId })
-        .where(idAndUserIdFilter(CategoryItem, { userId, id })),
-    ),
-  );
-  return null;
-};
-
 const update: ActionHandler<
   typeof categoryItemInputs.update,
   CategoryItemInsert
 > = async ({ categoryItemId, data }, c) => {
   const db = createDb(c.locals.runtime.env);
   const userId = isAuthorized(c).id;
-  const updated = await db
+
+  const [updated] = await db
     .update(CategoryItem)
     .set(data)
     .where(idAndUserIdFilter(CategoryItem, { userId, id: categoryItemId }))
-    .returning()
-    .then((rows) => rows[0]);
+    .returning();
+
+  const { categoryId, sortOrder } = data;
+
+  if (sortOrder !== undefined) {
+    const categoryItems = await db
+      .select()
+      .from(CategoryItem)
+      .where(
+        and(
+          eq(CategoryItem.categoryId, categoryId || updated.categoryId),
+          eq(CategoryItem.userId, userId),
+        ),
+      )
+      .orderBy(CategoryItem.sortOrder);
+
+    const categoryItemIds = categoryItems.map((i) => i.id);
+    const indexOfCategoryItem = categoryItemIds.indexOf(categoryItemId);
+
+    const reordered = reorder({
+      list: categoryItemIds,
+      startIndex: indexOfCategoryItem,
+      finishIndex: sortOrder,
+    });
+
+    await Promise.all(
+      reordered.map((id, index) =>
+        db
+          .update(CategoryItem)
+          .set({ sortOrder: index })
+          .where(idAndUserIdFilter(CategoryItem, { userId, id })),
+      ),
+    );
+  }
+
   return updated;
 };
 

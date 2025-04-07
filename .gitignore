@@ -170,3 +170,9 @@ test.db
 
 .wrangler
 .dev.vars
+
+# Playwright
+/test-results/
+/playwright-report/
+/blob-report/
+/playwright/.cache/

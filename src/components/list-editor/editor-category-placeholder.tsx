@@ -4,7 +4,7 @@ import { dropTargetForElements } from "@atlaskit/pragmatic-drag-and-drop/element
 import { combine } from "@atlaskit/pragmatic-drag-and-drop/combine";
 import invariant from "tiny-invariant";
 import {
-  DND_ENTITY_TYPE,
+  DND_TYPE_KEY,
   DndEntityType,
   isDndEntityType,
 } from "@/lib/client/constants";
@@ -50,7 +50,7 @@ const EditorCategoryPlaceholder: React.FC<Props> = (props) => {
         },
         getData() {
           return {
-            [DND_ENTITY_TYPE]: DndEntityType.CategoryPlaceholder,
+            [DND_TYPE_KEY]: DndEntityType.CategoryPlaceholder,
             id: DndEntityType.CategoryPlaceholder,
             categoryId,
           };

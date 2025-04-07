@@ -4,6 +4,7 @@ import { and, eq, inArray, max } from "drizzle-orm";
 import { idAndUserIdFilter } from "@/actions/filters";
 import { ActionError, type ActionHandler } from "astro:actions";
 import { getExpandedList, isAuthorized } from "@/actions/helpers";
+import { reorder } from "@atlaskit/pragmatic-drag-and-drop/reorder";
 
 import { v4 as uuid } from "uuid";
 import type listInputs from "./lists.inputs";
@@ -72,35 +73,47 @@ const create: ActionHandler<typeof listInputs.create, ListSelect> = async (
   return newList;
 };
 
-const reorder: ActionHandler<typeof listInputs.reorder, string[]> = async (
-  ids,
-  c,
-) => {
-  const db = createDb(c.locals.runtime.env);
-  const userId = isAuthorized(c).id;
-  await Promise.all(
-    ids.map((id, idx) =>
-      db
-        .update(List)
-        .set({ sortOrder: idx + 1 })
-        .where(idAndUserIdFilter(List, { userId, id })),
-    ),
-  );
-  return ids;
-};
-
 const update: ActionHandler<typeof listInputs.update, ListSelect> = async (
   { listId, data },
   c,
 ) => {
   const db = createDb(c.locals.runtime.env);
   const userId = isAuthorized(c).id;
-  const updated = await db
+  const { sortOrder } = data;
+
+  const [updated] = await db
     .update(List)
-    .set({ ...data, userId })
+    .set({ ...data })
     .where(idAndUserIdFilter(List, { userId, id: listId }))
-    .returning()
-    .then((rows) => rows[0]);
+    .returning();
+
+  if (sortOrder !== undefined) {
+    const lists = await db
+      .select({ id: List.id })
+      .from(List)
+      .where(and(eq(List.userId, userId)))
+      .orderBy(List.sortOrder);
+
+    const listIds = lists.map((l) => l.id);
+    const indexOfList = listIds.indexOf(listId);
+
+    const reordered = reorder({
+      list: listIds,
+      startIndex: indexOfList,
+      finishIndex: sortOrder,
+    });
+
+    await Promise.all(
+      reordered.map((listId, idx) => {
+        return db
+          .update(List)
+          .set({ sortOrder: idx })
+          .where(idAndUserIdFilter(List, { userId, id: listId }))
+          .returning();
+      }),
+    );
+  }
+
   return updated;
 };
 
@@ -217,7 +230,6 @@ const listHandlers = {
   getAll,
   getOne,
   create,
-  reorder,
   update,
   remove,
   unpack,

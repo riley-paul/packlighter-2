@@ -1,4 +1,4 @@
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useMutation } from "@tanstack/react-query";
 import {
   listQueryOptions,
   otherListCategoriesQueryOptions,
@@ -14,16 +14,10 @@ import {
   itemsQueryOptions,
   listsQueryOptions,
 } from "@/modules/sidebar/queries";
-import type {
-  ExpandedList,
-  ExpandedCategoryItem,
-  ListSelect,
-  ExpandedCategory,
-} from "@/lib/types";
+import type { ExpandedList } from "@/lib/types";
 
 export default function useMutations() {
   const { listId } = useCurrentList();
-  const queryClient = useQueryClient();
   const navigate = useNavigate();
 
   const {
@@ -170,43 +164,13 @@ export default function useMutations() {
   });
 
   const addItemToCategory = useMutation({
-    mutationFn: (props: {
-      itemId: string;
-      categoryId: string;
-      categoryItemData?: Partial<ExpandedCategoryItem>;
-      categoryItems: ExpandedCategoryItem[];
-    }) =>
-      actions.categoryItems.create.orThrow({
-        ...props,
-        reorderIds: props.categoryItems.map((i) => i.id),
-      }),
-    onMutate: async ({ categoryId, itemId, categoryItems }) => {
-      const { queryKey } = listQueryOptions(listId);
-      const item = queryClient
-        .getQueryData(itemsQueryOptions.queryKey)
-        ?.find((i) => i.id === itemId);
-      if (!item) return;
-      return optimisticUpdate<ExpandedList>(queryKey, (prev) =>
-        produce(prev, (draft) => {
-          const categoryIdx = draft.categories.findIndex(
-            (i) => i.id === categoryId,
-          );
-          if (categoryIdx === -1) return draft;
-          draft.categories[categoryIdx].items = categoryItems;
-        }),
-      );
-    },
+    mutationFn: actions.categoryItems.create.orThrow,
     onSuccess: () => {
       invalidateQueries([
         listQueryOptions(listId).queryKey,
         otherListCategoriesQueryOptions(listId).queryKey,
         itemsQueryOptions.queryKey,
       ]);
-    },
-    onError: (error, __, context) => {
-      const { queryKey } = listQueryOptions(listId);
-      onErrorOptimistic(queryKey, context);
-      onError(error);
     },
   });
 
@@ -296,87 +260,6 @@ export default function useMutations() {
     },
   });
 
-  const reorderLists = useMutation({
-    mutationFn: (lists: ListSelect[]) =>
-      actions.lists.reorder.orThrow(lists.map((i) => i.id)),
-    onMutate: async (newLists) => {
-      return optimisticUpdate(listsQueryOptions.queryKey, newLists);
-    },
-    onError: (error, __, context) => {
-      const { queryKey } = listsQueryOptions;
-      onErrorOptimistic(queryKey, context);
-      onError(error);
-    },
-    onSuccess: () => {
-      invalidateQueries([
-        listsQueryOptions.queryKey,
-        otherListCategoriesQueryOptions(listId).queryKey,
-      ]);
-    },
-  });
-
-  const reorderCategories = useMutation({
-    mutationFn: (categories: ExpandedCategory[]) =>
-      actions.categories.reorder.orThrow({
-        listId,
-        ids: categories.map((i) => i.id),
-      }),
-    onMutate: async (newCategories) => {
-      const { queryKey } = listQueryOptions(listId);
-      return optimisticUpdate<ExpandedList>(queryKey, (prev) => ({
-        ...prev,
-        categories: newCategories,
-      }));
-    },
-    onError: (error, __, context) => {
-      const { queryKey } = listQueryOptions(listId);
-      onErrorOptimistic(queryKey, context);
-      onError(error);
-    },
-    onSuccess: () => {
-      invalidateQueries([
-        listQueryOptions(listId).queryKey,
-        otherListCategoriesQueryOptions(listId).queryKey,
-      ]);
-    },
-  });
-
-  const reorderCategoryItems = useMutation({
-    mutationFn: (props: {
-      categoryId: string;
-      categoryItems: ExpandedCategoryItem[];
-    }) =>
-      actions.categoryItems.reorder.orThrow({
-        ...props,
-        ids: props.categoryItems.map((i) => i.id),
-      }),
-    onMutate: async ({ categoryId, categoryItems }) => {
-      const { queryKey } = listQueryOptions(listId);
-      return optimisticUpdate<ExpandedList>(queryKey, (prev) => ({
-        ...prev,
-        categories: prev.categories.map((category) =>
-          category.id === categoryId
-            ? { ...category, items: categoryItems }
-            : {
-                ...category,
-                items: category.items.filter(
-                  (i) => !categoryItems.map((i) => i.id).includes(i.id),
-                ),
-              },
-        ),
-      }));
-    },
-    onError: (error, __, context) => {
-      const { queryKey } = listQueryOptions(listId);
-      onErrorOptimistic(queryKey, context);
-      onError(error);
-    },
-    onSuccess: () => {
-      const { queryKey } = listQueryOptions(listId);
-      invalidateQueries([queryKey]);
-    },
-  });
-
   const unpackList = useMutation({
     mutationFn: actions.lists.unpack.orThrow,
     onSuccess: () => {
@@ -396,9 +279,6 @@ export default function useMutations() {
     addList,
     duplicateList,
     addCategory,
-    reorderLists,
-    reorderCategories,
-    reorderCategoryItems,
     toggleCategoryPacked,
     copyCategoryToList,
     unpackList,

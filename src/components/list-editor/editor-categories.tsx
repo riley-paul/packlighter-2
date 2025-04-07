@@ -2,6 +2,7 @@ import React from "react";
 import { monitorForElements } from "@atlaskit/pragmatic-drag-and-drop/element/adapter";
 import { DndEntityType, isDndEntityType } from "@/lib/client/constants";
 import { extractClosestEdge } from "@atlaskit/pragmatic-drag-and-drop-hitbox/closest-edge";
+import { getReorderDestinationIndex } from "@atlaskit/pragmatic-drag-and-drop-hitbox/util/get-reorder-destination-index";
 import { reorderWithEdge } from "@atlaskit/pragmatic-drag-and-drop-hitbox/util/reorder-with-edge";
 import { z } from "zod";
 import { flushSync } from "react-dom";
@@ -9,12 +10,17 @@ import useMutations from "@/hooks/use-mutations";
 import { initCategoryItem } from "@/lib/init";
 import EditorCategory from "./editor-category";
 import AddCategoryPopover from "./add-category-popover";
-import { triggerElementFlash } from "@/lib/client/utils";
-import type {
-  ExpandedCategory,
-  ExpandedCategoryItem,
-  ItemSelect,
+import { triggerElementFlashByDragId } from "@/lib/client/utils";
+import {
+  type ExpandedList,
+  type ExpandedCategory,
+  zExpandedCategoryItem,
+  zItemSelect,
+  zCategorySelect,
 } from "@/lib/types";
+import { useQueryClient } from "@tanstack/react-query";
+import { listQueryOptions } from "@/lib/client/queries";
+import useCurrentList from "@/hooks/use-current-list";
 
 type Props = {
   categories: ExpandedCategory[];
@@ -22,8 +28,11 @@ type Props = {
 
 const EditorCategories: React.FC<Props> = (props) => {
   const { categories } = props;
-  const { reorderCategories, reorderCategoryItems, addItemToCategory } =
+  const { updateCategoryItem, updateCategory, addItemToCategory } =
     useMutations();
+
+  const queryClient = useQueryClient();
+  const { listId } = useCurrentList();
 
   React.useEffect(() => {
     return monitorForElements({
@@ -43,54 +52,63 @@ const EditorCategories: React.FC<Props> = (props) => {
 
         // sorting categories
         if (isDndEntityType(source.data, DndEntityType.Category)) {
-          const sourceData = z
-            .custom<ExpandedCategory>()
-            .safeParse(source.data);
-          const targetData = z
-            .custom<ExpandedCategory>()
-            .safeParse(target.data);
+          const sourceData = zCategorySelect.safeParse(source.data);
+          const targetData = zCategorySelect.safeParse(target.data);
 
           if (!sourceData.success || !targetData.success) {
+            console.log("could not parse data");
+            console.log("sourceError", sourceData.error);
+            console.log("targetError", targetData.error);
             return;
           }
 
-          const indexOfSource = categories.findIndex(
-            (i) => i.id === sourceData.data.id,
-          );
-          const indexOfTarget = categories.findIndex(
-            (i) => i.id === targetData.data.id,
-          );
+          const sourceId = sourceData.data.id;
+          const targetId = targetData.data.id;
+
+          const indexOfSource = categories.findIndex((i) => i.id === sourceId);
+          const indexOfTarget = categories.findIndex((i) => i.id === targetId);
 
           if (indexOfTarget < 0 || indexOfSource < 0) {
+            console.log("could not find category");
             return;
           }
 
           const closestEdgeOfTarget = extractClosestEdge(target.data);
 
-          flushSync(() => {
-            reorderCategories.mutate(
-              reorderWithEdge({
-                list: categories,
-                startIndex: indexOfSource,
-                indexOfTarget,
-                closestEdgeOfTarget,
-                axis: "vertical",
-              }),
-            );
+          const newSortOrder = getReorderDestinationIndex({
+            startIndex: indexOfSource,
+            indexOfTarget,
+            closestEdgeOfTarget,
+            axis: "vertical",
           });
 
-          const element = document.querySelector(
-            `[data-category-id="${sourceData.data.id}"]`,
+          const newCategories = reorderWithEdge({
+            list: categories,
+            startIndex: indexOfSource,
+            indexOfTarget,
+            closestEdgeOfTarget,
+            axis: "vertical",
+          });
+
+          updateCategory.mutate({
+            data: { sortOrder: newSortOrder },
+            categoryId: sourceId,
+          });
+
+          queryClient.setQueryData<ExpandedList>(
+            listQueryOptions(listId).queryKey,
+            (prev) => {
+              if (!prev) return prev;
+              return { ...prev, categories: newCategories };
+            },
           );
-          if (element instanceof HTMLElement) {
-            triggerElementFlash(element);
-          }
+
           return;
         }
 
         // adding item
         if (isDndEntityType(source.data, DndEntityType.Item)) {
-          const sourceData = z.custom<ItemSelect>().safeParse(source.data);
+          const sourceData = zItemSelect.safeParse(source.data);
           const targetData = z
             .object({ id: z.string(), categoryId: z.string() })
             .safeParse(target.data);
@@ -105,52 +123,74 @@ const EditorCategories: React.FC<Props> = (props) => {
           );
           if (!targetCategory) return;
 
+          const targetId = targetData.data.id;
+
           const newCategoryItem = initCategoryItem({
+            itemId: sourceData.data.id,
             itemData: sourceData.data,
             categoryId: targetCategoryId,
           });
 
-          const items = [...targetCategory.items, newCategoryItem];
+          const items = [newCategoryItem, ...targetCategory.items];
 
-          const indexOfSource = items.findIndex(
-            (i) => i.id === newCategoryItem.id,
-          );
-          const indexOfTarget = items.findIndex(
-            (i) => i.id === targetData.data.id,
-          );
+          const indexOfSource = 0;
+          const indexOfTarget = items.findIndex((i) => i.id === targetId);
 
           const closestEdgeOfTarget = extractClosestEdge(target.data);
 
-          flushSync(() => {
-            addItemToCategory.mutate({
-              categoryId: targetCategoryId,
-              categoryItems: reorderWithEdge({
-                list: items,
-                startIndex: indexOfSource,
-                indexOfTarget,
-                closestEdgeOfTarget,
-                axis: "vertical",
-              }),
-              categoryItemData: newCategoryItem,
-              itemId: sourceData.data.id,
-            });
+          const sortOrder = getReorderDestinationIndex({
+            startIndex: indexOfSource,
+            indexOfTarget,
+            closestEdgeOfTarget,
+            axis: "vertical",
           });
 
-          const element = document.querySelector(
+          const newCategoryItems = reorderWithEdge({
+            list: items,
+            startIndex: indexOfSource,
+            indexOfTarget,
+            closestEdgeOfTarget,
+            axis: "vertical",
+          }).map((item, index) => ({
+            ...item,
+            sortOrder: index,
+          }));
+
+          addItemToCategory.mutate({
+            data: {
+              itemId: sourceData.data.id,
+              categoryId: targetCategoryId,
+              sortOrder,
+            },
+          });
+
+          queryClient.setQueryData<ExpandedList>(
+            listQueryOptions(listId).queryKey,
+            (prev) => {
+              if (!prev) return prev;
+              return {
+                ...prev,
+                categories: prev.categories.map((category) => ({
+                  ...category,
+                  items:
+                    category.id === targetCategoryId
+                      ? newCategoryItems
+                      : category.items,
+                })),
+              };
+            },
+          );
+
+          triggerElementFlashByDragId(
             `[data-category-item-id="${sourceData.data.id}"]`,
           );
-          if (element instanceof HTMLElement) {
-            triggerElementFlash(element);
-          }
 
           return;
         }
 
         // sorting items
         if (isDndEntityType(source.data, DndEntityType.CategoryItem)) {
-          const sourceData = z
-            .custom<ExpandedCategoryItem>()
-            .safeParse(source.data);
+          const sourceData = zExpandedCategoryItem.safeParse(source.data);
           const targetData = z
             .object({ categoryId: z.string(), id: z.string() })
             .safeParse(target.data);
@@ -163,6 +203,9 @@ const EditorCategories: React.FC<Props> = (props) => {
           const targetCategoryId = targetData.data.categoryId;
           const sourceCategoryId = sourceData.data.categoryId;
 
+          const sourceId = sourceData.data.id;
+          const targetId = targetData.data.id;
+
           const targetCategory = categories.find(
             (i) => i.id === targetCategoryId,
           );
@@ -173,34 +216,60 @@ const EditorCategories: React.FC<Props> = (props) => {
             ? [...targetCategory.items, sourceData.data]
             : targetCategory.items;
 
-          const indexOfSource = items.findIndex(
-            (i) => i.id === sourceData.data.id,
-          );
-          const indexOfTarget = items.findIndex(
-            (i) => i.id === targetData.data.id,
-          );
+          const indexOfSource = items.findIndex((i) => i.id === sourceId);
+          const indexOfTarget = items.findIndex((i) => i.id === targetId);
 
           const closestEdgeOfTarget = extractClosestEdge(target.data);
 
-          flushSync(() => {
-            reorderCategoryItems.mutate({
-              categoryId: targetCategoryId,
-              categoryItems: reorderWithEdge({
-                list: items,
-                startIndex: indexOfSource,
-                indexOfTarget,
-                closestEdgeOfTarget,
-                axis: "vertical",
-              }),
-            });
+          const newSortOrder = getReorderDestinationIndex({
+            startIndex: indexOfSource,
+            indexOfTarget,
+            closestEdgeOfTarget,
+            axis: "vertical",
           });
 
-          const element = document.querySelector(
+          const newCategoryItems = reorderWithEdge({
+            list: items,
+            startIndex: indexOfSource,
+            indexOfTarget,
+            closestEdgeOfTarget,
+            axis: "vertical",
+          }).map((item, index) => ({
+            ...item,
+            categoryId: targetCategoryId,
+            sortOrder: index,
+          }));
+
+          updateCategoryItem.mutate({
+            data: { sortOrder: newSortOrder, categoryId: targetCategoryId },
+            categoryItemId: sourceId,
+          });
+
+          flushSync(() =>
+            queryClient.setQueryData<ExpandedList>(
+              listQueryOptions(listId).queryKey,
+              (prev) => {
+                if (!prev) return prev;
+                return {
+                  ...prev,
+                  categories: prev.categories.map((category) =>
+                    category.id === targetCategoryId
+                      ? { ...category, items: newCategoryItems }
+                      : {
+                          ...category,
+                          items: category.items.filter(
+                            (i) => i.id !== sourceId,
+                          ),
+                        },
+                  ),
+                };
+              },
+            ),
+          );
+
+          triggerElementFlashByDragId(
             `[data-category-item-id="${targetData.data.id}"]`,
           );
-          if (element instanceof HTMLElement) {
-            triggerElementFlash(element);
-          }
           return;
         }
       },

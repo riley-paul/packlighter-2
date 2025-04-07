@@ -15,15 +15,46 @@ import { desktopSidebarOpenAtom, mobileSidebarOpenAtom } from "../store";
 import { cn, getHasModifier, getIsTyping } from "@/lib/client/utils";
 import { useEventListener } from "usehooks-ts";
 import { useIsMobile } from "@/hooks/use-is-mobile";
-import { Button, IconButton, Kbd, Tooltip } from "@radix-ui/themes";
+import { IconButton, Kbd, Tooltip } from "@radix-ui/themes";
 import { commandBarOpenAtom } from "@/components/command-bar";
+
+const AppSidebarHeader: React.FC = () => {
+  const setCommandBarOpen = useSetAtom(commandBarOpenAtom);
+  return (
+    <header
+      className="flex items-center justify-between border-b px-4"
+      style={{ height: NAVBAR_HEIGHT }}
+    >
+      <Logo />
+      <div className="flex items-center gap-2">
+        <Tooltip
+          content={
+            <>
+              Search <Kbd>⌘ K</Kbd>
+            </>
+          }
+          side="bottom"
+        >
+          <IconButton
+            size="1"
+            radius="full"
+            variant="soft"
+            onClick={() => setCommandBarOpen(true)}
+          >
+            <i className="fa-solid fa-search text-1" />
+          </IconButton>
+        </Tooltip>
+        <UserAvatar />
+      </div>
+    </header>
+  );
+};
 
 const AppSideBar: React.FC = () => {
   const isMobile = useIsMobile();
   const [isOpen, setIsOpen] = useAtom(
     isMobile ? mobileSidebarOpenAtom : desktopSidebarOpenAtom,
   );
-  const setCommandBarOpen = useSetAtom(commandBarOpenAtom);
 
   useEventListener("keydown", (e) => {
     if (getIsTyping() || getHasModifier(e)) return;
@@ -58,32 +89,7 @@ const AppSideBar: React.FC = () => {
         )}
       >
         <div className="relative flex h-full w-full flex-col rounded-4 border bg-panel-solid">
-          <header
-            className="flex items-center justify-between border-b px-4"
-            style={{ height: NAVBAR_HEIGHT }}
-          >
-            <Logo />
-            <div className="flex items-center gap-2">
-              <Tooltip
-                content={
-                  <>
-                    Search <Kbd>⌘ K</Kbd>
-                  </>
-                }
-                side="bottom"
-              >
-                <IconButton
-                  size="1"
-                  radius="full"
-                  variant="soft"
-                  onClick={() => setCommandBarOpen(true)}
-                >
-                  <i className="fa-solid fa-search text-1" />
-                </IconButton>
-              </Tooltip>
-              <UserAvatar />
-            </div>
-          </header>
+          <AppSidebarHeader />
           <ResizablePanelGroup autoSaveId="sidebar-panels" direction="vertical">
             <ResizablePanel defaultSize={40}>
               <PackingLists />
@@ -93,23 +99,20 @@ const AppSideBar: React.FC = () => {
               <PackingItems />
             </ResizablePanel>
           </ResizablePanelGroup>
-          <div className="absolute -right-4 bottom-0 top-0 flex flex-col justify-center">
-            <Button
-              onClick={() => setIsOpen((prev) => !prev)}
-              variant="ghost"
-              size="1"
-              color="gray"
-              className="m-0 my-auto h-full w-3 p-0"
-              radius="full"
-            >
-              <i
-                className={cn(
-                  "fa-solid fa-xs",
-                  isOpen ? "fa-chevron-left" : "fa-chevron-right",
-                )}
-              />
-            </Button>
-          </div>
+          <button
+            onClick={() => setIsOpen((prev) => !prev)}
+            className={cn(
+              "group absolute -right-2 bottom-4 top-4 flex w-4 justify-center",
+              !isOpen && "-right-3",
+            )}
+            title="Toggle sidebar"
+          >
+            <div
+              className={cn(
+                "m-0 h-full w-[2px] rounded-full bg-gray-6 p-0 transition ease-out group-hover:w-[4px] group-hover:bg-gray-8",
+              )}
+            />
+          </button>
         </div>
       </div>
     </>

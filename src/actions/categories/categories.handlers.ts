@@ -3,6 +3,7 @@ import { eq, max, and, ne, desc, notInArray } from "drizzle-orm";
 import { idAndUserIdFilter } from "@/actions/filters";
 import { ActionError, type ActionHandler } from "astro:actions";
 import { isAuthorized } from "@/actions/helpers";
+import { reorder } from "@atlaskit/pragmatic-drag-and-drop/reorder";
 
 import { v4 as uuid } from "uuid";
 import type categoryInputs from "./categories.inputs";
@@ -140,23 +141,6 @@ const create: ActionHandler<
   return created;
 };
 
-const reorder: ActionHandler<typeof categoryInputs.reorder, null> = async (
-  { listId, ids },
-  c,
-) => {
-  const db = createDb(c.locals.runtime.env);
-  const userId = isAuthorized(c).id;
-  await Promise.all(
-    ids.map((id, idx) =>
-      db
-        .update(Category)
-        .set({ sortOrder: idx + 1, listId })
-        .where(idAndUserIdFilter(Category, { id, userId })),
-    ),
-  );
-  return null;
-};
-
 const remove: ActionHandler<typeof categoryInputs.remove, null> = async (
   { categoryId },
   c,
@@ -176,11 +160,62 @@ const update: ActionHandler<
 > = async ({ categoryId, data }, c) => {
   const db = createDb(c.locals.runtime.env);
   const userId = isAuthorized(c).id;
+
+  const [category] = await db
+    .select()
+    .from(Category)
+    .where(eq(Category.id, categoryId));
+
+  if (!category) {
+    throw new ActionError({
+      message: "Category not found",
+      code: "NOT_FOUND",
+    });
+  }
+
+  if (category.userId !== userId) {
+    throw new ActionError({
+      message: "Unauthorized",
+      code: "UNAUTHORIZED",
+    });
+  }
+
+  const { listId } = category;
+  const { sortOrder } = data;
+
   const [updated] = await db
     .update(Category)
     .set({ ...data, userId })
     .where(idAndUserIdFilter(Category, { id: categoryId, userId }))
     .returning();
+
+  if (sortOrder !== undefined) {
+    const categories = await db
+      .select({ id: Category.id })
+      .from(Category)
+      .where(and(eq(Category.listId, listId)))
+      .orderBy(Category.sortOrder);
+
+    const categoryIds = categories.map((l) => l.id);
+    const indexOfCategory = categoryIds.indexOf(categoryId);
+
+    const reordered = reorder({
+      list: categoryIds,
+      startIndex: indexOfCategory,
+      finishIndex: sortOrder,
+    });
+
+    await Promise.all(
+      reordered.map((categoryId, idx) => {
+        return db
+          .update(Category)
+          .set({ sortOrder: idx })
+          .where(idAndUserIdFilter(Category, { userId, id: categoryId }))
+          .returning();
+      }),
+    );
+  }
+
   return updated;
 };
 
@@ -219,7 +254,6 @@ const categoryHandlers = {
   getFromOtherLists,
   copyToList,
   create,
-  reorder,
   remove,
   update,
   togglePacked,

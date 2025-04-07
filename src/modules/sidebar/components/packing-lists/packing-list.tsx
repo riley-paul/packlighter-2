@@ -21,7 +21,7 @@ import Gripper from "@/components/base/gripper";
 import useMutations from "@/hooks/use-mutations";
 import useDraggableState from "@/hooks/use-draggable-state";
 import {
-  DND_ENTITY_TYPE,
+  DND_TYPE_KEY,
   DndEntityType,
   isDndEntityType,
 } from "@/lib/client/constants";
@@ -113,7 +113,7 @@ const PackingList: React.FC<Props> = (props) => {
         element,
         dragHandle: gripper,
         getInitialData: () => ({
-          [DND_ENTITY_TYPE]: DndEntityType.List,
+          [DND_TYPE_KEY]: DndEntityType.List,
           ...list,
         }),
         onGenerateDragPreview({ location, nativeSetDragImage }) {

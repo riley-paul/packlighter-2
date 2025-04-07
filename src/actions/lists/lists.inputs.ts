@@ -9,10 +9,9 @@ const listInputs = {
   create: z.object({
     data: zListInsert.partial().optional(),
   }),
-  reorder: z.array(z.string()),
   update: z.object({
     listId: z.string(),
-    data: zListInsert.partial(),
+    data: zListInsert.omit({ id: true, userId: true }).partial(),
   }),
   remove: z.object({ listId: z.string() }),
   unpack: z.object({ listId: z.string() }),

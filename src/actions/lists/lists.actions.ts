@@ -17,11 +17,6 @@ export const create = defineAction({
   handler: listHandlers.create,
 });
 
-export const reorder = defineAction({
-  input: listInputs.reorder,
-  handler: listHandlers.reorder,
-});
-
 export const update = defineAction({
   input: listInputs.update,
   handler: listHandlers.update,
