@@ -57,6 +57,8 @@ const EditorCategories: React.FC<Props> = (props) => {
 
           if (!sourceData.success || !targetData.success) {
             console.log("could not parse data");
+            console.log("sourceError", sourceData.error);
+            console.log("targetError", targetData.error);
             return;
           }
 
