@@ -21,7 +21,7 @@ export default function useItemsMutations() {
   } = useMutationHelpers();
 
   const updateItem = useMutation({
-    mutationFn: (data: ItemForm & { id: string }) => {
+    mutationFn: (data: Partial<ItemForm> & { id: string }) => {
       const formData = new FormData();
       formData.append("itemId", data.id);
       formData.append(

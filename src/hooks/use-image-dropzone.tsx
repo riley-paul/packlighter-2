@@ -14,7 +14,7 @@ import { preventUnhandled } from "@atlaskit/pragmatic-drag-and-drop/prevent-unha
 
 type Props = {
   upload?: File | null;
-  handleUpload: (file: File | null) => void;
+  handleUpload: (file: File) => void;
 };
 
 export default function useImageDropzone({ upload, handleUpload }: Props) {
