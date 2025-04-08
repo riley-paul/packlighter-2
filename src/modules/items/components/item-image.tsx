@@ -29,6 +29,7 @@ type Props = {
 
 const ItemImage = React.forwardRef<HTMLDivElement, Props>((props, ref) => {
   const { imageUrl, size, className } = props;
+  const [imageError, setImageError] = React.useState(false);
 
   return (
     <div
@@ -37,8 +38,12 @@ const ItemImage = React.forwardRef<HTMLDivElement, Props>((props, ref) => {
         imageVariants({ size, hasImage: Boolean(imageUrl), className }),
       )}
     >
-      {imageUrl ? (
-        <img src={imageUrl} className="h-full w-full object-contain" />
+      {imageUrl && !imageError ? (
+        <img
+          src={imageUrl}
+          onError={() => setImageError(true)}
+          className="h-full w-full object-contain"
+        />
       ) : (
         size === "lg" && "No Image"
       )}

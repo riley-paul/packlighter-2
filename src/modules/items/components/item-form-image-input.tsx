@@ -79,8 +79,9 @@ const UploadImageInput: React.FC = () => {
                     color="red"
                     className="gap-2"
                     onClick={() => {
-                      field.onChange(null);
+                      field.onChange(undefined);
                       setValue("imageR2Key", null);
+                      setValue("removeImageFile", true);
                     }}
                   >
                     <i className="fas fa-trash"></i>
