@@ -165,6 +165,10 @@ const imageUpload: ActionHandler<typeof itemInputs.imageUpload, null> = async (
   if (imageFile && imageFile.size > 0) {
     // TODO: downsize and convert image
 
+    if (item.imageKey) {
+      await c.locals.runtime.env.R2_BUCKET.delete(item.imageKey);
+    }
+
     const key = crypto.randomUUID();
     await c.locals.runtime.env.R2_BUCKET.put(key, imageFile);
     await db
