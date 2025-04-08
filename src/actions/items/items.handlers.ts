@@ -9,7 +9,7 @@ import { isAuthorized } from "@/actions/helpers";
 import { v4 as uuid } from "uuid";
 import type itemInputs from "./items.inputs";
 import type { IncludedList, ItemSelect } from "@/lib/types";
-import processImage from "@/lib/server/process-images/process-images";
+import processImage from "@/lib/server/process-image/process-image";
 
 const getAll: ActionHandler<typeof itemInputs.getAll, ItemSelect[]> = async (
   _,

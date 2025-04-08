@@ -1,6 +1,6 @@
 import { test } from "vitest";
 import fs from "fs/promises";
-import processImage from "./process-images";
+import processImage from "./process-image";
 
 test("image processing", async () => {
   const file = await fs.readFile("src/tests/files/WCJKTVw.png");
