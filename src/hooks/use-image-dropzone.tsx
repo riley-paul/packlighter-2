@@ -11,6 +11,7 @@ import {
   getFiles,
 } from "@atlaskit/pragmatic-drag-and-drop/external/file";
 import { preventUnhandled } from "@atlaskit/pragmatic-drag-and-drop/prevent-unhandled";
+import { useEventListener } from "usehooks-ts";
 
 type Props = {
   upload?: File | null;
@@ -22,6 +23,15 @@ export default function useImageDropzone({ upload, handleUpload }: Props) {
   const [state, setState] = React.useState<"idle" | "potential" | "over">(
     "idle",
   );
+
+  useEventListener("paste", (event) => {
+    const items = Array.from(event.clipboardData?.items ?? []);
+    const files = items.filter((item) => item.kind === "file");
+    if (files.length > 0) {
+      event.preventDefault();
+      handleUpload(files[0].getAsFile()!);
+    }
+  });
 
   const imageUrl = React.useMemo(
     () => (upload ? URL.createObjectURL(upload) : null),
