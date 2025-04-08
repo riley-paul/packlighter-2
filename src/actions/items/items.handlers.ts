@@ -2,6 +2,8 @@ import { Category, CategoryItem, Item, List } from "@/db/schema";
 import { createDb } from "@/db";
 import { and, eq } from "drizzle-orm";
 
+import { Image } from "imagescript";
+
 import { idAndUserIdFilter } from "@/actions/filters";
 import { ActionError, type ActionHandler } from "astro:actions";
 import { isAuthorized } from "@/actions/helpers";
@@ -163,14 +165,22 @@ const imageUpload: ActionHandler<typeof itemInputs.imageUpload, null> = async (
   }
 
   if (imageFile && imageFile.size > 0) {
-    // TODO: downsize and convert image
+    // downsize and convert image
+    const inputBuffer = await imageFile.arrayBuffer();
+    const uint8 = new Uint8Array(inputBuffer);
+    const image = await Image.decode(uint8);
 
+    const resizedImage = image.resize(800, Image.RESIZE_AUTO);
+    const outputBuffer = await resizedImage.encodeWEBP(80);
+
+    // delete old image if it exists
     if (item.imageKey) {
       await c.locals.runtime.env.R2_BUCKET.delete(item.imageKey);
     }
 
+    // upload new image
     const key = crypto.randomUUID();
-    await c.locals.runtime.env.R2_BUCKET.put(key, imageFile);
+    await c.locals.runtime.env.R2_BUCKET.put(key, outputBuffer);
     await db
       .update(Item)
       .set({ imageR2Key: key, imageType: "file" })
