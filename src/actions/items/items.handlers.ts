@@ -9,6 +9,7 @@ import { isAuthorized } from "@/actions/helpers";
 import { v4 as uuid } from "uuid";
 import type itemInputs from "./items.inputs";
 import type { IncludedList, ItemSelect } from "@/lib/types";
+import processImage from "@/lib/server/process-images/process-images";
 
 const getAll: ActionHandler<typeof itemInputs.getAll, ItemSelect[]> = async (
   _,
@@ -163,7 +164,7 @@ const imageUpload: ActionHandler<typeof itemInputs.imageUpload, null> = async (
   }
 
   if (imageFile && imageFile.size > 0) {
-    // TODO: downsize and convert image
+    const processed = await processImage(imageFile);
 
     // delete old image if it exists
     if (item.imageKey) {
@@ -172,7 +173,7 @@ const imageUpload: ActionHandler<typeof itemInputs.imageUpload, null> = async (
 
     // upload new image
     const key = crypto.randomUUID();
-    await c.locals.runtime.env.R2_BUCKET.put(key, imageFile);
+    await c.locals.runtime.env.R2_BUCKET.put(key, processed);
     await db
       .update(Item)
       .set({ imageR2Key: key, imageType: "file" })

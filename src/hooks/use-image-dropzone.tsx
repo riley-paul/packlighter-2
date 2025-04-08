@@ -102,7 +102,7 @@ export default function useImageDropzone({ upload, handleUpload }: Props) {
       id="file-input"
       onChange={onFileInputChange}
       type="file"
-      accept="image/*"
+      accept="image/png, image/jpeg, image/webp"
     />
   );
 
