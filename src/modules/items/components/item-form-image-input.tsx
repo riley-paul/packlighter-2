@@ -59,6 +59,7 @@ const UrlImageInput: React.FC = () => {
               "h-16": size === "sm",
               "h-24": size === "md",
               "h-40": size === "lg",
+              "px-8": !Boolean(field.value),
             })}
           >
             <TextField.Root
