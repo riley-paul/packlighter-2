@@ -56,6 +56,14 @@ export const zItemForm = zItemInsert.omit({ userId: true }).extend({
 });
 export type ItemForm = z.infer<typeof zItemForm>;
 
+export const zItemImageForm = zItemForm.pick({
+  imageFile: true,
+  removeImageFile: true,
+  imageType: true,
+  image: true,
+});
+export type ItemImageForm = z.infer<typeof zItemImageForm>;
+
 export const zListSelect = createSelectSchema(List);
 export const zListInsert = createInsertSchema(List);
 export type ListSelect = z.infer<typeof zListSelect>;

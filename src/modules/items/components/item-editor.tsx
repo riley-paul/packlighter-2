@@ -1,7 +1,7 @@
 import React from "react";
 import ItemFormComponent from "./item-form";
 import ResponsiveModal from "@/components/base/responsive-modal";
-import { Heading, Text } from "@radix-ui/themes";
+import { Dialog } from "@radix-ui/themes";
 import { useAtomValue, useSetAtom } from "jotai";
 import {
   closeEditorAtom,
@@ -22,14 +22,14 @@ const ItemEditor: React.FC = () => {
       onOpenChange={(open) => (open ? openEditor() : closeEditor())}
     >
       <header>
-        <Heading as="h2" size="4">
+        <Dialog.Title size="4" className="m-0">
           {item ? "Edit" : "Add"} Gear
-        </Heading>
-        <Text size="2" color="gray">
+        </Dialog.Title>
+        <Dialog.Description size="2" color="gray">
           {item
             ? `Update the details of ${item.name}`
             : "Got a new piece of kit?"}
-        </Text>
+        </Dialog.Description>
       </header>
       <ItemFormComponent />
     </ResponsiveModal>

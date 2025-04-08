@@ -9,6 +9,7 @@ import { weightUnitsInfo } from "@/lib/client/constants";
 import ItemFormImageInput from "./item-form-image-input";
 import { toast } from "sonner";
 import { zItemForm, type ItemForm } from "@/lib/types";
+import { ItemImageContext } from "./item-image";
 
 const ItemFormComponent: React.FC = () => {
   const item = useAtomValue(editorItemAtom);
@@ -133,7 +134,9 @@ const ItemFormComponent: React.FC = () => {
           <Text as="label" size="2" weight="medium">
             Image
           </Text>
-          <ItemFormImageInput />
+          <ItemImageContext.Provider value={{ size: "md" }}>
+            <ItemFormImageInput />
+          </ItemImageContext.Provider>
         </div>
 
         <div className="grid w-full gap-2 pt-8">
