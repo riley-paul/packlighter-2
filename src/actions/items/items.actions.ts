@@ -31,3 +31,9 @@ export const getListsIncluded = defineAction({
   input: itemInputs.getListsIncluded,
   handler: itemHandlers.getListsIncluded,
 });
+
+export const imageUpload = defineAction({
+  accept: "form",
+  input: itemInputs.imageUpload,
+  handler: itemHandlers.imageUpload,
+});

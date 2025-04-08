@@ -4,7 +4,6 @@ import useMutations from "@/hooks/use-mutations";
 import React from "react";
 import DeleteButton from "../base/delete-button";
 import { cn, formatWeight, getCheckboxState } from "@/lib/client/utils";
-import ItemImageDialog from "@/modules/items/components/item-image-dialog";
 import AddItemPopover from "./add-item-popover";
 import useCurrentList from "@/hooks/use-current-list";
 import CellWrapper from "../base/cell-wrapper";
@@ -22,6 +21,7 @@ import { z } from "zod";
 import useItemsMutations from "@/modules/items/mutations";
 import { type ExpandedCategory, type ExpandedCategoryItem } from "@/lib/types";
 import { weightUnitsInfo, type WeightUnit } from "@/lib/client/constants";
+import ItemImageDroppable from "@/modules/items/components/item-image-droppable";
 
 const columnHelper = createColumnHelper<ExpandedCategoryItem>();
 
@@ -84,7 +84,12 @@ export default function useEditorColumns({
       columnHelper.accessor("itemData.image", {
         id: "image",
         header: () => null,
-        cell: (props) => <ItemImageDialog item={props.row.original.itemData} />,
+        cell: (props) => (
+          <ItemImageDroppable
+            item={props.row.original.itemData}
+            className="size-16"
+          />
+        ),
       }),
 
       columnHelper.accessor(
@@ -133,8 +138,8 @@ export default function useEditorColumns({
                   value={props.getValue().name}
                   handleSubmit={(name) =>
                     updateItem.mutate({
-                      itemId: props.row.original.itemData.id,
-                      data: { name },
+                      id: props.row.original.itemData.id,
+                      name,
                     })
                   }
                   textFieldProps={{ placeholder: "Name" }}
@@ -151,8 +156,8 @@ export default function useEditorColumns({
                   value={props.getValue().description}
                   handleSubmit={(description) =>
                     updateItem.mutate({
-                      itemId: props.row.original.itemData.id,
-                      data: { description },
+                      id: props.row.original.itemData.id,
+                      description,
                     })
                   }
                   textFieldProps={{ placeholder: "Description" }}
@@ -204,8 +209,8 @@ export default function useEditorColumns({
                 selectOnFocus
                 onUpdate={(weight) =>
                   updateItem.mutate({
-                    itemId: props.row.original.itemId,
-                    data: { weight: Number(weight) },
+                    id: props.row.original.itemId,
+                    weight: Number(weight),
                   })
                 }
               >
@@ -215,8 +220,8 @@ export default function useEditorColumns({
                     value={props.getValue().weightUnit}
                     onValueChange={(weightUnit: WeightUnit) =>
                       updateItem.mutate({
-                        itemId: props.row.original.itemId,
-                        data: { weightUnit },
+                        id: props.row.original.itemId,
+                        weightUnit,
                       })
                     }
                   >

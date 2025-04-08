@@ -17,6 +17,8 @@ export const initItem = (data: Partial<ItemSelect> = {}): ItemSelect => ({
   weight: data.weight ?? 0,
   weightUnit: data.weightUnit ?? "g",
   image: data.image ?? null,
+  imageType: data.imageType ?? "url",
+  imageR2Key: data.imageR2Key ?? null,
   createdAt: data.createdAt ?? currentTime(),
   updatedAt: data.updatedAt ?? currentTime(),
 });

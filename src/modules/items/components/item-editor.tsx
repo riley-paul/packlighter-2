@@ -1,5 +1,5 @@
 import React from "react";
-import ItemForm from "./item-form";
+import ItemFormComponent from "./item-form";
 import ResponsiveModal from "@/components/base/responsive-modal";
 import { Heading, Text } from "@radix-ui/themes";
 import { useAtomValue, useSetAtom } from "jotai";
@@ -31,7 +31,7 @@ const ItemEditor: React.FC = () => {
             : "Got a new piece of kit?"}
         </Text>
       </header>
-      <ItemForm />
+      <ItemFormComponent />
     </ResponsiveModal>
   );
 };

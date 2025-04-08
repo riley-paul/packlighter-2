@@ -1,52 +1,54 @@
 import React from "react";
 import { cn } from "@/lib/client/utils";
+import { cva, type VariantProps } from "class-variance-authority";
 
-interface Props {
-  url: string | undefined | null;
-  size: "lg" | "sm";
-  className?: string;
-}
+const imageVariants = cva(
+  "flex shrink-0 items-center justify-center text-gray-10 min-h-4",
+  {
+    variants: {
+      size: {
+        sm: "rounded-2 p-0.5 size-16",
+        lg: "rounded-3 p-2 size-32",
+      },
+      hasImage: {
+        true: "bg-[white]",
+        false: "bg-gray-4",
+      },
+    },
+    defaultVariants: {
+      size: "sm",
+      hasImage: false,
+    },
+  },
+);
 
-const NoImage: React.FC<Props> = (props) => {
-  const { size } = props;
-  if (size === "sm") return null;
-  return "No Image";
-};
+type Props = {
+  imageUrl: string | undefined;
+} & VariantProps<typeof imageVariants> &
+  React.HTMLAttributes<HTMLDivElement>;
 
-// const InvalidUrl: React.FC<Props> = (props) => {
-//   const { size } = props;
-//   if (size === "sm") {
-//     return (
-//       <i className="fa-solid fa-exclamation-triangle text-xl text-destructive"></i>
-//     );
-//   }
-//   return (
-//     <div className="flex flex-col items-center gap-1 text-destructive">
-//       <i className="fa-solid fa-exclamation-triangle text-xl" />
-//       <span>Invalid URL</span>
-//     </div>
-//   );
-// };
-
-const ItemImage: React.FC<Props> = (props) => {
-  const { url, size = "sm", className } = props;
+const ItemImage = React.forwardRef<HTMLDivElement, Props>((props, ref) => {
+  const { imageUrl, size, className } = props;
+  const [imageError, setImageError] = React.useState(false);
 
   return (
     <div
+      ref={ref}
       className={cn(
-        "flex shrink-0 items-center justify-center text-gray-10",
-        url ? "bg-[white]" : "bg-gray-4",
-        size === "lg" ? "rounded-3 p-2" : "rounded-2 p-0.5",
-        className,
+        imageVariants({ size, hasImage: Boolean(imageUrl), className }),
       )}
     >
-      {url ? (
-        <img src={url} className="h-full w-full object-contain" />
+      {imageUrl && !imageError ? (
+        <img
+          src={imageUrl}
+          onError={() => setImageError(true)}
+          className="h-full w-full object-contain"
+        />
       ) : (
-        <NoImage {...props} />
+        size === "lg" && "No Image"
       )}
     </div>
   );
-};
+});
 
 export default ItemImage;

@@ -1,36 +1,59 @@
 import React from "react";
 import { Controller, FormProvider, useForm } from "react-hook-form";
-import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { initItem } from "@/lib/init";
-import ItemImage from "@/modules/items/components/item-image";
-import { Button, IconButton, Select, Text, TextField } from "@radix-ui/themes";
+import { Button, Select, Text, TextField } from "@radix-ui/themes";
 import { useAtomValue, useSetAtom } from "jotai";
 import { closeEditorAtom, editorItemAtom } from "../store";
 import useItemsMutations from "../mutations";
-import type { ItemSelect } from "@/lib/types";
 import { weightUnitsInfo } from "@/lib/client/constants";
+import ItemFormImageInput from "./item-form-image-input";
+import { toast } from "sonner";
+import { zItemForm, type ItemForm } from "@/lib/types";
 
-const ItemForm: React.FC = () => {
+const ItemFormComponent: React.FC = () => {
   const item = useAtomValue(editorItemAtom);
   const closeEditor = useSetAtom(closeEditorAtom);
 
-  const methods = useForm<ItemSelect>({
-    defaultValues: initItem(item),
-    resolver: zodResolver(z.custom<ItemSelect>()),
+  const methods = useForm<ItemForm>({
+    values: item || {
+      name: "",
+      description: "",
+      weight: 0,
+      weightUnit: "g",
+      imageType: "file",
+    },
+    resolver: zodResolver(zItemForm),
   });
 
-  const { control, handleSubmit, watch } = methods;
+  const { control, handleSubmit } = methods;
   const { updateItem, addItem } = useItemsMutations();
 
-  const onSubmit = handleSubmit((data) => {
-    item
-      ? updateItem.mutate({ itemId: item.id, data })
-      : addItem.mutate({ data });
-    closeEditor();
-  });
-
-  const imageUrl = watch("image");
+  const onSubmit = handleSubmit(
+    (data) => {
+      item
+        ? updateItem.mutate(
+            { ...data, id: item.id },
+            {
+              onSuccess: () => {
+                closeEditor();
+                toast.success("Item updated");
+              },
+              onError: () => toast.error("Failed to update item"),
+            },
+          )
+        : addItem.mutate(data, {
+            onSuccess: () => {
+              closeEditor();
+              toast.success("Item added");
+            },
+            onError: () => toast.error("Failed to add item"),
+          });
+    },
+    (errors) => {
+      console.log(errors);
+      toast.error(errors.description?.message || "Form errors");
+    },
+  );
 
   return (
     <FormProvider {...methods}>
@@ -89,7 +112,7 @@ const ItemForm: React.FC = () => {
                         onValueChange={field.onChange}
                         value={field.value}
                       >
-                        <Select.Trigger variant="ghost" placeholder="Unit" />
+                        <Select.Trigger variant="soft" placeholder="Unit" />
                         <Select.Content>
                           {weightUnitsInfo.map(({ symbol, name }) => (
                             <Select.Item key={symbol} value={symbol}>
@@ -106,41 +129,12 @@ const ItemForm: React.FC = () => {
           )}
         />
 
-        <Controller
-          control={control}
-          name="image"
-          render={({ field }) => (
-            <div className="grid gap-2">
-              <Text as="label" size="2" weight="medium">
-                Image URL
-              </Text>
-              <TextField.Root
-                type="url"
-                placeholder="https://example.com/image.jpg"
-                {...field}
-                value={field.value || ""}
-              >
-                {field.value && (
-                  <TextField.Slot side="right">
-                    <IconButton
-                      type="button"
-                      size="1"
-                      variant="soft"
-                      color="red"
-                      onClick={() => field.onChange("")}
-                    >
-                      <i className="fa-solid fa-xmark" />
-                    </IconButton>
-                  </TextField.Slot>
-                )}
-              </TextField.Root>
-            </div>
-          )}
-        />
-
-        {imageUrl && (
-          <ItemImage url={imageUrl} size="sm" className="mx-auto size-32" />
-        )}
+        <div className="grid">
+          <Text as="label" size="2" weight="medium">
+            Image
+          </Text>
+          <ItemFormImageInput />
+        </div>
 
         <div className="grid w-full gap-2 pt-8">
           <Button
@@ -162,4 +156,4 @@ const ItemForm: React.FC = () => {
   );
 };
 
-export default ItemForm;
+export default ItemFormComponent;

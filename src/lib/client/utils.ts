@@ -2,6 +2,7 @@ import type { DragLocationHistory } from "@atlaskit/pragmatic-drag-and-drop/dist
 import type { CheckedState } from "@radix-ui/react-checkbox";
 import { type ClassValue, clsx } from "clsx";
 import { twMerge } from "tailwind-merge";
+import type { ItemSelect } from "../types";
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -11,6 +12,12 @@ export const formatWeight = (value: number): string => {
   if (value < 10) return (Math.round(value * 100) / 100).toLocaleString("en");
   if (value < 100) return (Math.round(value * 10) / 10).toLocaleString("en");
   return Math.round(value).toLocaleString("en");
+};
+
+export const formatFileSize = (bytes: number) => {
+  if (bytes < 1024) return `${bytes} B`;
+  if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(1)} KB`;
+  return `${(bytes / (1024 * 1024)).toFixed(1)} MB`;
 };
 
 export const getCheckboxState = (values: boolean[]): CheckedState => {
@@ -59,4 +66,16 @@ export const centerDragPreviewOnMouse = (
   const leftOffset = clientX - left;
 
   return () => ({ x: leftOffset, y: topOffset });
+};
+
+export const getItemImageUrl = (
+  item: Partial<Pick<ItemSelect, "image" | "imageR2Key" | "imageType">>,
+): string | undefined => {
+  if (item.imageType === "url") {
+    if (!item.image) return undefined;
+    return item.image;
+  }
+
+  if (!item.imageR2Key) return undefined;
+  return `/media/${item.imageR2Key}.jpg`;
 };

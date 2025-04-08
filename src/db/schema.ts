@@ -47,6 +47,10 @@ export const Item = sqliteTable("item", {
   weight: integer().notNull().default(0),
   weightUnit: text({ enum: weightUnits }).notNull().default("g"),
   image: text(),
+  imageR2Key: text(),
+  imageType: text({ enum: ["url", "file"] })
+    .notNull()
+    .default("url"),
   ...timeStamps,
 });
 
