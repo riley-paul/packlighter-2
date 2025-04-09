@@ -102,14 +102,19 @@ const AppSideBar: React.FC = () => {
           <button
             onClick={() => setIsOpen((prev) => !prev)}
             className={cn(
-              "group absolute -right-2 bottom-4 top-4 flex w-4 justify-center",
-              !isOpen && "-right-3",
+              "group absolute -right-2 bottom-4 top-4 flex w-4 justify-center outline-none transition-[right] duration-200 ease-in-out",
+              !isOpen && "-right-4",
+              {
+                "cursor-w-resize": isOpen,
+                "cursor-e-resize": !isOpen,
+              },
             )}
-            title="Toggle sidebar"
+            title="Toggle sidebar [B]"
           >
             <div
               className={cn(
-                "m-0 h-full w-[2px] rounded-full bg-gray-6 p-0 transition ease-out group-hover:w-[4px] group-hover:bg-gray-8",
+                "m-0 h-full w-[4px] rounded-full bg-gray-6 p-0 transition ease-out group-hover:w-[6px] group-hover:bg-gray-8",
+                "focus:bg-gray-9",
               )}
             />
           </button>
