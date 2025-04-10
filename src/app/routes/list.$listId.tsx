@@ -7,6 +7,7 @@ import ErrorDisplay from "@/components/base/error-display";
 import ListSharing from "@/components/list-sharing";
 import ListName from "@/components/list-name";
 import { createFileRoute } from "@tanstack/react-router";
+import WeightChart from "@/modules/weight-chart/weight-chart";
 
 export const Route = createFileRoute("/list/$listId")({
   component: RouteComponent,
@@ -36,6 +37,7 @@ function RouteComponent() {
             <ListSettings list={list} />
           </div>
         </header>
+        <WeightChart list={list} />
         <ListDescription list={list} />
         <EditorCategories categories={list.categories} />
       </div>
