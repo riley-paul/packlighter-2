@@ -2,7 +2,7 @@ import useMutations from '@/hooks/use-mutations'
 import { Button, Heading, Separator, Text } from '@radix-ui/themes'
 import { createFileRoute } from '@tanstack/react-router'
 
-export const Route = createFileRoute('/')({ component: RouteComponent })
+export const Route = createFileRoute('/_withSidebar/')({ component: RouteComponent })
 
 function RouteComponent() {
   const { addList } = useMutations()

@@ -8,7 +8,7 @@ import ListSharing from "@/components/list-sharing";
 import ListName from "@/components/list-name";
 import { createFileRoute } from "@tanstack/react-router";
 
-export const Route = createFileRoute("/list/$listId")({
+export const Route = createFileRoute("/_withSidebar/list/$listId")({
   component: RouteComponent,
   loader: ({ context: { queryClient }, params: { listId } }) => {
     queryClient.ensureQueryData(listQueryOptions(listId));

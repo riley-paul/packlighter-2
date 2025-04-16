@@ -56,7 +56,7 @@ const PackingItems: React.FC = () => {
       <ScrollArea
         ref={listRef}
         type="hover"
-        className="h-full flex-1 overflow-y-auto overflow-x-hidden"
+        className="relative h-full flex-1 overflow-y-auto overflow-x-hidden"
       >
         <ArrayQueryGuard query={itemsQuery} placeholder="No gear yet">
           <div
