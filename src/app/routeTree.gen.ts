@@ -11,11 +11,18 @@
 // Import Routes
 
 import { Route as rootRoute } from './routes/__root'
+import { Route as AllGearImport } from './routes/all-gear'
 import { Route as WithSidebarImport } from './routes/_withSidebar'
 import { Route as WithSidebarIndexImport } from './routes/_withSidebar.index'
 import { Route as WithSidebarListListIdImport } from './routes/_withSidebar.list.$listId'
 
 // Create/Update Routes
+
+const AllGearRoute = AllGearImport.update({
+  id: '/all-gear',
+  path: '/all-gear',
+  getParentRoute: () => rootRoute,
+} as any)
 
 const WithSidebarRoute = WithSidebarImport.update({
   id: '/_withSidebar',
@@ -43,6 +50,13 @@ declare module '@tanstack/react-router' {
       path: ''
       fullPath: ''
       preLoaderRoute: typeof WithSidebarImport
+      parentRoute: typeof rootRoute
+    }
+    '/all-gear': {
+      id: '/all-gear'
+      path: '/all-gear'
+      fullPath: '/all-gear'
+      preLoaderRoute: typeof AllGearImport
       parentRoute: typeof rootRoute
     }
     '/_withSidebar/': {
@@ -80,11 +94,13 @@ const WithSidebarRouteWithChildren = WithSidebarRoute._addFileChildren(
 
 export interface FileRoutesByFullPath {
   '': typeof WithSidebarRouteWithChildren
+  '/all-gear': typeof AllGearRoute
   '/': typeof WithSidebarIndexRoute
   '/list/$listId': typeof WithSidebarListListIdRoute
 }
 
 export interface FileRoutesByTo {
+  '/all-gear': typeof AllGearRoute
   '/': typeof WithSidebarIndexRoute
   '/list/$listId': typeof WithSidebarListListIdRoute
 }
@@ -92,18 +108,20 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRoute
   '/_withSidebar': typeof WithSidebarRouteWithChildren
+  '/all-gear': typeof AllGearRoute
   '/_withSidebar/': typeof WithSidebarIndexRoute
   '/_withSidebar/list/$listId': typeof WithSidebarListListIdRoute
 }
 
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '' | '/' | '/list/$listId'
+  fullPaths: '' | '/all-gear' | '/' | '/list/$listId'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/list/$listId'
+  to: '/all-gear' | '/' | '/list/$listId'
   id:
     | '__root__'
     | '/_withSidebar'
+    | '/all-gear'
     | '/_withSidebar/'
     | '/_withSidebar/list/$listId'
   fileRoutesById: FileRoutesById
@@ -111,10 +129,12 @@ export interface FileRouteTypes {
 
 export interface RootRouteChildren {
   WithSidebarRoute: typeof WithSidebarRouteWithChildren
+  AllGearRoute: typeof AllGearRoute
 }
 
 const rootRouteChildren: RootRouteChildren = {
   WithSidebarRoute: WithSidebarRouteWithChildren,
+  AllGearRoute: AllGearRoute,
 }
 
 export const routeTree = rootRoute
@@ -127,7 +147,8 @@ export const routeTree = rootRoute
     "__root__": {
       "filePath": "__root.tsx",
       "children": [
-        "/_withSidebar"
+        "/_withSidebar",
+        "/all-gear"
       ]
     },
     "/_withSidebar": {
@@ -136,6 +157,9 @@ export const routeTree = rootRoute
         "/_withSidebar/",
         "/_withSidebar/list/$listId"
       ]
+    },
+    "/all-gear": {
+      "filePath": "all-gear.tsx"
     },
     "/_withSidebar/": {
       "filePath": "_withSidebar.index.tsx",

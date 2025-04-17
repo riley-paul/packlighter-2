@@ -2,7 +2,11 @@ import React from "react";
 
 import { FilterOptions, SortOptions } from "../../types";
 import { useAtom } from "jotai";
-import { filterOptionsAtom, searchStringAtom, sortOptionAtom } from "@/modules/sidebar/store";
+import {
+  filterOptionsAtom,
+  searchStringAtom,
+  sortOptionAtom,
+} from "@/modules/sidebar/store";
 import {
   Button,
   Checkbox,
@@ -13,6 +17,7 @@ import {
   Text,
   TextField,
 } from "@radix-ui/themes";
+import { Link } from "@tanstack/react-router";
 
 const PackingItemsSortFilter: React.FC = () => {
   const [searchQuery, setSearchQuery] = useAtom(searchStringAtom);
@@ -53,7 +58,7 @@ const PackingItemsSortFilter: React.FC = () => {
           </IconButton>
         </Popover.Trigger>
         <Popover.Content className="z-30 grid gap-5">
-          <div className="grid gap-3">
+          <section className="grid gap-3">
             <Heading as="h4" size="2" weight="medium">
               <i className="fa-solid fa-arrow-down-wide-short mr-1.5" />
               Sort
@@ -71,8 +76,8 @@ const PackingItemsSortFilter: React.FC = () => {
                 </RadioGroup.Item>
               ))}
             </RadioGroup.Root>
-          </div>
-          <div className="grid gap-3">
+          </section>
+          <section className="grid gap-3">
             <Heading as="h4" size="2" weight="medium">
               <i className="fa-solid fa-filter mr-1.5" />
               Filter
@@ -89,13 +94,21 @@ const PackingItemsSortFilter: React.FC = () => {
               />
               Hide gear in current list
             </Text>
-          </div>
-          <Button asChild variant="soft">
-            <a href="/download/items" download>
-              <i className="fa-solid fa-download" />
-              <span>Download CSV</span>
-            </a>
-          </Button>
+          </section>
+          <section className="grid gap-2">
+            <Button asChild variant="soft">
+              <Link to="/all-gear">
+                <i className="fas fa-list"></i>
+                <span>All Gear</span>
+              </Link>
+            </Button>
+            <Button asChild variant="soft">
+              <a href="/download/items" download>
+                <i className="fa-solid fa-download" />
+                <span>Download CSV</span>
+              </a>
+            </Button>
+          </section>
         </Popover.Content>
       </Popover.Root>
     </div>
