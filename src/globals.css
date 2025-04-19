@@ -25,6 +25,9 @@
   .container2 {
     @apply mx-auto w-full max-w-screen-lg px-5;
   }
+  .rounded-non {
+    border-radius: 0;
+  }
 }
 
 @layer base {

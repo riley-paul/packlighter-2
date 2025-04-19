@@ -1,3 +1,4 @@
+import ItemCard from "@/modules/items/components/item-card";
 import { itemsQueryOptions } from "@/modules/sidebar/queries";
 import UserAvatar from "@/modules/users/components/user-avatar";
 import {
@@ -23,7 +24,7 @@ function RouteComponent() {
 
   return (
     <main>
-      <header className="sticky top-0 z-10 bg-gray-1 py-3">
+      <header className="sticky top-0 z-10 bg-gray-1 py-4 border-b">
         <article className="container2 grid gap-6">
           <section className="flex items-center justify-between">
             <div className="flex items-baseline gap-4">
@@ -60,25 +61,10 @@ function RouteComponent() {
           </section>
         </article>
       </header>
-      <article className="container2 py-8">
-        <Table.Root>
-          <Table.Header>
-            <Table.Row>
-              <Table.ColumnHeaderCell>Name</Table.ColumnHeaderCell>
-              <Table.ColumnHeaderCell>Description</Table.ColumnHeaderCell>
-              <Table.ColumnHeaderCell>Weight</Table.ColumnHeaderCell>
-            </Table.Row>
-          </Table.Header>
-          <Table.Body>
-            {itemsQuery.data.map((item) => (
-              <Table.Row key={item.id}>
-                <Table.Cell>{item.name}</Table.Cell>
-                <Table.Cell>{item.description}</Table.Cell>
-                <Table.Cell>{item.weight}</Table.Cell>
-              </Table.Row>
-            ))}
-          </Table.Body>
-        </Table.Root>
+      <article className="container2 py-5 grid gap-4">
+        {itemsQuery.data.map((item) => (
+          <ItemCard key={item.id} item={item} />
+        ))}
       </article>
     </main>
   );
