@@ -14,7 +14,10 @@ import ItemFormImageInput from "./item-form-image-input";
 import useItemsMutations from "../mutations";
 import { toast } from "sonner";
 
-const ItemImageFormComponent: React.FC<{ item: ItemSelect }> = ({ item }) => {
+const ItemImageFormComponent: React.FC<{
+  item: ItemSelect;
+  handleCancel: () => void;
+}> = ({ item, handleCancel }) => {
   const { updateItem } = useItemsMutations();
 
   const methods = useForm<ItemImageForm>({
@@ -42,7 +45,15 @@ const ItemImageFormComponent: React.FC<{ item: ItemSelect }> = ({ item }) => {
       <form className="grid gap-4" onSubmit={onSubmit}>
         <ItemFormImageInput />
         <footer className="flex justify-end gap-2">
-          <Button type="submit" variant="soft">
+          <Button
+            type="button"
+            variant="soft"
+            color="gray"
+            onClick={handleCancel}
+          >
+            Cancel
+          </Button>
+          <Button type="submit">
             Submit
           </Button>
         </footer>
@@ -69,7 +80,10 @@ const ItemImageDialog: React.FC<{ item: ItemSelect }> = ({ item }) => {
           </Dialog.Description>
         </header>
         <ItemImageContext.Provider value={{ size: "lg" }}>
-          <ItemImageFormComponent item={item} />
+          <ItemImageFormComponent
+            item={item}
+            handleCancel={() => setIsOpen(false)}
+          />
         </ItemImageContext.Provider>
       </ResponsiveModal>
     </>

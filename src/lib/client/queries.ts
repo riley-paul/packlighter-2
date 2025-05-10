@@ -18,4 +18,5 @@ export const itemListsIncludedOptions = (itemId: string) =>
   queryOptions({
     queryKey: ["itemListsIncluded", itemId],
     queryFn: () => actions.items.getListsIncluded.orThrow({ itemId }),
+    staleTime: 0,
   });
