@@ -5,8 +5,8 @@ import {
   filterOptionsAtom,
   searchStringAtom,
   sortOptionAtom,
-} from "@/modules/sidebar/store";
-import { FilterOptions, SortOptions } from "@/modules/sidebar/types";
+} from "@/modules/sidebar/sidebar.store";
+import { FilterOptions, SortOptions } from "@/modules/sidebar/sidebar.types";
 import { useAtomValue } from "jotai";
 import type { ItemSelect } from "@/lib/types";
 

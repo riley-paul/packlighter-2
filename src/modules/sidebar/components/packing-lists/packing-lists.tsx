@@ -2,7 +2,7 @@ import React from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import PackingList from "./packing-list";
 import { cn } from "@/lib/client/utils";
-import { listsQueryOptions } from "@/modules/sidebar/queries";
+import { listsQueryOptions } from "@/modules/sidebar/sidebar.queries";
 import useMutations from "@/hooks/use-mutations";
 
 import ArrayQueryGuard from "@/components/base/array-query-guard";

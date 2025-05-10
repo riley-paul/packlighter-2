@@ -1,13 +1,13 @@
 import { DropdownMenu, IconButton, Spinner, Text } from "@radix-ui/themes";
 import { useSetAtom } from "jotai";
 import React from "react";
-import { openEditorAtom } from "@/modules/items/store";
+import { openEditorAtom } from "@/modules/items/items.store";
 import useConfirmDialog from "@/hooks/use-confirm-dialog";
 import { itemListsIncludedOptions } from "@/lib/client/queries";
 import { useQuery } from "@tanstack/react-query";
 import { Link } from "@tanstack/react-router";
 import { listLinkOptions } from "@/lib/client/links";
-import useItemsMutations from "@/modules/items/mutations";
+import useItemsMutations from "@/modules/items/items.mutations";
 import type { ItemSelect } from "@/lib/types";
 
 type Props = {

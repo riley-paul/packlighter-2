@@ -16,7 +16,7 @@ import useCurrentList from "@/hooks/use-current-list";
 import { usePackingItemsSortFilter } from "../../modules/sidebar/components/packing-items-sort-filter/use-packing-item-sort-filter";
 import { v4 as uuidv4 } from "uuid";
 import { Button, Popover, Spinner } from "@radix-ui/themes";
-import { itemsQueryOptions } from "@/modules/sidebar/queries";
+import { itemsQueryOptions } from "@/modules/sidebar/sidebar.queries";
 import type { ExpandedCategory } from "@/lib/types";
 
 type Props = {

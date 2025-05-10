@@ -9,7 +9,7 @@ import {
   TextArea,
   Tooltip,
 } from "@radix-ui/themes";
-import useFeedbackMutations from "./mutations";
+import useFeedbackMutations from "./feedback.mutations";
 
 const FeedbackButton: React.FC = () => {
   const [value, setValue] = React.useState("");

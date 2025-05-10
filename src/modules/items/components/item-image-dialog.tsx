@@ -11,7 +11,7 @@ import { Button, Dialog } from "@radix-ui/themes";
 import { FormProvider, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import ItemFormImageInput from "./item-form-image-input";
-import useItemsMutations from "../mutations";
+import useItemsMutations from "../items.mutations";
 import { toast } from "sonner";
 
 const ItemImageFormComponent: React.FC<{
@@ -53,9 +53,7 @@ const ItemImageFormComponent: React.FC<{
           >
             Cancel
           </Button>
-          <Button type="submit">
-            Submit
-          </Button>
+          <Button type="submit">Submit</Button>
         </footer>
       </form>
     </FormProvider>

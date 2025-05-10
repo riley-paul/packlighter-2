@@ -18,7 +18,7 @@ import {
 } from "@radix-ui/themes";
 import ConditionalForm from "../base/conditional-form";
 import { z } from "zod";
-import useItemsMutations from "@/modules/items/mutations";
+import useItemsMutations from "@/modules/items/items.mutations";
 import { type ExpandedCategory, type ExpandedCategoryItem } from "@/lib/types";
 import { weightUnitsInfo, type WeightUnit } from "@/lib/client/constants";
 import ItemImageDialog from "@/modules/items/components/item-image-dialog";

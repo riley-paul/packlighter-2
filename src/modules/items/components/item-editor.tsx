@@ -8,7 +8,7 @@ import {
   editorItemAtom,
   editorOpenAtom,
   openEditorAtom,
-} from "../store";
+} from "../items.store";
 
 const ItemEditor: React.FC = () => {
   const item = useAtomValue(editorItemAtom);

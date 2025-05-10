@@ -13,7 +13,7 @@ import { listLinkOptions } from "@/lib/client/links";
 import {
   itemsQueryOptions,
   listsQueryOptions,
-} from "@/modules/sidebar/queries";
+} from "@/modules/sidebar/sidebar.queries";
 import type { ExpandedList } from "@/lib/types";
 
 export default function useMutations() {

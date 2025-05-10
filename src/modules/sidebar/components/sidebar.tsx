@@ -11,7 +11,10 @@ import { NAVBAR_HEIGHT } from "@/lib/client/constants";
 import UserAvatar from "@/modules/users/components/user-avatar";
 import Logo from "@/components/logo";
 import { useAtom, useSetAtom } from "jotai";
-import { desktopSidebarOpenAtom, mobileSidebarOpenAtom } from "../store";
+import {
+  desktopSidebarOpenAtom,
+  mobileSidebarOpenAtom,
+} from "../sidebar.store";
 import { cn, getHasModifier, getIsTyping } from "@/lib/client/utils";
 import { useEventListener } from "usehooks-ts";
 import { useIsMobile } from "@/hooks/use-is-mobile";
