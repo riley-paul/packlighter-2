@@ -1,4 +1,4 @@
-import CommandBar from "@/components/command-bar";
+import CommandBar from "@/modules/command-bar/command-bar";
 import FeedbackButton from "@/modules/feedback/feedback-button";
 import ItemEditor from "@/modules/items/components/item-editor";
 import type { QueryClient } from "@tanstack/react-query";
