@@ -2,7 +2,7 @@ import React from "react";
 import { useQuery } from "@tanstack/react-query";
 import PackingItem from "./packing-item";
 import { itemsQueryOptions } from "@/modules/sidebar/sidebar.queries";
-import ArrayQueryGuard from "@/components/base/array-query-guard";
+import ArrayQueryGuard from "@/components/ui/array-query-guard";
 import PackingItemsSortFilter from "../packing-items-sort-filter/packing-item-sort-filter";
 import { usePackingItemsSortFilter } from "../packing-items-sort-filter/use-packing-item-sort-filter";
 import SidebarSectionHeader from "../sidebar-section-header";

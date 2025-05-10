@@ -2,7 +2,7 @@ import { useSuspenseQuery } from "@tanstack/react-query";
 import ListDescription from "@/modules/list-editor/list-description";
 import ListSettings from "@/modules/list-editor/list-settings";
 import { listQueryOptions } from "@/lib/client/queries";
-import ErrorDisplay from "@/components/base/error-display";
+import ErrorDisplay from "@/components/ui/error-display";
 import ListSharing from "@/modules/list-editor/list-sharing";
 import { createFileRoute } from "@tanstack/react-router";
 import ListName from "@/modules/list-editor/list-name";

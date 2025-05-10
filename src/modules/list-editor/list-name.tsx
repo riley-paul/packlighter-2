@@ -3,7 +3,7 @@ import { cn } from "@/lib/client/utils";
 import { Button, Heading } from "@radix-ui/themes";
 import React from "react";
 import type { ListSelect } from "@/lib/types";
-import ConditionalForm from "@/components/base/conditional-form";
+import ConditionalForm from "@/components/input/conditional-form";
 
 const PLACEHOLDER = "Unnamed List";
 

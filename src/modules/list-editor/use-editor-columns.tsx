@@ -18,10 +18,10 @@ import useItemsMutations from "@/modules/items/items.mutations";
 import { type ExpandedCategory, type ExpandedCategoryItem } from "@/lib/types";
 import { weightUnitsInfo, type WeightUnit } from "@/lib/client/constants";
 import ItemImageDialog from "@/modules/items/components/item-image-dialog";
-import CellWrapper from "@/components/base/cell-wrapper";
-import ConditionalForm from "@/components/base/conditional-form";
-import DeleteButton from "@/components/base/delete-button";
-import ServerInput from "@/components/ui/server-input";
+import CellWrapper from "@/components/ui/cell-wrapper";
+import ConditionalForm from "@/components/input/conditional-form";
+import DeleteButton from "@/components/ui/delete-button";
+import ServerInput from "@/components/input/server-input";
 
 const columnHelper = createColumnHelper<ExpandedCategoryItem>();
 

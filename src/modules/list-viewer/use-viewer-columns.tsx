@@ -15,7 +15,7 @@ import type {
   ExpandedCategoryItem,
   ListSelect,
 } from "@/lib/types";
-import CellWrapper from "@/components/base/cell-wrapper";
+import CellWrapper from "@/components/ui/cell-wrapper";
 
 const columnHelper = createColumnHelper<ExpandedCategoryItem>();
 

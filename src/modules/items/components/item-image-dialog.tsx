@@ -1,4 +1,4 @@
-import ResponsiveModal from "@/components/base/responsive-modal";
+import ResponsiveModal from "@/components/ui/responsive-modal";
 import {
   zItemImageForm,
   type ItemImageForm,

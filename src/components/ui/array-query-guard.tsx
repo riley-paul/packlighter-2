@@ -1,7 +1,7 @@
 import type { UseQueryResult } from "@tanstack/react-query";
-import Loader from "@/components/base/loader";
-import Placeholder from "@/components/base/placeholder";
-import ErrorDisplay from "@/components/base/error-display";
+import Loader from "@/components/ui/loader";
+import Placeholder from "@/components/ui/placeholder";
+import ErrorDisplay from "@/components/ui/error-display";
 import React from "react";
 
 type Props = React.PropsWithChildren<{

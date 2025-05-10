@@ -1,7 +1,7 @@
 import React from "react";
 import { centerDragPreviewOnMouse, cn } from "@/lib/client/utils";
 import { formatWeight } from "@/lib/client/utils";
-import Gripper from "@/components/base/gripper";
+import Gripper from "@/components/drag-and-drop/gripper";
 import invariant from "tiny-invariant";
 
 import { draggable } from "@atlaskit/pragmatic-drag-and-drop/element/adapter";
@@ -11,7 +11,7 @@ import useDraggableState, {
 } from "@/hooks/use-draggable-state";
 import { DND_TYPE_KEY, DndEntityType } from "@/lib/client/constants";
 import { Portal, Text } from "@radix-ui/themes";
-import RadixProvider from "@/components/base/radix-provider";
+import RadixProvider from "@/components/ui/radix-provider";
 import PackingItemMenu from "./packing-item-menu";
 import type { ItemSelect } from "@/lib/types";
 

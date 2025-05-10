@@ -10,7 +10,7 @@ import useListTableState from "../../hooks/use-list-table-state";
 import useViewerColumns from "./use-viewer-columns";
 import { Separator } from "@radix-ui/themes";
 import type { ExpandedCategory, ListSelect } from "@/lib/types";
-import Placeholder from "@/components/base/placeholder";
+import Placeholder from "@/components/ui/placeholder";
 
 interface Props {
   category: ExpandedCategory;

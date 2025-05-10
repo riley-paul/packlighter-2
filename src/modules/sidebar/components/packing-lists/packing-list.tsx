@@ -17,7 +17,7 @@ import {
   extractClosestEdge,
 } from "@atlaskit/pragmatic-drag-and-drop-hitbox/closest-edge";
 
-import Gripper from "@/components/base/gripper";
+import Gripper from "@/components/drag-and-drop/gripper";
 import useMutations from "@/hooks/use-mutations";
 import useDraggableState from "@/hooks/use-draggable-state";
 import {
@@ -27,15 +27,15 @@ import {
 } from "@/lib/client/constants";
 import useCurrentList from "@/hooks/use-current-list";
 import { DropdownMenu, IconButton, Portal, Text } from "@radix-ui/themes";
-import RadixProvider from "../../../../components/base/radix-provider";
 import useConfirmDialog from "@/hooks/use-confirm-dialog";
 import { useSetAtom } from "jotai";
 import { mobileSidebarOpenAtom } from "@/modules/sidebar/sidebar.store";
-import DropIndicatorWrapper from "../../../../components/ui/drop-indicator-wrapper";
-import ConditionalForm from "../../../../components/base/conditional-form";
 import { listLinkOptions } from "@/lib/client/links";
 import { Link } from "@tanstack/react-router";
 import type { ListSelect } from "@/lib/types";
+import DropIndicatorWrapper from "@/components/drag-and-drop/drop-indicator-wrapper";
+import ConditionalForm from "@/components/input/conditional-form";
+import RadixProvider from "@/components/ui/radix-provider";
 
 interface Props {
   list: ListSelect;

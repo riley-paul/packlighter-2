@@ -5,7 +5,7 @@ import { cn } from "@/lib/client/utils";
 import { listsQueryOptions } from "@/modules/sidebar/sidebar.queries";
 import useMutations from "@/hooks/use-mutations";
 
-import ArrayQueryGuard from "@/components/base/array-query-guard";
+import ArrayQueryGuard from "@/components/ui/array-query-guard";
 
 import { monitorForElements } from "@atlaskit/pragmatic-drag-and-drop/element/adapter";
 import { extractClosestEdge } from "@atlaskit/pragmatic-drag-and-drop-hitbox/closest-edge";
