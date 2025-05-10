@@ -79,3 +79,11 @@ export const getItemImageUrl = (
   if (!item.imageR2Key) return undefined;
   return `/media/${item.imageR2Key}.jpg`;
 };
+
+export const toTitleCase = (str: string) => {
+  return str
+    .toLowerCase()
+    .split(" ")
+    .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+    .join(" ");
+};
