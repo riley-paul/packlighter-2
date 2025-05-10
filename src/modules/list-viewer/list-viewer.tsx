@@ -1,6 +1,6 @@
 import React from "react";
 import Markdown from "react-markdown";
-import ViewerCategory from "./viewer-category";
+import ViewerCategory from "./list-viewer-category";
 import type { ExpandedList } from "@/lib/types";
 
 type Props = {
