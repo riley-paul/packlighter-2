@@ -13,7 +13,7 @@ import { useQuery } from "@tanstack/react-query";
 import { CommandLoading } from "cmdk";
 import useMutations from "@/hooks/use-mutations";
 import useCurrentList from "@/hooks/use-current-list";
-import { usePackingItemsSortFilter } from "../../modules/sidebar/components/packing-items-sort-filter/use-packing-item-sort-filter";
+import { usePackingItemsSortFilter } from "../sidebar/components/packing-items-sort-filter/use-packing-item-sort-filter";
 import { v4 as uuidv4 } from "uuid";
 import { Button, Popover, Spinner } from "@radix-ui/themes";
 import { itemsQueryOptions } from "@/modules/sidebar/sidebar.queries";

@@ -20,11 +20,11 @@ import {
 } from "@/lib/client/constants";
 import useCurrentList from "@/hooks/use-current-list";
 import { flexRender, type Row } from "@tanstack/react-table";
-import Gripper from "../base/gripper";
 import { Portal, Separator } from "@radix-ui/themes";
-import RadixProvider from "../base/radix-provider";
-import DropIndicatorWrapper from "../ui/drop-indicator-wrapper";
 import type { ExpandedCategoryItem } from "@/lib/types";
+import DropIndicatorWrapper from "@/components/ui/drop-indicator-wrapper";
+import Gripper from "@/components/base/gripper";
+import RadixProvider from "@/components/base/radix-provider";
 
 interface Props {
   row: Row<ExpandedCategoryItem>;
