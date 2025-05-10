@@ -2,7 +2,7 @@ import { createColumnHelper } from "@tanstack/react-table";
 import useMutations from "@/hooks/use-mutations";
 import React from "react";
 import { cn, formatWeight, getCheckboxState } from "@/lib/client/utils";
-import AddItemPopover from "./add-item-popover";
+import AddItemPopover from "./add-popovers/add-item-popover";
 import useCurrentList from "@/hooks/use-current-list";
 import { WeightConvertible } from "@/lib/convertible";
 import {
