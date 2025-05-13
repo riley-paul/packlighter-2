@@ -1,6 +1,7 @@
 import { WeightConvertible } from "@/lib/convertible";
 import type { ExpandedList } from "@/lib/types";
-import { ResponsivePie } from "@nivo/pie";
+import { ResponsivePie, type PieTooltipProps } from "@nivo/pie";
+import { Strong, Text } from "@radix-ui/themes";
 import React from "react";
 import { useOnClickOutside } from "usehooks-ts";
 
@@ -12,7 +13,7 @@ type Data = {
   id: string;
   label: string;
   value: number;
-}
+};
 
 type Props = {
   list: ExpandedList;
@@ -60,6 +61,16 @@ const generateMargin = (width: number) => ({
   bottom: width,
 });
 
+const ChartTooltip: React.FC<PieTooltipProps<Data>> = ({ datum }) => {
+  return (
+    <div className="rounded-2 bg-gray-2 px-2 py-1 shadow-2">
+      <Text size="1">
+        <Strong>{datum.label}</Strong>: {datum.value}
+      </Text>
+    </div>
+  );
+};
+
 const WeightChart: React.FC<Props> = ({ list }) => {
   const containerRef = React.useRef<HTMLDivElement>(null);
   const [activeCategoryId, setActiveCategoryId] = React.useState<string | null>(
@@ -89,19 +100,7 @@ const WeightChart: React.FC<Props> = ({ list }) => {
           borderColor={{ from: "color", modifiers: [["darker", 0.2]] }}
           enableArcLabels={false}
           enableArcLinkLabels={false}
-          tooltip={({ datum }) => (
-            <div
-              style={{
-                background: "white",
-                padding: "8px 12px",
-                color: "black",
-                borderRadius: "4px",
-                boxShadow: "0 0 6px rgba(0,0,0,0.15)",
-              }}
-            >
-              <strong>{datum.label}</strong>: {datum.value}
-            </div>
-          )}
+          tooltip={ChartTooltip}
         />
       </div>
       <div id="list-container" className="absolute inset-0">
@@ -120,6 +119,7 @@ const WeightChart: React.FC<Props> = ({ list }) => {
           borderColor={{ from: "color", modifiers: [["darker", 0.2]] }}
           enableArcLabels={false}
           enableArcLinkLabels={false}
+          tooltip={ChartTooltip}
         />
       </div>
     </div>
