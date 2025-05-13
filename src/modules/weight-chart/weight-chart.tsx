@@ -2,16 +2,18 @@ import { ResponsivePie, type PieTooltipProps } from "@nivo/pie";
 import { Strong, Text } from "@radix-ui/themes";
 import React from "react";
 import type { ChartData, ChartDataNested } from "./weight-chart.types";
-import { formatWeight } from "@/lib/client/utils";
+import { cn, formatWeight } from "@/lib/client/utils";
 import { useAtom } from "jotai";
 import {
   activeCategoryIdAtom,
   selectedCategoryIdAtom,
 } from "./weight-chart.store";
+import invariant from "tiny-invariant";
 
 const ACTIVE_OUTER_RADIUS_OFFSET = 4;
 const CORNER_RADIUS = 3;
 const BORDER_WIDTH = 1;
+const INNER_RADIUS = 60;
 
 type Props = {
   list: ChartDataNested[];
@@ -41,8 +43,11 @@ const ChartTooltip: React.FC<PieTooltipProps<ChartData>> = ({ datum }) => {
 
 const WeightChart: React.FC<Props> = ({ list }) => {
   const containerRef = React.useRef<HTMLDivElement>(null);
+
   const [selectedId, setSelectedId] = useAtom(selectedCategoryIdAtom);
   const [activeId, setActiveId] = useAtom(activeCategoryIdAtom);
+
+  const [withinInnerRadius, setWithinInnerRadius] = React.useState(false);
 
   const selectedCategory = list.find((c) => c.id === selectedId);
 
@@ -53,11 +58,27 @@ const WeightChart: React.FC<Props> = ({ list }) => {
       onClick={() => {
         setSelectedId(null);
       }}
+      onMouseMove={(e) => {
+        if (!selectedId) return;
+
+        const container = containerRef.current;
+        invariant(container);
+
+        const rect = container.getBoundingClientRect();
+        const centerX = rect.left + rect.width / 2;
+        const centerY = rect.top + rect.height / 2;
+        const distanceX = e.clientX - centerX;
+        const distanceY = e.clientY - centerY;
+        const distance = Math.sqrt(distanceX ** 2 + distanceY ** 2);
+
+        setWithinInnerRadius(distance < INNER_RADIUS);
+      }}
     >
-      <div id="category-container" className="absolute inset-0">
+      <div id="category-container" className="absolute inset-0 rounded-full">
         <ResponsivePie
           data={selectedCategory ? selectedCategory.children : []}
-          onClick={(_, e) => {
+          onClick={(data, e) => {
+            console.log("data", data);
             e.stopPropagation();
           }}
           margin={generateMargin(10)}
@@ -73,10 +94,17 @@ const WeightChart: React.FC<Props> = ({ list }) => {
           colors={{ datum: "data.color" }}
         />
       </div>
-      <div id="list-container" className="absolute inset-0">
+      <div
+        id="list-container"
+        className={cn(
+          "absolute inset-0 rounded-full",
+          !withinInnerRadius && selectedId && "pointer-events-none",
+        )}
+      >
         <ResponsivePie
           data={list}
-          onClick={({ id }, e) => {
+          onClick={({ id, arc }, e) => {
+            console.log("arc", arc);
             setSelectedId(id as string);
             e.stopPropagation();
           }}

@@ -46,7 +46,7 @@ const WeightTable: React.FC<Props> = ({ list }) => {
                 <span>{category.label}</span>
               </div>
             </Table.Cell>
-            <Table.Cell className="flex gap-2">
+            <Table.Cell className="flex gap-2 justify-end">
               <span>{formatWeight(category.value)}</span>
               <span>{category.unit}</span>
             </Table.Cell>
