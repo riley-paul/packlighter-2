@@ -1,7 +1,7 @@
 import useImageDropzone from "@/hooks/use-image-dropzone";
 import type { ItemSelect } from "@/lib/types";
 import React from "react";
-import useItemsMutations from "../mutations";
+import useItemsMutations from "../items.mutations";
 import ItemImage from "./item-image";
 import { cn, getItemImageUrl } from "@/lib/client/utils";
 import { toast } from "sonner";

@@ -9,8 +9,8 @@ import {
   isDndEntityType,
 } from "@/lib/client/constants";
 import useCurrentList from "@/hooks/use-current-list";
-import Placeholder from "../base/placeholder";
 import { Separator } from "@radix-ui/themes";
+import Placeholder from "@/components/ui/placeholder";
 
 interface Props {
   categoryId: string;

@@ -2,9 +2,9 @@
 import RootLayout from "@/layouts/root-layout.astro";
 import { getExpandedList, getUser } from "@/actions/helpers";
 
-import ViewerList from "@/components/list-viewer/viewer-list";
-import RadixProvider from "@/components/base/radix-provider";
+import RadixProvider from "@/components/ui/radix-provider";
 import { Badge, Button, Link } from "@radix-ui/themes";
+import ViewerList from "@/modules/list-viewer/list-viewer";
 
 const { listId = "" } = Astro.params;
 const list = await getExpandedList(Astro, listId);

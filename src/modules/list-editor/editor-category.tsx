@@ -33,10 +33,10 @@ import useListTableState from "../../hooks/use-list-table-state";
 import EditorCategoryPlaceholder from "./editor-category-placeholder";
 import useCurrentList from "@/hooks/use-current-list";
 import { Portal } from "@radix-ui/themes";
-import RadixProvider from "../base/radix-provider";
-import Gripper from "../base/gripper";
-import DropIndicatorWrapper from "../ui/drop-indicator-wrapper";
 import type { ExpandedCategory } from "@/lib/types";
+import RadixProvider from "@/components/ui/radix-provider";
+import Gripper from "@/components/drag-and-drop/gripper";
+import DropIndicatorWrapper from "@/components/drag-and-drop/drop-indicator-wrapper";
 
 interface Props {
   category: ExpandedCategory;

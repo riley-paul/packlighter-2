@@ -2,7 +2,7 @@ import { useAtomValue } from "jotai/react";
 import React from "react";
 import { useCookies } from "react-cookie";
 import { useMediaQuery } from "usehooks-ts";
-import { themeAtom } from "./store";
+import { themeAtom } from "./theme.store";
 
 const MEDIA_QUERY_STR = "(prefers-color-scheme: dark)";
 

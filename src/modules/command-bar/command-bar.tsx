@@ -14,16 +14,15 @@ import { useQuery } from "@tanstack/react-query";
 import useMutations from "@/hooks/use-mutations";
 import { cn } from "@/lib/client/utils";
 import { ACCENT_COLOR } from "@/lib/client/constants";
-import { atom, useAtom, useSetAtom } from "jotai";
-import { openEditorAtom } from "@/modules/items/store";
+import { useAtom, useSetAtom } from "jotai";
+import { openEditorAtom } from "@/modules/items/items.store";
 import { useNavigate } from "@tanstack/react-router";
 import { listLinkOptions } from "@/lib/client/links";
 import {
   listsQueryOptions,
   itemsQueryOptions,
-} from "@/modules/sidebar/queries";
-
-export const commandBarOpenAtom = atom(false);
+} from "@/modules/sidebar/sidebar.queries";
+import { commandBarOpenAtom } from "./command-bar.store";
 
 const CommandBar: React.FC = () => {
   const [open, setOpen] = useAtom(commandBarOpenAtom);

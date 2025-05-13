@@ -9,26 +9,41 @@ import {
   CommandList,
 } from "@/components/ui/command";
 
-import useMutations from "@/hooks/use-mutations";
-import { v4 as uuidv4 } from "uuid";
-import { useQuery } from "@tanstack/react-query";
-import { otherListCategoriesQueryOptions } from "@/lib/client/queries";
-import useCurrentList from "@/hooks/use-current-list";
-import { Button, Popover, Strong, Text } from "@radix-ui/themes";
+import { Button, Popover, Spinner } from "@radix-ui/themes";
+import { cn, toTitleCase } from "@/lib/client/utils";
+import { CommandLoading } from "cmdk";
 
-const NEW_CATEGORY_VALUE = "create-new-category-" + uuidv4();
+const NEW_ENTITY_VALUE = "create-new-category-" + crypto.randomUUID();
 
-const AddCategoryPopover: React.FC = () => {
+type Props<T extends { id: string }> = {
+  entityName: string;
+  entities: T[];
+  groupHeader?: string;
+  className?: string;
+  getEntityValue: (entity: T) => string;
+  getEntityDisabled?: (entity: T) => boolean;
+  handleAdd: (value: string) => void;
+  handleEntitySelect: (id: string) => void;
+  renderEntity: (entity: T) => React.ReactNode;
+  isLoading?: boolean;
+};
+
+function AddEntityPopover<T extends { id: string }>({
+  entityName,
+  entities,
+  groupHeader,
+  className,
+  getEntityValue,
+  getEntityDisabled,
+  handleAdd,
+  handleEntitySelect,
+  renderEntity,
+  isLoading,
+}: Props<T>) {
   const buttonRef = React.useRef<HTMLButtonElement>(null);
-  const { listId } = useCurrentList();
-
-  const { data } = useQuery(otherListCategoriesQueryOptions(listId));
-  const otherCategoriesExist = data && data.length > 0;
 
   const [isOpen, setIsOpen] = React.useState(false);
   const [value, setValue] = React.useState<string>("");
-
-  const { addCategory, copyCategoryToList } = useMutations();
 
   return (
     <Popover.Root
@@ -47,18 +62,18 @@ const AddCategoryPopover: React.FC = () => {
           aria-expanded={isOpen}
         >
           <i className="fa-solid fa-plus" />
-          <span>Add Category</span>
+          <span>Add {toTitleCase(entityName)}</span>
         </Button>
       </Popover.Trigger>
       <Popover.Content
-        className="z-30 w-[400px] p-0"
+        className={cn("z-30 p-0", className)}
         align="start"
         side="bottom"
       >
         <Command
           loop
           filter={(value, search) => {
-            if (value === NEW_CATEGORY_VALUE) return 1;
+            if (value === NEW_ENTITY_VALUE) return 1;
             if (value.toLowerCase().includes(search.toLowerCase())) return 1;
             return 0;
           }}
@@ -69,41 +84,44 @@ const AddCategoryPopover: React.FC = () => {
             onValueChange={setValue}
           />
           <CommandList>
+            {isLoading && (
+              <CommandLoading>
+                <Spinner />
+              </CommandLoading>
+            )}
             <CommandEmpty> No suggestions </CommandEmpty>
             {value && (
               <CommandGroup>
                 <CommandItem
-                  value={NEW_CATEGORY_VALUE}
+                  value={NEW_ENTITY_VALUE}
                   onSelect={() => {
-                    addCategory.mutate({ listId, data: { name: value } });
+                    handleAdd(value);
                     setIsOpen(false);
                     buttonRef.current?.focus();
                   }}
                 >
                   <i className="fa-solid fa-plus mr-2 text-accent-10" />
-                  <span>Create new category "{value}"</span>
+                  <span>
+                    Create new {entityName} "{value}"
+                  </span>
                 </CommandItem>
               </CommandGroup>
             )}
-            {otherCategoriesExist && (
+            {entities.length > 0 && (
               <>
-                <CommandGroup heading="Copy from another list">
-                  {data?.map((category) => (
+                <CommandGroup heading={groupHeader}>
+                  {entities?.map((entity) => (
                     <CommandItem
-                      key={category.id}
-                      value={`${category.name}-${category.listId}-${category.id}`}
+                      key={entity.id}
+                      value={getEntityValue(entity)}
                       onSelect={() => {
-                        copyCategoryToList.mutate({
-                          categoryId: category.id,
-                          listId,
-                        });
+                        handleEntitySelect(entity.id);
                         setIsOpen(false);
                         buttonRef.current?.focus();
                       }}
+                      disabled={getEntityDisabled?.(entity)}
                     >
-                      <Text color="gray">
-                        {category.listName} / <Strong>{category.name}</Strong>
-                      </Text>
+                      {renderEntity(entity)}
                     </CommandItem>
                   ))}
                 </CommandGroup>
@@ -114,6 +132,6 @@ const AddCategoryPopover: React.FC = () => {
       </Popover.Content>
     </Popover.Root>
   );
-};
+}
 
-export default AddCategoryPopover;
+export default AddEntityPopover;

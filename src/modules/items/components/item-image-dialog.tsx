@@ -1,4 +1,4 @@
-import ResponsiveModal from "@/components/base/responsive-modal";
+import ResponsiveModal from "@/components/ui/responsive-modal";
 import {
   zItemImageForm,
   type ItemImageForm,
@@ -11,10 +11,13 @@ import { Button, Dialog } from "@radix-ui/themes";
 import { FormProvider, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import ItemFormImageInput from "./item-form-image-input";
-import useItemsMutations from "../mutations";
+import useItemsMutations from "../items.mutations";
 import { toast } from "sonner";
 
-const ItemImageFormComponent: React.FC<{ item: ItemSelect }> = ({ item }) => {
+const ItemImageFormComponent: React.FC<{
+  item: ItemSelect;
+  handleCancel: () => void;
+}> = ({ item, handleCancel }) => {
   const { updateItem } = useItemsMutations();
 
   const methods = useForm<ItemImageForm>({
@@ -42,9 +45,15 @@ const ItemImageFormComponent: React.FC<{ item: ItemSelect }> = ({ item }) => {
       <form className="grid gap-4" onSubmit={onSubmit}>
         <ItemFormImageInput />
         <footer className="flex justify-end gap-2">
-          <Button type="submit" variant="soft">
-            Submit
+          <Button
+            type="button"
+            variant="soft"
+            color="gray"
+            onClick={handleCancel}
+          >
+            Cancel
           </Button>
+          <Button type="submit">Submit</Button>
         </footer>
       </form>
     </FormProvider>
@@ -69,7 +78,10 @@ const ItemImageDialog: React.FC<{ item: ItemSelect }> = ({ item }) => {
           </Dialog.Description>
         </header>
         <ItemImageContext.Provider value={{ size: "lg" }}>
-          <ItemImageFormComponent item={item} />
+          <ItemImageFormComponent
+            item={item}
+            handleCancel={() => setIsOpen(false)}
+          />
         </ItemImageContext.Provider>
       </ResponsiveModal>
     </>

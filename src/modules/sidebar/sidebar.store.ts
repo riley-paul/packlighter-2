@@ -1,5 +1,5 @@
 import { atomWithStorage } from "jotai/utils";
-import { FilterOptions, SortOptions } from "./types";
+import { FilterOptions, SortOptions } from "./sidebar.types";
 import { atom } from "jotai";
 
 export const sortOptionAtom = atomWithStorage<SortOptions>(

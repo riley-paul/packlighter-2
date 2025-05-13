@@ -11,79 +11,110 @@
 // Import Routes
 
 import { Route as rootRoute } from './routes/__root'
-import { Route as IndexImport } from './routes/index'
-import { Route as ListListIdImport } from './routes/list.$listId'
+import { Route as WithSidebarImport } from './routes/_withSidebar'
+import { Route as WithSidebarIndexImport } from './routes/_withSidebar.index'
+import { Route as WithSidebarListListIdImport } from './routes/_withSidebar.list.$listId'
 
 // Create/Update Routes
 
-const IndexRoute = IndexImport.update({
-  id: '/',
-  path: '/',
+const WithSidebarRoute = WithSidebarImport.update({
+  id: '/_withSidebar',
   getParentRoute: () => rootRoute,
 } as any)
 
-const ListListIdRoute = ListListIdImport.update({
+const WithSidebarIndexRoute = WithSidebarIndexImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => WithSidebarRoute,
+} as any)
+
+const WithSidebarListListIdRoute = WithSidebarListListIdImport.update({
   id: '/list/$listId',
   path: '/list/$listId',
-  getParentRoute: () => rootRoute,
+  getParentRoute: () => WithSidebarRoute,
 } as any)
 
 // Populate the FileRoutesByPath interface
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/': {
-      id: '/'
-      path: '/'
-      fullPath: '/'
-      preLoaderRoute: typeof IndexImport
+    '/_withSidebar': {
+      id: '/_withSidebar'
+      path: ''
+      fullPath: ''
+      preLoaderRoute: typeof WithSidebarImport
       parentRoute: typeof rootRoute
     }
-    '/list/$listId': {
-      id: '/list/$listId'
+    '/_withSidebar/': {
+      id: '/_withSidebar/'
+      path: '/'
+      fullPath: '/'
+      preLoaderRoute: typeof WithSidebarIndexImport
+      parentRoute: typeof WithSidebarImport
+    }
+    '/_withSidebar/list/$listId': {
+      id: '/_withSidebar/list/$listId'
       path: '/list/$listId'
       fullPath: '/list/$listId'
-      preLoaderRoute: typeof ListListIdImport
-      parentRoute: typeof rootRoute
+      preLoaderRoute: typeof WithSidebarListListIdImport
+      parentRoute: typeof WithSidebarImport
     }
   }
 }
 
 // Create and export the route tree
 
+interface WithSidebarRouteChildren {
+  WithSidebarIndexRoute: typeof WithSidebarIndexRoute
+  WithSidebarListListIdRoute: typeof WithSidebarListListIdRoute
+}
+
+const WithSidebarRouteChildren: WithSidebarRouteChildren = {
+  WithSidebarIndexRoute: WithSidebarIndexRoute,
+  WithSidebarListListIdRoute: WithSidebarListListIdRoute,
+}
+
+const WithSidebarRouteWithChildren = WithSidebarRoute._addFileChildren(
+  WithSidebarRouteChildren,
+)
+
 export interface FileRoutesByFullPath {
-  '/': typeof IndexRoute
-  '/list/$listId': typeof ListListIdRoute
+  '': typeof WithSidebarRouteWithChildren
+  '/': typeof WithSidebarIndexRoute
+  '/list/$listId': typeof WithSidebarListListIdRoute
 }
 
 export interface FileRoutesByTo {
-  '/': typeof IndexRoute
-  '/list/$listId': typeof ListListIdRoute
+  '/': typeof WithSidebarIndexRoute
+  '/list/$listId': typeof WithSidebarListListIdRoute
 }
 
 export interface FileRoutesById {
   __root__: typeof rootRoute
-  '/': typeof IndexRoute
-  '/list/$listId': typeof ListListIdRoute
+  '/_withSidebar': typeof WithSidebarRouteWithChildren
+  '/_withSidebar/': typeof WithSidebarIndexRoute
+  '/_withSidebar/list/$listId': typeof WithSidebarListListIdRoute
 }
 
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/list/$listId'
+  fullPaths: '' | '/' | '/list/$listId'
   fileRoutesByTo: FileRoutesByTo
   to: '/' | '/list/$listId'
-  id: '__root__' | '/' | '/list/$listId'
+  id:
+    | '__root__'
+    | '/_withSidebar'
+    | '/_withSidebar/'
+    | '/_withSidebar/list/$listId'
   fileRoutesById: FileRoutesById
 }
 
 export interface RootRouteChildren {
-  IndexRoute: typeof IndexRoute
-  ListListIdRoute: typeof ListListIdRoute
+  WithSidebarRoute: typeof WithSidebarRouteWithChildren
 }
 
 const rootRouteChildren: RootRouteChildren = {
-  IndexRoute: IndexRoute,
-  ListListIdRoute: ListListIdRoute,
+  WithSidebarRoute: WithSidebarRouteWithChildren,
 }
 
 export const routeTree = rootRoute
@@ -96,15 +127,23 @@ export const routeTree = rootRoute
     "__root__": {
       "filePath": "__root.tsx",
       "children": [
-        "/",
-        "/list/$listId"
+        "/_withSidebar"
       ]
     },
-    "/": {
-      "filePath": "index.tsx"
+    "/_withSidebar": {
+      "filePath": "_withSidebar.tsx",
+      "children": [
+        "/_withSidebar/",
+        "/_withSidebar/list/$listId"
+      ]
     },
-    "/list/$listId": {
-      "filePath": "list.$listId.tsx"
+    "/_withSidebar/": {
+      "filePath": "_withSidebar.index.tsx",
+      "parent": "/_withSidebar"
+    },
+    "/_withSidebar/list/$listId": {
+      "filePath": "_withSidebar.list.$listId.tsx",
+      "parent": "/_withSidebar"
     }
   }
 }

@@ -2,10 +2,10 @@ import React from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import PackingList from "./packing-list";
 import { cn } from "@/lib/client/utils";
-import { listsQueryOptions } from "@/modules/sidebar/queries";
+import { listsQueryOptions } from "@/modules/sidebar/sidebar.queries";
 import useMutations from "@/hooks/use-mutations";
 
-import ArrayQueryGuard from "@/components/base/array-query-guard";
+import ArrayQueryGuard from "@/components/ui/array-query-guard";
 
 import { monitorForElements } from "@atlaskit/pragmatic-drag-and-drop/element/adapter";
 import { extractClosestEdge } from "@atlaskit/pragmatic-drag-and-drop-hitbox/closest-edge";
@@ -121,7 +121,7 @@ export default function PackingLists(): ReturnType<React.FC> {
       <ScrollArea
         type="hover"
         ref={listRef}
-        className={cn("h-full overflow-y-auto overflow-x-hidden py-1")}
+        className={cn("relative h-full overflow-y-auto overflow-x-hidden py-1")}
       >
         <ArrayQueryGuard query={listsQuery} placeholder="No lists yet">
           <div

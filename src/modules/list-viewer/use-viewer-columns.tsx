@@ -6,16 +6,16 @@ import {
   getCheckboxState,
   getItemImageUrl,
 } from "@/lib/client/utils";
-import CellWrapper from "../base/cell-wrapper";
 import ItemImage from "../../modules/items/components/item-image";
 import { Checkbox } from "@radix-ui/themes";
 import { useAtomValue, useSetAtom } from "jotai";
-import { isItemPackedAtom, togglePackedItemAtom } from "./store";
+import { isItemPackedAtom, togglePackedItemAtom } from "./list-viewer.store";
 import type {
   ExpandedCategory,
   ExpandedCategoryItem,
   ListSelect,
 } from "@/lib/types";
+import CellWrapper from "@/components/ui/cell-wrapper";
 
 const columnHelper = createColumnHelper<ExpandedCategoryItem>();
 

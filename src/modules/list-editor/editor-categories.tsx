@@ -9,7 +9,7 @@ import { flushSync } from "react-dom";
 import useMutations from "@/hooks/use-mutations";
 import { initCategoryItem } from "@/lib/init";
 import EditorCategory from "./editor-category";
-import AddCategoryPopover from "./add-category-popover";
+import AddCategoryPopover from "./add-popovers/add-category-popover";
 import { triggerElementFlashByDragId } from "@/lib/client/utils";
 import {
   type ExpandedList,

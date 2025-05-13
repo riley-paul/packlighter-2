@@ -3,8 +3,8 @@ import React from "react";
 
 const Loader: React.FC = () => {
   return (
-    <div className="flex h-full w-full items-center justify-center">
-      <div className="flex items-center gap-2">
+    <div className="absolute inset-0">
+      <div className="flex h-full w-full items-center justify-center gap-2">
         <Spinner loading />
         <Text size="2" color="gray">
           Loading...
