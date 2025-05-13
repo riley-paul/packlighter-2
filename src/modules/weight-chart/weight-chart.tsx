@@ -1,5 +1,4 @@
 import type { ExpandedList } from "@/lib/types";
-import { Card } from "@radix-ui/themes";
 import React from "react";
 
 type Props = {
@@ -7,9 +6,7 @@ type Props = {
 };
 
 const WeightChart: React.FC<Props> = ({ list }) => {
-  if (!list.showWeights) return null;
-
-  return <Card>weight card</Card>;
+  return <div className="size-40 rounded-full bg-red-8" />;
 };
 
 export default WeightChart;
