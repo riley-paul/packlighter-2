@@ -3,7 +3,10 @@ import React from "react";
 import type { ChartDataNested } from "./weight-chart.types";
 import { cn, formatWeight } from "@/lib/client/utils";
 import { useAtom } from "jotai";
-import { activeCategoryIdAtom } from "./weight-chart.store";
+import {
+  activeCategoryIdAtom,
+  selectedCategoryIdAtom,
+} from "./weight-chart.store";
 
 type Props = {
   list: ChartDataNested[];
@@ -11,6 +14,8 @@ type Props = {
 
 const WeightTable: React.FC<Props> = ({ list }) => {
   const [activeId] = useAtom(activeCategoryIdAtom);
+  const [selectedId] = useAtom(selectedCategoryIdAtom);
+
   return (
     <Table.Root size="1">
       <Table.Header>
@@ -26,6 +31,7 @@ const WeightTable: React.FC<Props> = ({ list }) => {
             className={cn(
               "transition-colors ease-out",
               activeId === category.id && "bg-gray-2",
+              selectedId === category.id && "bg-gray-3",
             )}
           >
             <Table.Cell>

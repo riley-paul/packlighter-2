@@ -4,7 +4,10 @@ import React from "react";
 import type { ChartData, ChartDataNested } from "./weight-chart.types";
 import { formatWeight } from "@/lib/client/utils";
 import { useAtom } from "jotai";
-import { activeCategoryIdAtom } from "./weight-chart.store";
+import {
+  activeCategoryIdAtom,
+  selectedCategoryIdAtom,
+} from "./weight-chart.store";
 
 const ACTIVE_OUTER_RADIUS_OFFSET = 4;
 const CORNER_RADIUS = 3;
@@ -38,23 +41,22 @@ const ChartTooltip: React.FC<PieTooltipProps<ChartData>> = ({ datum }) => {
 
 const WeightChart: React.FC<Props> = ({ list }) => {
   const containerRef = React.useRef<HTMLDivElement>(null);
-  const [activeCategoryId, setActiveCategoryId] = React.useState<string | null>(
-    null,
-  );
+  const [selectedId, setSelectedId] = useAtom(selectedCategoryIdAtom);
   const [activeId, setActiveId] = useAtom(activeCategoryIdAtom);
-  const activeCategory = list.find((c) => c.id === activeCategoryId);
+
+  const selectedCategory = list.find((c) => c.id === selectedId);
 
   return (
     <div
       ref={containerRef}
       className="relative size-48 rounded-full"
       onClick={() => {
-        setActiveCategoryId(null);
+        setSelectedId(null);
       }}
     >
       <div id="category-container" className="absolute inset-0">
         <ResponsivePie
-          data={activeCategory ? activeCategory.children : []}
+          data={selectedCategory ? selectedCategory.children : []}
           onClick={(_, e) => {
             e.stopPropagation();
           }}
@@ -75,14 +77,14 @@ const WeightChart: React.FC<Props> = ({ list }) => {
         <ResponsivePie
           data={list}
           onClick={({ id }, e) => {
-            setActiveCategoryId(id as string);
+            setSelectedId(id as string);
             e.stopPropagation();
           }}
           activeId={activeId}
           onActiveIdChange={setActiveId}
-          margin={activeCategoryId ? generateMargin(40) : generateMargin(10)}
+          margin={selectedCategory ? generateMargin(40) : generateMargin(10)}
           innerRadius={0.5}
-          padAngle={activeCategoryId ? 1.5 : 1}
+          padAngle={selectedCategory ? 1.5 : 1}
           cornerRadius={CORNER_RADIUS}
           activeOuterRadiusOffset={ACTIVE_OUTER_RADIUS_OFFSET}
           borderWidth={BORDER_WIDTH}
