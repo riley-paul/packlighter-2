@@ -13,8 +13,8 @@ type Props = {
 };
 
 const WeightTable: React.FC<Props> = ({ list }) => {
-  const [activeId] = useAtom(activeCategoryIdAtom);
-  const [selectedId] = useAtom(selectedCategoryIdAtom);
+  const [activeId, setActiveId] = useAtom(activeCategoryIdAtom);
+  const [selectedId, setSelectedId] = useAtom(selectedCategoryIdAtom);
 
   return (
     <Table.Root size="1">
@@ -33,6 +33,9 @@ const WeightTable: React.FC<Props> = ({ list }) => {
               activeId === category.id && "bg-gray-2",
               selectedId === category.id && "bg-gray-3",
             )}
+            onMouseEnter={() => setActiveId(category.id)}
+            onMouseLeave={() => setActiveId(null)}
+            onClick={() => setSelectedId(category.id)}
           >
             <Table.Cell>
               <div className="flex items-center gap-3">

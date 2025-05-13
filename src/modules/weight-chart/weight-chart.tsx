@@ -26,9 +26,9 @@ const generateMargin = (width: number) => ({
 
 const ChartTooltip: React.FC<PieTooltipProps<ChartData>> = ({ datum }) => {
   return (
-    <div className="flex items-center gap-3 rounded-2 bg-gray-2 px-2 py-1 shadow-2">
+    <div className="flex items-center gap-2 rounded-2 bg-gray-2 px-2 py-1 shadow-2">
       <div
-        className="size-4 rounded-full"
+        className="size-3 rounded-full"
         style={{ backgroundColor: datum.color }}
       />
       <Text size="1">
