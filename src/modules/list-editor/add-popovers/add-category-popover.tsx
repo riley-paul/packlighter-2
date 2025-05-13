@@ -9,13 +9,15 @@ import AddEntityPopover from "./add-entity-popover";
 
 const AddCategoryPopover: React.FC = () => {
   const { listId } = useCurrentList();
-  const { data, isLoading } = useQuery(otherListCategoriesQueryOptions(listId));
+  const { data = [], isLoading } = useQuery(
+    otherListCategoriesQueryOptions(listId),
+  );
   const { addCategory, copyCategoryToList } = useMutations();
 
   return (
     <AddEntityPopover
       entityName="category"
-      entities={data ?? []}
+      entities={data}
       groupHeader="Copy from another list"
       getEntityValue={(category) =>
         `${category.name}-${category.listId}-${category.id}-${category.listName}`
@@ -32,6 +34,7 @@ const AddCategoryPopover: React.FC = () => {
         </Text>
       )}
       isLoading={isLoading}
+      className="w-[320px]"
     />
   );
 };

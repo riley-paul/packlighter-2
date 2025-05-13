@@ -10,7 +10,7 @@ import {
 } from "@/components/ui/command";
 
 import { Button, Popover, Spinner } from "@radix-ui/themes";
-import { toTitleCase } from "@/lib/client/utils";
+import { cn, toTitleCase } from "@/lib/client/utils";
 import { CommandLoading } from "cmdk";
 
 const NEW_ENTITY_VALUE = "create-new-category-" + crypto.randomUUID();
@@ -18,8 +18,10 @@ const NEW_ENTITY_VALUE = "create-new-category-" + crypto.randomUUID();
 type Props<T extends { id: string }> = {
   entityName: string;
   entities: T[];
-  groupHeader: string;
+  groupHeader?: string;
+  className?: string;
   getEntityValue: (entity: T) => string;
+  getEntityDisabled?: (entity: T) => boolean;
   handleAdd: (value: string) => void;
   handleEntitySelect: (id: string) => void;
   renderEntity: (entity: T) => React.ReactNode;
@@ -30,7 +32,9 @@ function AddEntityPopover<T extends { id: string }>({
   entityName,
   entities,
   groupHeader,
+  className,
   getEntityValue,
+  getEntityDisabled,
   handleAdd,
   handleEntitySelect,
   renderEntity,
@@ -62,7 +66,7 @@ function AddEntityPopover<T extends { id: string }>({
         </Button>
       </Popover.Trigger>
       <Popover.Content
-        className="z-30 w-[400px] p-0"
+        className={cn("z-30 p-0", className)}
         align="start"
         side="bottom"
       >
@@ -115,6 +119,7 @@ function AddEntityPopover<T extends { id: string }>({
                         setIsOpen(false);
                         buttonRef.current?.focus();
                       }}
+                      disabled={getEntityDisabled?.(entity)}
                     >
                       {renderEntity(entity)}
                     </CommandItem>
