@@ -2,6 +2,9 @@ import { ResponsivePie, type PieTooltipProps } from "@nivo/pie";
 import { Strong, Text } from "@radix-ui/themes";
 import React from "react";
 import type { ChartData, ChartDataNested } from "./weight-chart.types";
+import { formatWeight } from "@/lib/client/utils";
+import { useAtom } from "jotai";
+import { activeCategoryIdAtom } from "./weight-chart.store";
 
 const ACTIVE_OUTER_RADIUS_OFFSET = 4;
 const CORNER_RADIUS = 3;
@@ -26,7 +29,8 @@ const ChartTooltip: React.FC<PieTooltipProps<ChartData>> = ({ datum }) => {
         style={{ backgroundColor: datum.color }}
       />
       <Text size="1">
-        <Strong>{datum.label}</Strong>: {datum.value}
+        <Strong>{datum.label}</Strong>: {formatWeight(datum.value)}{" "}
+        {datum.data.unit}
       </Text>
     </div>
   );
@@ -37,6 +41,7 @@ const WeightChart: React.FC<Props> = ({ list }) => {
   const [activeCategoryId, setActiveCategoryId] = React.useState<string | null>(
     null,
   );
+  const [activeId, setActiveId] = useAtom(activeCategoryIdAtom);
   const activeCategory = list.find((c) => c.id === activeCategoryId);
 
   return (
@@ -73,6 +78,8 @@ const WeightChart: React.FC<Props> = ({ list }) => {
             setActiveCategoryId(id as string);
             e.stopPropagation();
           }}
+          activeId={activeId}
+          onActiveIdChange={setActiveId}
           margin={activeCategoryId ? generateMargin(40) : generateMargin(10)}
           innerRadius={0.5}
           padAngle={activeCategoryId ? 1.5 : 1}

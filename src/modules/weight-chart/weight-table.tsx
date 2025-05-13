@@ -1,12 +1,16 @@
 import { Table } from "@radix-ui/themes";
 import React from "react";
 import type { ChartDataNested } from "./weight-chart.types";
+import { cn, formatWeight } from "@/lib/client/utils";
+import { useAtom } from "jotai";
+import { activeCategoryIdAtom } from "./weight-chart.store";
 
 type Props = {
   list: ChartDataNested[];
 };
 
 const WeightTable: React.FC<Props> = ({ list }) => {
+  const [activeId] = useAtom(activeCategoryIdAtom);
   return (
     <Table.Root size="1">
       <Table.Header>
@@ -17,7 +21,13 @@ const WeightTable: React.FC<Props> = ({ list }) => {
       </Table.Header>
       <Table.Body>
         {list.map((category) => (
-          <Table.Row key={category.id}>
+          <Table.Row
+            key={category.id}
+            className={cn(
+              "transition-colors ease-out",
+              activeId === category.id && "bg-gray-2",
+            )}
+          >
             <Table.Cell>
               <div className="flex items-center gap-3">
                 <div
@@ -28,7 +38,7 @@ const WeightTable: React.FC<Props> = ({ list }) => {
               </div>
             </Table.Cell>
             <Table.Cell className="flex gap-2">
-              <span>{category.value}</span>
+              <span>{formatWeight(category.value)}</span>
               <span>{category.unit}</span>
             </Table.Cell>
           </Table.Row>
