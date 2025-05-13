@@ -15,7 +15,7 @@ function getMonochromaticScale(baseColor: string, steps = 5) {
 }
 
 export const parseListToChartData = (list: ExpandedList): ChartDataNested[] => {
-  const colorPalette = chroma.scale("Viridis").colors(list.categories.length);
+  const colorPalette = chroma.scale("Spectral").colors(list.categories.length);
   return list.categories.map((category, index1) => ({
     id: category.id,
     label: category.name,
@@ -29,6 +29,7 @@ export const parseListToChartData = (list: ExpandedList): ChartDataNested[] => {
         ),
       0,
     ),
+    unit: list.weightUnit,
     color: colorPalette[index1],
     children: category.items.map((item, index2) => {
       const colorScale = getMonochromaticScale(
@@ -43,6 +44,7 @@ export const parseListToChartData = (list: ExpandedList): ChartDataNested[] => {
           item.itemData.weightUnit,
           list.weightUnit,
         ),
+        unit: list.weightUnit,
         color: colorScale[index2],
       };
     }),

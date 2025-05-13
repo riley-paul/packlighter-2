@@ -20,7 +20,11 @@ const generateMargin = (width: number) => ({
 
 const ChartTooltip: React.FC<PieTooltipProps<ChartData>> = ({ datum }) => {
   return (
-    <div className="rounded-2 bg-gray-2 px-2 py-1 shadow-2">
+    <div className="flex items-center gap-3 rounded-2 bg-gray-2 px-2 py-1 shadow-2">
+      <div
+        className="size-4 rounded-full"
+        style={{ backgroundColor: datum.color }}
+      />
       <Text size="1">
         <Strong>{datum.label}</Strong>: {datum.value}
       </Text>
@@ -59,6 +63,7 @@ const WeightChart: React.FC<Props> = ({ list }) => {
           enableArcLabels={false}
           enableArcLinkLabels={false}
           tooltip={ChartTooltip}
+          colors={{ datum: "data.color" }}
         />
       </div>
       <div id="list-container" className="absolute inset-0">
@@ -78,6 +83,7 @@ const WeightChart: React.FC<Props> = ({ list }) => {
           enableArcLabels={false}
           enableArcLinkLabels={false}
           tooltip={ChartTooltip}
+          colors={{ datum: "data.color" }}
         />
       </div>
     </div>

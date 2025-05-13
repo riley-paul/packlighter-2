@@ -1,10 +1,9 @@
-import { WeightConvertible } from "@/lib/convertible";
-import type { ExpandedList } from "@/lib/types";
 import { Table } from "@radix-ui/themes";
 import React from "react";
+import type { ChartDataNested } from "./weight-chart.types";
 
 type Props = {
-  list: ExpandedList;
+  list: ChartDataNested[];
 };
 
 const WeightTable: React.FC<Props> = ({ list }) => {
@@ -17,23 +16,20 @@ const WeightTable: React.FC<Props> = ({ list }) => {
         </Table.Row>
       </Table.Header>
       <Table.Body>
-        {list.categories.map((category) => (
+        {list.map((category) => (
           <Table.Row key={category.id}>
-            <Table.Cell>{category.name}</Table.Cell>
+            <Table.Cell>
+              <div className="flex items-center gap-3">
+                <div
+                  className="size-4 rounded-full"
+                  style={{ backgroundColor: category.color }}
+                />
+                <span>{category.label}</span>
+              </div>
+            </Table.Cell>
             <Table.Cell className="flex gap-2">
-              <span>
-                {category.items.reduce(
-                  (acc, val) =>
-                    acc +
-                    WeightConvertible.convert(
-                      val.itemData.weight,
-                      val.itemData.weightUnit,
-                      list.weightUnit,
-                    ),
-                  0,
-                )}
-              </span>
-              <span>{list.weightUnit}</span>
+              <span>{category.value}</span>
+              <span>{category.unit}</span>
             </Table.Cell>
           </Table.Row>
         ))}
@@ -41,23 +37,9 @@ const WeightTable: React.FC<Props> = ({ list }) => {
           <Table.Cell className="font-bold">Total</Table.Cell>
           <Table.Cell className="flex gap-2 font-bold">
             <span>
-              {list.categories.reduce(
-                (acc, category) =>
-                  acc +
-                  category.items.reduce(
-                    (acc, val) =>
-                      acc +
-                      WeightConvertible.convert(
-                        val.itemData.weight,
-                        val.itemData.weightUnit,
-                        list.weightUnit,
-                      ),
-                    0,
-                  ),
-                0,
-              )}
+              {list.reduce((acc, category) => acc + category.value, 0)}
             </span>
-            <span>{list.weightUnit}</span>
+            <span>{list[0].unit}</span>
           </Table.Cell>
         </Table.Row>
       </Table.Body>
