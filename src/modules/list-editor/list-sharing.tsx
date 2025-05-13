@@ -75,7 +75,7 @@ const ListSharing: React.FC<Props> = (props) => {
                     {hasBeenCopied ? (
                       <i className="fa-solid fa-check" />
                     ) : (
-                      <i className="fa-solid fa-check" />
+                      <i className="fa-solid fa-copy" />
                     )}
                   </IconButton>
                 </Tooltip>
