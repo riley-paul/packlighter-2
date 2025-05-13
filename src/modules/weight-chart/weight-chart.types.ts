@@ -1,10 +1,10 @@
-type CategoryWeightSummary = {
+export type ChartData = {
   id: string;
-  name: string;
-  weight: number;
-  items: {
-    id: string;
-    name: string;
-    weight: number;
-  };
+  label: string;
+  value: number;
+  color: string;
+};
+
+export type ChartDataNested = ChartData & {
+  children: ChartData[];
 };

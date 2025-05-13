@@ -1,57 +1,14 @@
-import { WeightConvertible } from "@/lib/convertible";
-import type { ExpandedList } from "@/lib/types";
 import { ResponsivePie, type PieTooltipProps } from "@nivo/pie";
 import { Strong, Text } from "@radix-ui/themes";
 import React from "react";
-import { useOnClickOutside } from "usehooks-ts";
+import type { ChartData, ChartDataNested } from "./weight-chart.types";
 
 const ACTIVE_OUTER_RADIUS_OFFSET = 4;
 const CORNER_RADIUS = 3;
 const BORDER_WIDTH = 1;
 
-type Data = {
-  id: string;
-  label: string;
-  value: number;
-};
-
 type Props = {
-  list: ExpandedList;
-};
-
-const getCategoryData = (
-  list: ExpandedList,
-  activeCategoryId: string | null,
-): Data[] => {
-  const category = list.categories.find((c) => c.id === activeCategoryId);
-  if (!category) return [];
-
-  return category.items.map((item) => ({
-    id: item.id,
-    label: item.itemData.name,
-    value: WeightConvertible.convert(
-      item.itemData.weight,
-      item.itemData.weightUnit,
-      list.weightUnit,
-    ),
-  }));
-};
-
-const getListData = (list: ExpandedList): Data[] => {
-  return list.categories.map((category) => ({
-    id: category.id,
-    label: category.name,
-    value: category.items.reduce(
-      (acc, val) =>
-        acc +
-        WeightConvertible.convert(
-          val.itemData.weight,
-          val.itemData.weightUnit,
-          list.weightUnit,
-        ),
-      0,
-    ),
-  }));
+  list: ChartDataNested[];
 };
 
 const generateMargin = (width: number) => ({
@@ -61,7 +18,7 @@ const generateMargin = (width: number) => ({
   bottom: width,
 });
 
-const ChartTooltip: React.FC<PieTooltipProps<Data>> = ({ datum }) => {
+const ChartTooltip: React.FC<PieTooltipProps<ChartData>> = ({ datum }) => {
   return (
     <div className="rounded-2 bg-gray-2 px-2 py-1 shadow-2">
       <Text size="1">
@@ -76,18 +33,19 @@ const WeightChart: React.FC<Props> = ({ list }) => {
   const [activeCategoryId, setActiveCategoryId] = React.useState<string | null>(
     null,
   );
+  const activeCategory = list.find((c) => c.id === activeCategoryId);
 
   return (
     <div
       ref={containerRef}
-      className="relative size-48"
+      className="relative size-48 rounded-full"
       onClick={() => {
         setActiveCategoryId(null);
       }}
     >
       <div id="category-container" className="absolute inset-0">
         <ResponsivePie
-          data={getCategoryData(list, activeCategoryId)}
+          data={activeCategory ? activeCategory.children : []}
           onClick={(_, e) => {
             e.stopPropagation();
           }}
@@ -105,7 +63,7 @@ const WeightChart: React.FC<Props> = ({ list }) => {
       </div>
       <div id="list-container" className="absolute inset-0">
         <ResponsivePie
-          data={getListData(list)}
+          data={list}
           onClick={({ id }, e) => {
             setActiveCategoryId(id as string);
             e.stopPropagation();
