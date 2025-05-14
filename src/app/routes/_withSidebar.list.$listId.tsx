@@ -7,6 +7,7 @@ import ListSharing from "@/modules/list-editor/list-sharing";
 import { createFileRoute } from "@tanstack/react-router";
 import ListName from "@/modules/list-editor/list-name";
 import EditorCategories from "@/modules/list-editor/editor-categories";
+import WeightPanel from "@/modules/weight-chart/weight-panel";
 
 export const Route = createFileRoute("/_withSidebar/list/$listId")({
   component: RouteComponent,
@@ -36,6 +37,7 @@ function RouteComponent() {
             <ListSettings list={list} />
           </div>
         </header>
+        <WeightPanel list={list} />
         <ListDescription list={list} />
         <EditorCategories categories={list.categories} />
       </div>
