@@ -203,10 +203,7 @@ export default function useMutations() {
         ...data,
       }));
     },
-    onSuccess: (list) => {
-      updateCachedList(queryClient, list);
-      invalidateQueries([listsQueryOptions.queryKey]);
-    },
+    onSuccess: (list) => updateCachedList(queryClient, list),
     onError: (error, __, context) => {
       const { queryKey } = listQueryOptions(listId);
       onErrorOptimistic(queryKey, context);

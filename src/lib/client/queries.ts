@@ -3,7 +3,7 @@ import { actions } from "astro:actions";
 
 export const listQueryOptions = (listId: string) =>
   queryOptions({
-    queryKey: ["lists", listId],
+    queryKey: ["list", listId],
     queryFn: () => actions.lists.getOne.orThrow({ listId }),
     enabled: listId.length > 0,
   });
