@@ -16,6 +16,7 @@ import { listLinkOptions } from "@/lib/client/links";
 import type { ExpandedList } from "@/lib/types";
 import {
   addCachedCategory,
+  addCachedList,
   updateCachedCategory,
   updateCachedList,
 } from "@/lib/client/cache-updaters";
@@ -214,10 +215,7 @@ export default function useMutations() {
   const addList = useMutation({
     mutationFn: actions.lists.create.orThrow,
     onSuccess: (data) => {
-      invalidateQueries([
-        listsQueryOptions.queryKey,
-        otherListCategoriesQueryOptions(listId).queryKey,
-      ]);
+      addCachedList(queryClient, data);
       navigate(listLinkOptions(data.id));
     },
   });
@@ -225,7 +223,7 @@ export default function useMutations() {
   const duplicateList = useMutation({
     mutationFn: actions.lists.duplicate.orThrow,
     onSuccess: (data) => {
-      invalidateQueries([listsQueryOptions.queryKey]);
+      addCachedList(queryClient, data);
       navigate(listLinkOptions(data.id));
     },
   });
