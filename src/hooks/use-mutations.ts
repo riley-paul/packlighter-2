@@ -1,10 +1,10 @@
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import {
   listQueryOptions,
   otherListCategoriesQueryOptions,
 } from "@/lib/client/queries";
 import { produce } from "immer";
-import { initCategory, initCategoryItem, initItem } from "@/lib/init";
+import { initCategoryItem, initItem } from "@/lib/init";
 import { actions } from "astro:actions";
 import useCurrentList from "./use-current-list";
 import useMutationHelpers from "./use-mutation-helpers";
@@ -15,10 +15,15 @@ import {
   listsQueryOptions,
 } from "@/modules/sidebar/sidebar.queries";
 import type { ExpandedList } from "@/lib/types";
+import {
+  addCachedCategory,
+  updateCachedCategory,
+} from "@/lib/client/cache-updaters";
 
 export default function useMutations() {
   const { listId } = useCurrentList();
   const navigate = useNavigate();
+  const queryClient = useQueryClient();
 
   const {
     onError,
@@ -119,16 +124,6 @@ export default function useMutations() {
     },
   });
 
-  const updateCategory = useMutation({
-    mutationFn: actions.categories.update.orThrow,
-    onSuccess: () => {
-      invalidateQueries([
-        listQueryOptions(listId).queryKey,
-        otherListCategoriesQueryOptions(listId).queryKey,
-      ]);
-    },
-  });
-
   const addCategoryItem = useMutation({
     mutationFn: actions.categoryItems.createAndAddToCategory.orThrow,
     onMutate: async ({ categoryId, itemData, categoryItemData }) => {
@@ -174,35 +169,19 @@ export default function useMutations() {
     },
   });
 
+  const updateCategory = useMutation({
+    mutationFn: actions.categories.update.orThrow,
+    onSuccess: (data) => updateCachedCategory(queryClient, data),
+  });
+
   const addCategory = useMutation({
     mutationFn: actions.categories.create.orThrow,
-    onMutate: ({ data }) => {
-      const { queryKey } = listQueryOptions(listId);
-      return optimisticUpdate<ExpandedList>(queryKey, (prev) =>
-        produce(prev, (draft) => {
-          const newCategory = initCategory(data);
-          draft.categories.push(newCategory);
-        }),
-      );
-    },
-    onSuccess: () => {
-      invalidateQueries([
-        listQueryOptions(listId).queryKey,
-        otherListCategoriesQueryOptions(listId).queryKey,
-      ]);
-    },
-    onError: (error, __, context) => {
-      const { queryKey } = listQueryOptions(listId);
-      onErrorOptimistic(queryKey, context);
-      onError(error);
-    },
+    onSuccess: (category) => addCachedCategory(queryClient, category),
   });
 
   const toggleCategoryPacked = useMutation({
     mutationFn: actions.categories.togglePacked.orThrow,
-    onSuccess: () => {
-      invalidateQueries([listQueryOptions(listId).queryKey]);
-    },
+    onSuccess: (category) => updateCachedCategory(queryClient, category),
   });
 
   const copyCategoryToList = useMutation({
