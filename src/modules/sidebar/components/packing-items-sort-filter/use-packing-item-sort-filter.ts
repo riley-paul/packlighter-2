@@ -9,6 +9,7 @@ import {
 import { FilterOptions, SortOptions } from "@/modules/sidebar/sidebar.types";
 import { useAtomValue } from "jotai";
 import type { ItemSelect } from "@/lib/types";
+import { WeightConvertible } from "@/lib/convertible";
 
 type FilteringFn = (item: ItemSelect) => boolean;
 type SortingFn = (a: ItemSelect, b: ItemSelect) => number;
@@ -38,7 +39,9 @@ export function usePackingItemsSortFilter(
     [SortOptions.Name]: (a, b) => a.name.localeCompare(b.name),
     [SortOptions.Description]: (a, b) =>
       a.description.localeCompare(b.description),
-    [SortOptions.Weight]: (a, b) => a.weight - b.weight,
+    [SortOptions.Weight]: (a, b) =>
+      WeightConvertible.convert(a.weight, a.weightUnit, "g") -
+      WeightConvertible.convert(b.weight, b.weightUnit, "g"),
     [SortOptions.Packed]: (a, b) =>
       (listItemIds.has(a.id) ? 1 : 0) - (listItemIds.has(b.id) ? 1 : 0),
   };
