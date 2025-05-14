@@ -6,7 +6,7 @@ import ThemeToggle from "@/modules/theme/theme-toggle";
 import useConfirmDialog from "@/hooks/use-confirm-dialog";
 import { Avatar, Button, Link, Popover, Text } from "@radix-ui/themes";
 import useUsersMutations from "@/modules/users/users.mutations";
-import { userQueryOptions } from "../users.queries";
+import { userQueryOptions } from "@/lib/client/queries";
 
 const UserAvatar: React.FC = () => {
   const [DeletionConfirmDialog, confirmDeleteAccount] = useConfirmDialog({

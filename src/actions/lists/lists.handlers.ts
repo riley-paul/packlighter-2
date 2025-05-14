@@ -73,7 +73,7 @@ const create: ActionHandler<typeof listInputs.create, ListSelect> = async (
   return newList;
 };
 
-const update: ActionHandler<typeof listInputs.update, ListSelect> = async (
+const update: ActionHandler<typeof listInputs.update, ExpandedList> = async (
   { listId, data },
   c,
 ) => {
@@ -81,11 +81,10 @@ const update: ActionHandler<typeof listInputs.update, ListSelect> = async (
   const userId = isAuthorized(c).id;
   const { sortOrder } = data;
 
-  const [updated] = await db
+  await db
     .update(List)
-    .set({ ...data })
-    .where(idAndUserIdFilter(List, { userId, id: listId }))
-    .returning();
+    .set(data)
+    .where(idAndUserIdFilter(List, { userId, id: listId }));
 
   if (sortOrder !== undefined) {
     const lists = await db
@@ -114,7 +113,7 @@ const update: ActionHandler<typeof listInputs.update, ListSelect> = async (
     );
   }
 
-  return updated;
+  return getExpandedList(c, listId);
 };
 
 const remove: ActionHandler<typeof listInputs.remove, null> = async (
@@ -145,7 +144,7 @@ const remove: ActionHandler<typeof listInputs.remove, null> = async (
   return null;
 };
 
-const unpack: ActionHandler<typeof listInputs.unpack, null> = async (
+const unpack: ActionHandler<typeof listInputs.unpack, ExpandedList> = async (
   { listId },
   c,
 ) => {
@@ -161,12 +160,12 @@ const unpack: ActionHandler<typeof listInputs.unpack, null> = async (
     .update(CategoryItem)
     .set({ packed: false })
     .where(inArray(CategoryItem.id, ids));
-  return null;
+  return getExpandedList(c, listId);
 };
 
 const duplicate: ActionHandler<
   typeof listInputs.duplicate,
-  { listId: string }
+  ExpandedList
 > = async ({ listId }, c) => {
   const db = createDb(c.locals.runtime.env);
   const userId = isAuthorized(c).id;
@@ -223,7 +222,7 @@ const duplicate: ActionHandler<
     }),
   );
 
-  return { listId: newListId };
+  return getExpandedList(c, newListId);
 };
 
 const listHandlers = {

@@ -33,3 +33,14 @@ export const addCachedCategory = (
     };
   });
 };
+
+export const updateCachedList = (
+  queryClient: QueryClient,
+  list: ExpandedList,
+) => {
+  const { queryKey } = listQueryOptions(list.id);
+  queryClient.setQueryData<ExpandedList>(queryKey, (prev) => {
+    if (!prev) return prev;
+    return { ...prev, ...list };
+  });
+};

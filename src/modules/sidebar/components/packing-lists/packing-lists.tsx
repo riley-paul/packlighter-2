@@ -2,7 +2,6 @@ import React from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import PackingList from "./packing-list";
 import { cn } from "@/lib/client/utils";
-import { listsQueryOptions } from "@/modules/sidebar/sidebar.queries";
 import useMutations from "@/hooks/use-mutations";
 
 import ArrayQueryGuard from "@/components/ui/array-query-guard";
@@ -18,6 +17,7 @@ import { useVirtualizer } from "@tanstack/react-virtual";
 import useCurrentList from "@/hooks/use-current-list";
 import { ScrollArea } from "@radix-ui/themes";
 import { zListSelect } from "@/lib/types";
+import { listsQueryOptions } from "@/lib/client/queries";
 
 export default function PackingLists(): ReturnType<React.FC> {
   const listsQuery = useQuery(listsQueryOptions);

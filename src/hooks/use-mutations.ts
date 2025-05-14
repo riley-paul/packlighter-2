@@ -1,6 +1,8 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import {
+  itemsQueryOptions,
   listQueryOptions,
+  listsQueryOptions,
   otherListCategoriesQueryOptions,
 } from "@/lib/client/queries";
 import { produce } from "immer";
@@ -10,14 +12,12 @@ import useCurrentList from "./use-current-list";
 import useMutationHelpers from "./use-mutation-helpers";
 import { useNavigate } from "@tanstack/react-router";
 import { listLinkOptions } from "@/lib/client/links";
-import {
-  itemsQueryOptions,
-  listsQueryOptions,
-} from "@/modules/sidebar/sidebar.queries";
+
 import type { ExpandedList } from "@/lib/types";
 import {
   addCachedCategory,
   updateCachedCategory,
+  updateCachedList,
 } from "@/lib/client/cache-updaters";
 
 export default function useMutations() {
@@ -171,7 +171,7 @@ export default function useMutations() {
 
   const updateCategory = useMutation({
     mutationFn: actions.categories.update.orThrow,
-    onSuccess: (data) => updateCachedCategory(queryClient, data),
+    onSuccess: (category) => updateCachedCategory(queryClient, category),
   });
 
   const addCategory = useMutation({
@@ -203,12 +203,9 @@ export default function useMutations() {
         ...data,
       }));
     },
-    onSuccess: () => {
-      invalidateQueries([
-        listQueryOptions(listId).queryKey,
-        otherListCategoriesQueryOptions(listId).queryKey,
-        listsQueryOptions.queryKey,
-      ]);
+    onSuccess: (list) => {
+      updateCachedList(queryClient, list);
+      invalidateQueries([listsQueryOptions.queryKey]);
     },
     onError: (error, __, context) => {
       const { queryKey } = listQueryOptions(listId);
@@ -231,19 +228,14 @@ export default function useMutations() {
   const duplicateList = useMutation({
     mutationFn: actions.lists.duplicate.orThrow,
     onSuccess: (data) => {
-      invalidateQueries([
-        listsQueryOptions.queryKey,
-        otherListCategoriesQueryOptions(listId).queryKey,
-      ]);
-      navigate(listLinkOptions(data.listId));
+      invalidateQueries([listsQueryOptions.queryKey]);
+      navigate(listLinkOptions(data.id));
     },
   });
 
   const unpackList = useMutation({
     mutationFn: actions.lists.unpack.orThrow,
-    onSuccess: () => {
-      invalidateQueries([listQueryOptions(listId).queryKey]);
-    },
+    onSuccess: (list) => updateCachedList(queryClient, list),
   });
 
   return {
