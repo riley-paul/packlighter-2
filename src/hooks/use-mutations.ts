@@ -18,6 +18,7 @@ import {
   addCachedCategory,
   addCachedList,
   updateCachedCategory,
+  updateCachedCategoryItem,
   updateCachedList,
 } from "@/lib/client/cache-updaters";
 
@@ -103,24 +104,22 @@ export default function useMutations() {
 
   const updateCategoryItem = useMutation({
     mutationFn: actions.categoryItems.update.orThrow,
-    onSuccess: () => {
-      invalidateQueries([listQueryOptions(listId).queryKey]);
-    },
+    onSuccess: (data) =>
+      updateCachedCategoryItem({ queryClient, data, listId }),
     onMutate: ({ categoryItemId, data }) => {
       const { queryKey } = listQueryOptions(listId);
-      return optimisticUpdate<ExpandedList>(queryKey, (prev) => ({
-        ...prev,
-        categories: prev.categories.map((category) => ({
-          ...category,
-          items: category.items.map((item) =>
-            item.id === categoryItemId ? { ...item, ...data } : item,
-          ),
-        })),
-      }));
+      queryClient.cancelQueries({ queryKey });
+      const previous = queryClient.getQueryData(queryKey);
+      updateCachedCategoryItem({
+        queryClient,
+        data: { id: categoryItemId, ...data },
+        listId,
+      });
+      return { previous };
     },
     onError: (error, __, context) => {
       const { queryKey } = listQueryOptions(listId);
-      onErrorOptimistic(queryKey, context);
+      queryClient.setQueryData(queryKey, context?.previous);
       onError(error);
     },
   });
