@@ -92,6 +92,7 @@ const WeightChart: React.FC<Props> = ({ list }) => {
           enableArcLinkLabels={false}
           tooltip={ChartTooltip}
           colors={{ datum: "data.color" }}
+          sortByValue
         />
       </div>
       <div
