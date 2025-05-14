@@ -11,7 +11,7 @@ type Props = {
 const WeightPanel: React.FC<Props> = ({ list }) => {
   const parsedList = parseListToChartData(list);
 
-  if (!list.showWeights) return null;
+  if (!list.showWeights || parsedList.length === 0) return null;
   return (
     <div className="flex w-full items-center justify-center gap-8">
       <WeightChart list={parsedList} />
