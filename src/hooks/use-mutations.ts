@@ -187,12 +187,7 @@ export default function useMutations() {
 
   const copyCategoryToList = useMutation({
     mutationFn: actions.categories.copyToList.orThrow,
-    onSuccess: () => {
-      invalidateQueries([
-        listQueryOptions(listId).queryKey,
-        otherListCategoriesQueryOptions(listId).queryKey,
-      ]);
-    },
+    onSuccess: (category) => addCachedCategory(queryClient, category),
   });
 
   const updateList = useMutation({

@@ -8,7 +8,7 @@ import {
 import { actions } from "astro:actions";
 import useCurrentList from "@/hooks/use-current-list";
 import type { ExpandedList, ItemForm } from "@/lib/types";
-import { addCachedItem } from "@/lib/client/cache-updaters";
+import { addCachedItem, updateCachedItem } from "@/lib/client/cache-updaters";
 
 export default function useItemsMutations() {
   const { listId } = useCurrentList();
@@ -24,24 +24,19 @@ export default function useItemsMutations() {
 
   const updateItem = useMutation({
     mutationFn: (data: Partial<ItemForm> & { id: string }) => {
-      const formData = new FormData();
-      formData.append("itemId", data.id);
-      formData.append(
-        "removeImageFile",
-        data.removeImageFile ? "true" : "false",
-      );
-      if (data.imageFile) formData.append("imageFile", data.imageFile);
-
-      return Promise.all([
-        actions.items.update.orThrow(data),
-        actions.items.imageUpload.orThrow(formData),
-      ]);
+      const { removeImageFile, imageFile } = data;
+      if (!!imageFile || !!removeImageFile) {
+        const formData = new FormData();
+        formData.append("itemId", data.id);
+        formData.append("removeImageFile", removeImageFile ? "true" : "false");
+        if (imageFile) formData.append("imageFile", imageFile);
+        actions.items.imageUpload.orThrow(formData);
+      }
+      return actions.items.update.orThrow(data);
     },
-    onSuccess: () => {
-      invalidateQueries([
-        listQueryOptions(listId).queryKey,
-        itemsQueryOptions.queryKey,
-      ]);
+    onSuccess: (data) => {
+      updateCachedItem(queryClient, data);
+      invalidateQueries([listQueryOptions(listId).queryKey]);
     },
     onMutate: ({ id, ...data }) => {
       const { queryKey } = listQueryOptions(listId);

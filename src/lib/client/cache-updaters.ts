@@ -1,4 +1,4 @@
-import type { QueryClient } from "@tanstack/react-query";
+import { QueryClient } from "@tanstack/react-query";
 import {
   type ExpandedCategory,
   type ExpandedList,
@@ -66,6 +66,17 @@ export const addCachedList = (queryClient: QueryClient, list: ListSelect) => {
   queryClient.setQueryData(queryKey, (prev) => {
     if (!prev) return prev;
     return [...prev, list].sort((a, b) => a.sortOrder - b.sortOrder);
+  });
+};
+
+export const updateCachedItem = (
+  queryClient: QueryClient,
+  item: ItemSelect,
+) => {
+  const { queryKey } = itemsQueryOptions;
+  queryClient.setQueryData(queryKey, (prev) => {
+    if (!prev) return prev;
+    return prev.map((i) => (i.id === item.id ? { ...i, ...item } : i));
   });
 };
 
