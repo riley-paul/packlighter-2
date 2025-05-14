@@ -35,7 +35,7 @@ export default function useItemsMutations() {
       return actions.items.update.orThrow(data);
     },
     onSuccess: (data) => {
-      updateCachedItem(queryClient, data);
+      updateCachedItem({ queryClient, data, listId });
       invalidateQueries([listQueryOptions(listId).queryKey]);
     },
     onMutate: ({ id, ...data }) => {
@@ -74,12 +74,12 @@ export default function useItemsMutations() {
 
       return response;
     },
-    onSuccess: (item) => addCachedItem(queryClient, item),
+    onSuccess: (data) => addCachedItem({ queryClient, data, listId }),
   });
 
   const duplicateItem = useMutation({
     mutationFn: actions.items.duplicate.orThrow,
-    onSuccess: (item) => addCachedItem(queryClient, item),
+    onSuccess: (data) => addCachedItem({ queryClient, data, listId }),
   });
 
   const deleteItem = useMutation({

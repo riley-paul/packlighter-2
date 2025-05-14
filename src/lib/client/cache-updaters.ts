@@ -1,9 +1,9 @@
 import { QueryClient } from "@tanstack/react-query";
-import {
-  type ExpandedCategory,
-  type ExpandedList,
-  type ItemSelect,
-  type ListSelect,
+import type {
+  ExpandedCategory,
+  ExpandedList,
+  ItemSelect,
+  ListSelect,
 } from "../types";
 import {
   itemsQueryOptions,
@@ -11,79 +11,101 @@ import {
   listsQueryOptions,
 } from "./queries";
 
-export const updateCachedCategory = (
-  queryClient: QueryClient,
-  category: ExpandedCategory,
-) => {
-  const { queryKey } = listQueryOptions(category.listId);
+type UpdateCacheProps<T> = {
+  queryClient: QueryClient;
+  data: Partial<T>;
+  listId: string;
+};
+
+type AddCacheProps<T> = {
+  queryClient: QueryClient;
+  data: T;
+  listId: string;
+};
+
+export const updateCachedCategory = ({
+  queryClient,
+  data,
+  listId,
+}: UpdateCacheProps<ExpandedCategory>) => {
+  const { queryKey } = listQueryOptions(listId);
   queryClient.setQueryData(queryKey, (prev) => {
     if (!prev) return prev;
     return {
       ...prev,
       categories: prev.categories.map((c) =>
-        c.id === category.id ? { ...c, ...category } : c,
+        c.id === data.id ? { ...c, ...data } : c,
       ),
     };
   });
 };
 
-export const addCachedCategory = (
-  queryClient: QueryClient,
-  category: ExpandedCategory,
-) => {
-  const { queryKey } = listQueryOptions(category.listId);
+export const addCachedCategory = ({
+  queryClient,
+  data,
+  listId,
+}: AddCacheProps<ExpandedCategory>) => {
+  const { queryKey } = listQueryOptions(listId);
   queryClient.setQueryData(queryKey, (prev) => {
     if (!prev) return prev;
     return {
       ...prev,
-      categories: [...prev.categories, category].sort(
+      categories: [...prev.categories, data].sort(
         (a, b) => a.sortOrder - b.sortOrder,
       ),
     };
   });
 };
 
-export const updateCachedList = (
-  queryClient: QueryClient,
-  list: ExpandedList,
-) => {
-  const { queryKey: individualQueryKey } = listQueryOptions(list.id);
+export const updateCachedList = ({
+  queryClient,
+  data,
+  listId,
+}: UpdateCacheProps<ExpandedList>) => {
+  const { queryKey: individualQueryKey } = listQueryOptions(listId);
   const { queryKey: allQueryKey } = listsQueryOptions;
 
   queryClient.setQueryData(individualQueryKey, (prev) => {
     if (!prev) return prev;
-    return { ...prev, ...list };
+    return { ...prev, ...data };
   });
 
   queryClient.setQueryData(allQueryKey, (prev) => {
     if (!prev) return prev;
-    return prev.map((l) => (l.id === list.id ? { ...l, ...list } : l));
+    return prev.map((l) => (l.id === data.id ? { ...l, ...data } : l));
   });
 };
 
-export const addCachedList = (queryClient: QueryClient, list: ListSelect) => {
+export const addCachedList = ({
+  queryClient,
+  data,
+}: AddCacheProps<ListSelect>) => {
   const { queryKey } = listsQueryOptions;
   queryClient.setQueryData(queryKey, (prev) => {
     if (!prev) return prev;
-    return [...prev, list].sort((a, b) => a.sortOrder - b.sortOrder);
+    return [...prev, data].sort((a, b) => a.sortOrder - b.sortOrder);
   });
 };
 
-export const updateCachedItem = (
-  queryClient: QueryClient,
-  item: ItemSelect,
-) => {
+export const updateCachedItem = ({
+  queryClient,
+  data,
+  listId,
+}: UpdateCacheProps<ItemSelect>) => {
   const { queryKey } = itemsQueryOptions;
   queryClient.setQueryData(queryKey, (prev) => {
     if (!prev) return prev;
-    return prev.map((i) => (i.id === item.id ? { ...i, ...item } : i));
+    return prev.map((i) => (i.id === data.id ? { ...i, ...data } : i));
   });
 };
 
-export const addCachedItem = (queryClient: QueryClient, item: ItemSelect) => {
+export const addCachedItem = ({
+  queryClient,
+  data,
+}: AddCacheProps<ItemSelect>) => {
   const { queryKey } = itemsQueryOptions;
   queryClient.setQueryData(queryKey, (prev) => {
     if (!prev) return prev;
-    return [...prev, item];
+    return [...prev, data];
   });
 };

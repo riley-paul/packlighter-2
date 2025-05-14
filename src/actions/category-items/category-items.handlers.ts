@@ -1,17 +1,21 @@
 import { idAndUserIdFilter } from "@/actions/filters";
 import { ActionError, type ActionHandler } from "astro:actions";
-import { getListItemIds, isAuthorized } from "@/actions/helpers";
+import {
+  getExpandedCategoryItem,
+  getListItemIds,
+  isAuthorized,
+} from "@/actions/helpers";
 import { CategoryItem, Item, Category } from "@/db/schema";
 import { and, eq, max } from "drizzle-orm";
 import { v4 as uuid } from "uuid";
-import type { CategoryItemInsert } from "@/lib/types";
+import type { ExpandedCategoryItem } from "@/lib/types";
 import type categoryItemInputs from "./category-items.inputs";
 import { createDb } from "@/db";
 import { reorder } from "@atlaskit/pragmatic-drag-and-drop/reorder";
 
 const create: ActionHandler<
   typeof categoryItemInputs.create,
-  CategoryItemInsert
+  ExpandedCategoryItem
 > = async ({ data }, c) => {
   const db = createDb(c.locals.runtime.env);
   const userId = isAuthorized(c).id;
@@ -92,12 +96,12 @@ const create: ActionHandler<
     );
   }
 
-  return created;
+  return getExpandedCategoryItem(c, created.id);
 };
 
 const createAndAddToCategory: ActionHandler<
   typeof categoryItemInputs.createAndAddToCategory,
-  CategoryItemInsert
+  ExpandedCategoryItem
 > = async ({ categoryId, itemData, categoryItemData }, c) => {
   const db = createDb(c.locals.runtime.env);
   const userId = isAuthorized(c).id;
@@ -114,7 +118,7 @@ const createAndAddToCategory: ActionHandler<
     .where(eq(CategoryItem.categoryId, categoryId))
     .then((rows) => rows[0]);
 
-  const created = await db
+  const [{ id: categoryItemId }] = await db
     .insert(CategoryItem)
     .values({
       id: uuid(),
@@ -124,15 +128,14 @@ const createAndAddToCategory: ActionHandler<
       ...categoryItemData,
       userId,
     })
-    .returning()
-    .then((rows) => rows[0]);
+    .returning();
 
-  return created;
+  return getExpandedCategoryItem(c, categoryItemId);
 };
 
 const update: ActionHandler<
   typeof categoryItemInputs.update,
-  CategoryItemInsert
+  ExpandedCategoryItem
 > = async ({ categoryItemId, data }, c) => {
   const db = createDb(c.locals.runtime.env);
   const userId = isAuthorized(c).id;
@@ -176,7 +179,7 @@ const update: ActionHandler<
     );
   }
 
-  return updated;
+  return getExpandedCategoryItem(c, categoryItemId);
 };
 
 const remove: ActionHandler<typeof categoryItemInputs.remove, null> = async (

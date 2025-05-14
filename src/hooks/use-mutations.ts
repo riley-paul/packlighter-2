@@ -172,22 +172,22 @@ export default function useMutations() {
 
   const updateCategory = useMutation({
     mutationFn: actions.categories.update.orThrow,
-    onSuccess: (category) => updateCachedCategory(queryClient, category),
+    onSuccess: (data) => updateCachedCategory({ queryClient, data, listId }),
   });
 
   const addCategory = useMutation({
     mutationFn: actions.categories.create.orThrow,
-    onSuccess: (category) => addCachedCategory(queryClient, category),
+    onSuccess: (data) => addCachedCategory({ queryClient, data, listId }),
   });
 
   const toggleCategoryPacked = useMutation({
     mutationFn: actions.categories.togglePacked.orThrow,
-    onSuccess: (category) => updateCachedCategory(queryClient, category),
+    onSuccess: (data) => updateCachedCategory({ queryClient, data, listId }),
   });
 
   const copyCategoryToList = useMutation({
     mutationFn: actions.categories.copyToList.orThrow,
-    onSuccess: (category) => addCachedCategory(queryClient, category),
+    onSuccess: (data) => addCachedCategory({ queryClient, data, listId }),
   });
 
   const updateList = useMutation({
@@ -199,7 +199,7 @@ export default function useMutations() {
         ...data,
       }));
     },
-    onSuccess: (list) => updateCachedList(queryClient, list),
+    onSuccess: (data) => updateCachedList({ queryClient, data, listId }),
     onError: (error, __, context) => {
       const { queryKey } = listQueryOptions(listId);
       onErrorOptimistic(queryKey, context);
@@ -210,7 +210,7 @@ export default function useMutations() {
   const addList = useMutation({
     mutationFn: actions.lists.create.orThrow,
     onSuccess: (data) => {
-      addCachedList(queryClient, data);
+      addCachedList({ queryClient, data, listId });
       navigate(listLinkOptions(data.id));
     },
   });
@@ -218,14 +218,14 @@ export default function useMutations() {
   const duplicateList = useMutation({
     mutationFn: actions.lists.duplicate.orThrow,
     onSuccess: (data) => {
-      addCachedList(queryClient, data);
+      addCachedList({ queryClient, data, listId });
       navigate(listLinkOptions(data.id));
     },
   });
 
   const unpackList = useMutation({
     mutationFn: actions.lists.unpack.orThrow,
-    onSuccess: (list) => updateCachedList(queryClient, list),
+    onSuccess: (data) => updateCachedList({ queryClient, data, listId }),
   });
 
   return {
