@@ -19,3 +19,16 @@ describe("get all items", () => {
     expect(items.length).toBe(0);
   });
 });
+
+describe("update item", () => {
+  test("updates the item with the given id", async () => {
+    const itemId = ITEM_IDS[0];
+    const updatedItem = await itemHandlers.update(
+      { id: itemId, name: "Updated Item" },
+      mockApiContext(USER_ID),
+    );
+    expect(updatedItem).toBeDefined();
+    expect(updatedItem.id).toBe(itemId);
+    expect(updatedItem.name).toBe("Updated Item");
+  });
+});
