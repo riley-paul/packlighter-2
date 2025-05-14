@@ -140,7 +140,7 @@ const EditorCategory: React.FC<Props> = (props) => {
   const { columnVisibility } = useListTableState(list);
 
   const table = useReactTable({
-    data: category.items,
+    data: category.items.sort((a, b) => a.sortOrder - b.sortOrder),
     columns,
     getCoreRowModel: getCoreRowModel(),
     state: {

@@ -175,14 +175,14 @@ export default function useMutations() {
     onSuccess: (data) => updateCachedCategory({ queryClient, data, listId }),
   });
 
-  const addCategory = useMutation({
-    mutationFn: actions.categories.create.orThrow,
-    onSuccess: (data) => addCachedCategory({ queryClient, data, listId }),
-  });
-
   const toggleCategoryPacked = useMutation({
     mutationFn: actions.categories.togglePacked.orThrow,
     onSuccess: (data) => updateCachedCategory({ queryClient, data, listId }),
+  });
+
+  const addCategory = useMutation({
+    mutationFn: actions.categories.create.orThrow,
+    onSuccess: (data) => addCachedCategory({ queryClient, data, listId }),
   });
 
   const copyCategoryToList = useMutation({

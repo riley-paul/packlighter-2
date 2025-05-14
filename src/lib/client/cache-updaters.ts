@@ -92,10 +92,27 @@ export const updateCachedItem = ({
   data,
   listId,
 }: UpdateCacheProps<ItemSelect>) => {
-  const { queryKey } = itemsQueryOptions;
-  queryClient.setQueryData(queryKey, (prev) => {
+  const { queryKey: itemListQueryKey } = itemsQueryOptions;
+  const { queryKey: listQueryKey } = listQueryOptions(listId);
+
+  queryClient.setQueryData(itemListQueryKey, (prev) => {
     if (!prev) return prev;
     return prev.map((i) => (i.id === data.id ? { ...i, ...data } : i));
+  });
+
+  queryClient.setQueryData(listQueryKey, (prev) => {
+    if (!prev) return prev;
+    return {
+      ...prev,
+      categories: prev.categories.map((category) => ({
+        ...category,
+        items: category.items.map((item) =>
+          item.itemId === data.id
+            ? { ...item, itemData: { ...item.itemData, ...data } }
+            : item,
+        ),
+      })),
+    };
   });
 };
 

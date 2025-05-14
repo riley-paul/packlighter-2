@@ -7,20 +7,14 @@ import {
 } from "@/lib/client/queries";
 import { actions } from "astro:actions";
 import useCurrentList from "@/hooks/use-current-list";
-import type { ExpandedList, ItemForm } from "@/lib/types";
+import type { ItemForm } from "@/lib/types";
 import { addCachedItem, updateCachedItem } from "@/lib/client/cache-updaters";
 
 export default function useItemsMutations() {
   const { listId } = useCurrentList();
   const queryClient = useQueryClient();
-  const {
-    invalidateQueries,
-    toastSuccess,
-    onMutateMessage,
-    optimisticUpdate,
-    onErrorOptimistic,
-    onError,
-  } = useMutationHelpers();
+  const { invalidateQueries, toastSuccess, onMutateMessage, onError } =
+    useMutationHelpers();
 
   const updateItem = useMutation({
     mutationFn: (data: Partial<ItemForm> & { id: string }) => {
@@ -34,27 +28,17 @@ export default function useItemsMutations() {
       }
       return actions.items.update.orThrow(data);
     },
-    onSuccess: (data) => {
-      updateCachedItem({ queryClient, data, listId });
-      invalidateQueries([listQueryOptions(listId).queryKey]);
-    },
-    onMutate: ({ id, ...data }) => {
+    onSuccess: (data) => updateCachedItem({ queryClient, data, listId }),
+    onMutate: async (data) => {
       const { queryKey } = listQueryOptions(listId);
-      return optimisticUpdate<ExpandedList>(queryKey, (prev) => ({
-        ...prev,
-        categories: prev.categories.map((category) => ({
-          ...category,
-          items: category.items.map((item) =>
-            item.itemId === id
-              ? { ...item, itemData: { ...item.itemData, ...data } }
-              : item,
-          ),
-        })),
-      }));
+      queryClient.cancelQueries({ queryKey });
+      const previous = queryClient.getQueryData(queryKey);
+      updateCachedItem({ queryClient, data, listId });
+      return { previous };
     },
     onError: (error, __, context) => {
       const { queryKey } = listQueryOptions(listId);
-      onErrorOptimistic(queryKey, context);
+      queryClient.setQueryData(queryKey, context?.previous);
       onError(error);
     },
   });
