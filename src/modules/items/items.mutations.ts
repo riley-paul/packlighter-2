@@ -1,5 +1,5 @@
 import useMutationHelpers from "@/hooks/use-mutation-helpers";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import {
   itemsQueryOptions,
   listQueryOptions,
@@ -8,9 +8,11 @@ import {
 import { actions } from "astro:actions";
 import useCurrentList from "@/hooks/use-current-list";
 import type { ExpandedList, ItemForm } from "@/lib/types";
+import { addCachedItem } from "@/lib/client/cache-updaters";
 
 export default function useItemsMutations() {
   const { listId } = useCurrentList();
+  const queryClient = useQueryClient();
   const {
     invalidateQueries,
     toastSuccess,
@@ -66,26 +68,23 @@ export default function useItemsMutations() {
     mutationFn: async (data: ItemForm) => {
       const response = await actions.items.create.orThrow(data);
 
-      const formData = new FormData();
-      formData.append("itemId", response.id);
-      formData.append(
-        "removeImageFile",
-        data.removeImageFile ? "true" : "false",
-      );
-      if (data.imageFile) formData.append("imageFile", data.imageFile);
+      const { imageFile, removeImageFile } = data;
+      if (!!imageFile || !!removeImageFile) {
+        const formData = new FormData();
+        formData.append("itemId", response.id);
+        formData.append("removeImageFile", removeImageFile ? "true" : "false");
+        if (imageFile) formData.append("imageFile", imageFile);
+        await actions.items.imageUpload.orThrow(formData);
+      }
 
-      await actions.items.imageUpload.orThrow(formData);
+      return response;
     },
-    onSuccess: () => {
-      invalidateQueries([itemsQueryOptions.queryKey]);
-    },
+    onSuccess: (item) => addCachedItem(queryClient, item),
   });
 
   const duplicateItem = useMutation({
     mutationFn: actions.items.duplicate.orThrow,
-    onSuccess: () => {
-      invalidateQueries([itemsQueryOptions.queryKey]);
-    },
+    onSuccess: (item) => addCachedItem(queryClient, item),
   });
 
   const deleteItem = useMutation({
