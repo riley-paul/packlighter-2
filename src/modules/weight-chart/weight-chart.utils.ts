@@ -26,7 +26,7 @@ export const parseListToChartData = (list: ExpandedList): ChartDataNested[] => {
       item.itemData.weight,
       item.itemData.weightUnit,
       list.weightUnit,
-    );
+    ) * item.quantity;
 
   const getCategoryWeight = (category: ExpandedCategory) =>
     category.items.reduce((acc, val) => acc + getItemWeight(val), 0);
