@@ -38,7 +38,7 @@ export const parseListToChartData = (list: ExpandedList): ChartDataNested[] => {
     unit: list.weightUnit,
     color: colorPalette[index1],
     children: category.items
-      .sort((a, b) => getItemWeight(a) - getItemWeight(b))
+      // .sort((a, b) => getItemWeight(a) - getItemWeight(b))
       .map((item, index2) => {
         const colorScale = getMonochromaticScale(
           colorPalette[index1],
