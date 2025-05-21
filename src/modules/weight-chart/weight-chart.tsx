@@ -110,6 +110,7 @@ const WeightChart: React.FC<Props> = ({ list, listColorMap }) => {
                       color: listColorMap.get(i.id),
                     }),
                   )
+                  .filter((i) => i.value > 0)
               : []
           }
           onClick={(data, e) => {
@@ -137,15 +138,17 @@ const WeightChart: React.FC<Props> = ({ list, listColorMap }) => {
         )}
       >
         <ResponsivePie
-          data={list.categories.map(
-            (c): ChartData => ({
-              id: c.id,
-              label: c.name,
-              value: getCategoryWeight(c, list.weightUnit),
-              unit: list.weightUnit,
-              color: listColorMap.get(c.id),
-            }),
-          )}
+          data={list.categories
+            .map(
+              (c): ChartData => ({
+                id: c.id,
+                label: c.name,
+                value: getCategoryWeight(c, list.weightUnit),
+                unit: list.weightUnit,
+                color: listColorMap.get(c.id),
+              }),
+            )
+            .filter((i) => i.value > 0)}
           onClick={({ id, arc }, e) => {
             console.log("arc", arc);
             setSelectedId(id as string);
