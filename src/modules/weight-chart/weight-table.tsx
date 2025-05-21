@@ -1,13 +1,14 @@
 import { Table } from "@radix-ui/themes";
 import React from "react";
-import { cn, formatWeight } from "@/lib/client/utils";
+import { cn, formatWeight, toTitleCase } from "@/lib/client/utils";
 import { useAtom } from "jotai";
 import {
   activeCategoryIdAtom,
   selectedCategoryIdAtom,
 } from "./weight-chart.store";
 import type { ExpandedList } from "@/lib/types";
-import { getCategoryWeight } from "./weight-chart.utils";
+import { getCategoryWeight, getListWeight } from "./weight-chart.utils";
+import { weightTypes } from "@/db/schema";
 
 type Props = {
   list: ExpandedList;
@@ -17,6 +18,23 @@ type Props = {
 const WeightTable: React.FC<Props> = ({ list, listColorMap }) => {
   const [activeId, setActiveId] = useAtom(activeCategoryIdAtom);
   const [selectedId, setSelectedId] = useAtom(selectedCategoryIdAtom);
+
+  const totalWeight = getListWeight(list, list.weightUnit);
+  const totalBaseWeight = getListWeight(list, list.weightUnit, "base");
+
+  const tableFooters: { title: string; value: number }[] = [
+    { title: "Total", value: totalWeight },
+    ...weightTypes
+      .filter((i) => i !== "base")
+      .map((t) => ({
+        title: toTitleCase(t),
+        value: getListWeight(list, list.weightUnit, t),
+      })),
+    {
+      title: "Base Weight",
+      value: totalBaseWeight === totalWeight ? 0 : totalBaseWeight,
+    },
+  ].filter((i) => i.value > 0);
 
   return (
     <Table.Root size="1">
@@ -31,7 +49,7 @@ const WeightTable: React.FC<Props> = ({ list, listColorMap }) => {
           <Table.Row
             key={category.id}
             className={cn(
-              "transition-colors ease-out",
+              "cursor-pointer transition-colors ease-out",
               activeId === category.id && "bg-gray-2",
               selectedId === category.id && "bg-gray-3",
             )}
@@ -56,39 +74,17 @@ const WeightTable: React.FC<Props> = ({ list, listColorMap }) => {
             </Table.Cell>
           </Table.Row>
         ))}
-        {/* <Table.Row>
-          <Table.Cell className="text-right font-bold">Total</Table.Cell>
-          <Table.Cell className="flex gap-2 font-bold">
-            <span>
-              {formatWeight(
-                list.reduce((acc, category) => acc + category.value, 0),
-              )}
-            </span>
-            <span>{list[0]?.unit}</span>
-          </Table.Cell>
-        </Table.Row>
-        <Table.Row>
-          <Table.Cell className="text-right font-bold">Total</Table.Cell>
-          <Table.Cell className="flex gap-2 font-bold">
-            <span>
-              {formatWeight(
-                list.reduce((acc, category) => acc + category.value, 0),
-              )}
-            </span>
-            <span>{list[0]?.unit}</span>
-          </Table.Cell>
-        </Table.Row>
-        <Table.Row>
-          <Table.Cell className="text-right font-bold">Total</Table.Cell>
-          <Table.Cell className="flex gap-2 font-bold">
-            <span>
-              {formatWeight(
-                list.reduce((acc, category) => acc + category.value, 0),
-              )}
-            </span>
-            <span>{list[0]?.unit}</span>
-          </Table.Cell>
-        </Table.Row> */}
+        {tableFooters.map((footer) => (
+          <Table.Row>
+            <Table.Cell className="text-right font-medium">
+              {footer.title}
+            </Table.Cell>
+            <Table.Cell className="flex gap-2 font-bold">
+              <span>{formatWeight(footer.value)}</span>
+              <span>{list.weightUnit}</span>
+            </Table.Cell>
+          </Table.Row>
+        ))}
       </Table.Body>
     </Table.Root>
   );

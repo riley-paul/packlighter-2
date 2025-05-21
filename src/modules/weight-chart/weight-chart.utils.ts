@@ -2,6 +2,7 @@ import type {
   ExpandedCategory,
   ExpandedCategoryItem,
   ExpandedList,
+  WeightType,
   WeightUnit,
 } from "@/lib/types";
 import { WeightConvertible } from "@/lib/convertible";
@@ -21,18 +22,37 @@ const getMonochromaticScale = (baseColor: string, steps = 5) => {
 export const getItemWeight = (
   item: ExpandedCategoryItem,
   weightUnit: WeightUnit,
-) =>
-  WeightConvertible.convert(
-    item.itemData.weight,
-    item.itemData.weightUnit,
-    weightUnit,
-  ) * item.quantity;
+  weightType?: WeightType,
+) => {
+  if (weightType && item.weightType !== weightType) return 0;
+  return (
+    WeightConvertible.convert(
+      item.itemData.weight,
+      item.itemData.weightUnit,
+      weightUnit,
+    ) * item.quantity
+  );
+};
 
 export const getCategoryWeight = (
   category: ExpandedCategory,
   weightUnit: WeightUnit,
+  weightType?: WeightType,
 ) =>
-  category.items.reduce((acc, val) => acc + getItemWeight(val, weightUnit), 0);
+  category.items.reduce(
+    (acc, val) => acc + getItemWeight(val, weightUnit, weightType),
+    0,
+  );
+
+export const getListWeight = (
+  list: ExpandedList,
+  weightUnit: WeightUnit,
+  weightType?: WeightType,
+) =>
+  list.categories.reduce(
+    (acc, val) => acc + getCategoryWeight(val, weightUnit, weightType),
+    0,
+  );
 
 export const getListColorMap = (list: ExpandedList) => {
   const colorPalette = chroma.scale("Spectral").colors(list.categories.length);

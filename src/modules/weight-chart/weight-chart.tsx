@@ -14,7 +14,10 @@ import { getCategoryWeight, getItemWeight } from "./weight-chart.utils";
 const ACTIVE_OUTER_RADIUS_OFFSET = 4;
 const CORNER_RADIUS = 3;
 const BORDER_WIDTH = 1;
-const INNER_RADIUS = 60;
+const OUTER_RADIUS = 120;
+const RADIUS_RATIO = 0.75;
+const INNER_RADIUS = OUTER_RADIUS * RADIUS_RATIO;
+const BASE_MARGIN = 10;
 
 export type ChartData = {
   id: string;
@@ -64,7 +67,11 @@ const WeightChart: React.FC<Props> = ({ list, listColorMap }) => {
   return (
     <div
       ref={containerRef}
-      className="relative size-48 rounded-full"
+      className="relative rounded-full"
+      style={{
+        width: OUTER_RADIUS * 2,
+        height: OUTER_RADIUS * 2,
+      }}
       onClick={() => {
         setSelectedId(null);
       }}
@@ -81,7 +88,7 @@ const WeightChart: React.FC<Props> = ({ list, listColorMap }) => {
         const distanceY = e.clientY - centerY;
         const distance = Math.sqrt(distanceX ** 2 + distanceY ** 2);
 
-        setWithinInnerRadius(distance < INNER_RADIUS);
+        setWithinInnerRadius(distance < INNER_RADIUS - BASE_MARGIN);
       }}
     >
       <div id="category-container" className="absolute inset-0 rounded-full">
@@ -103,8 +110,8 @@ const WeightChart: React.FC<Props> = ({ list, listColorMap }) => {
             console.log("data", data);
             e.stopPropagation();
           }}
-          margin={generateMargin(10)}
-          innerRadius={0.75}
+          margin={generateMargin(BASE_MARGIN)}
+          innerRadius={RADIUS_RATIO}
           padAngle={1}
           cornerRadius={CORNER_RADIUS}
           activeOuterRadiusOffset={ACTIVE_OUTER_RADIUS_OFFSET}
@@ -140,8 +147,12 @@ const WeightChart: React.FC<Props> = ({ list, listColorMap }) => {
           }}
           activeId={activeId}
           onActiveIdChange={setActiveId}
-          margin={selectedCategory ? generateMargin(40) : generateMargin(10)}
-          innerRadius={0.5}
+          margin={
+            selectedCategory
+              ? generateMargin(BASE_MARGIN + (OUTER_RADIUS - INNER_RADIUS) + 4)
+              : generateMargin(BASE_MARGIN)
+          }
+          innerRadius={0.6}
           padAngle={selectedCategory ? 1.5 : 1}
           cornerRadius={CORNER_RADIUS}
           activeOuterRadiusOffset={ACTIVE_OUTER_RADIUS_OFFSET}
