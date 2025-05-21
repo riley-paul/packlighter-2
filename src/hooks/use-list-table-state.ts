@@ -6,6 +6,7 @@ const defaultColumnVisibility: VisibilityState = {
   packed: false,
   image: false,
   weight: false,
+  weightType: false,
 };
 
 export default function useListTableState(list: ListSelect | undefined): {
