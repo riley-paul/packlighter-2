@@ -2,20 +2,19 @@ import type { ExpandedList } from "@/lib/types";
 import React from "react";
 import WeightChart from "./weight-chart";
 import WeightTable from "./weight-table";
-import { parseListToChartData } from "./weight-chart.utils";
+import { getListColorMap } from "./weight-chart.utils";
 
 type Props = {
   list: ExpandedList;
 };
 
 const WeightPanel: React.FC<Props> = ({ list }) => {
-  const parsedList = parseListToChartData(list);
-
-  if (!list.showWeights || parsedList.length === 0) return null;
+  const colorMap = getListColorMap(list);
+  if (!list.showWeights || list.categories.length === 0) return null;
   return (
     <div className="flex w-full items-center justify-center gap-8">
-      <WeightChart list={parsedList} />
-      <WeightTable list={parsedList} />
+      <WeightChart list={list} listColorMap={colorMap} />
+      <WeightTable list={list} listColorMap={colorMap} />
     </div>
   );
 };
