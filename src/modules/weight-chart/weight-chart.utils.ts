@@ -64,9 +64,15 @@ export const getListColorMap = (list: ExpandedList) => {
       colorPalette[index1],
       category.items.length,
     );
-    category.items.forEach((item, index2) => {
-      colorMap.set(item.id, colorScale[index2]);
-    });
+    [...category.items]
+      .sort((a, b) => {
+        const aWeight = getItemWeight(a, list.weightUnit);
+        const bWeight = getItemWeight(b, list.weightUnit);
+        return aWeight - bWeight;
+      })
+      .forEach((item, index2) => {
+        colorMap.set(item.id, colorScale[index2]);
+      });
   });
   return colorMap;
 };

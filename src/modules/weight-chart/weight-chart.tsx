@@ -67,7 +67,7 @@ const WeightChart: React.FC<Props> = ({ list, listColorMap }) => {
   return (
     <div
       ref={containerRef}
-      className="relative rounded-full"
+      className="relative shrink-0 rounded-full"
       style={{
         width: OUTER_RADIUS * 2,
         height: OUTER_RADIUS * 2,
@@ -95,15 +95,21 @@ const WeightChart: React.FC<Props> = ({ list, listColorMap }) => {
         <ResponsivePie
           data={
             selectedCategory
-              ? selectedCategory.items.map(
-                  (i): ChartData => ({
-                    id: i.id,
-                    label: i.itemData.name,
-                    value: getItemWeight(i, list.weightUnit),
-                    unit: i.itemData.weightUnit,
-                    color: listColorMap.get(i.id),
-                  }),
-                )
+              ? [...selectedCategory.items]
+                  .sort((a, b) => {
+                    const aWeight = getItemWeight(a, list.weightUnit);
+                    const bWeight = getItemWeight(b, list.weightUnit);
+                    return bWeight - aWeight;
+                  })
+                  .map(
+                    (i): ChartData => ({
+                      id: i.id,
+                      label: i.itemData.name,
+                      value: getItemWeight(i, list.weightUnit),
+                      unit: i.itemData.weightUnit,
+                      color: listColorMap.get(i.id),
+                    }),
+                  )
               : []
           }
           onClick={(data, e) => {
