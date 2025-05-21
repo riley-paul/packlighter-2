@@ -145,7 +145,7 @@ const EditorCategoryItem: React.FC<Props> = (props) => {
           ref={ref}
           data-category-item-id={row.original.id}
           className={cn(
-            "text-sm flex h-fit items-center gap-2 p-1 transition-colors hover:bg-gray-3",
+            "text-sm flex h-fit items-center gap-2 p-1 transition-colors hover:bg-gray-3 group",
             isOverlay && "w-[800px] rounded-2 border bg-gray-2",
             isDuplicate && "bg-red-2 hover:bg-red-3",
           )}

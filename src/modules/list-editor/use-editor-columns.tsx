@@ -1,7 +1,12 @@
 import { createColumnHelper } from "@tanstack/react-table";
 import useMutations from "@/hooks/use-mutations";
 import React from "react";
-import { cn, formatWeight, getCheckboxState } from "@/lib/client/utils";
+import {
+  cn,
+  formatWeight,
+  getCheckboxState,
+  toTitleCase,
+} from "@/lib/client/utils";
 import AddItemPopover from "./add-popovers/add-item-popover";
 import useCurrentList from "@/hooks/use-current-list";
 import { WeightConvertible } from "@/lib/convertible";
@@ -12,16 +17,24 @@ import {
   Heading,
   Text,
   Button,
+  IconButton,
+  Tooltip,
 } from "@radix-ui/themes";
 import { z } from "zod";
 import useItemsMutations from "@/modules/items/items.mutations";
-import { type ExpandedCategory, type ExpandedCategoryItem } from "@/lib/types";
-import { weightUnitsInfo, type WeightUnit } from "@/lib/client/constants";
+import {
+  type ExpandedCategory,
+  type ExpandedCategoryItem,
+  type WeightType,
+  type WeightUnit,
+} from "@/lib/types";
+import { ACCENT_COLOR, weightUnitsInfo } from "@/lib/client/constants";
 import ItemImageDialog from "@/modules/items/components/item-image-dialog";
 import CellWrapper from "@/components/ui/cell-wrapper";
 import ConditionalForm from "@/components/input/conditional-form";
 import DeleteButton from "@/components/ui/delete-button";
 import ServerInput from "@/components/input/server-input";
+import { weightTypes } from "@/db/schema";
 
 const columnHelper = createColumnHelper<ExpandedCategoryItem>();
 
@@ -94,7 +107,7 @@ export default function useEditorColumns({
           isPacked: row.packed,
         }),
         {
-          id: "name-description",
+          id: "nameDescription",
           header: () => (
             <ConditionalForm
               value={category.name}
@@ -181,6 +194,61 @@ export default function useEditorColumns({
         },
       ),
 
+      columnHelper.accessor("weightType", {
+        id: "weightType",
+        header: () => null,
+        cell: (props) => {
+          const getIcon = (weightType: WeightType): string => {
+            switch (weightType) {
+              case "worn":
+                return "fas fa-shirt";
+              case "consumable":
+                return "fas fa-utensils";
+              default:
+                return "fas fa-shirt";
+            }
+          };
+
+          return (
+            <CellWrapper>
+              <div className="flex items-center gap-2">
+                {weightTypes
+                  .filter((i) => i !== "base")
+                  .map((unit) => {
+                    const isActive = props.getValue() === unit;
+                    return (
+                      <Tooltip
+                        content={toTitleCase(unit)}
+                        key={unit}
+                        delayDuration={500}
+                      >
+                        <IconButton
+                          size="1"
+                          aria-checked={isActive}
+                          variant="ghost"
+                          className={cn(
+                            "size-4 opacity-0 transition-opacity group-hover:opacity-100",
+                            isActive && "opacity-100",
+                          )}
+                          color={isActive ? ACCENT_COLOR : "gray"}
+                          onClick={() => {
+                            updateCategoryItem.mutate({
+                              categoryItemId: props.row.original.id,
+                              data: { weightType: isActive ? "base" : unit },
+                            });
+                          }}
+                        >
+                          <i className={cn(getIcon(unit), "text-1")} />
+                        </IconButton>
+                      </Tooltip>
+                    );
+                  })}
+              </div>
+            </CellWrapper>
+          );
+        },
+      }),
+
       columnHelper.accessor(
         (row) => ({
           weight: row.itemData.weight,
@@ -239,7 +307,8 @@ export default function useEditorColumns({
                   val.itemData.weight,
                   val.itemData.weightUnit,
                   list.weightUnit,
-                ),
+                ) *
+                  val.quantity,
               0,
             );
             return (

@@ -5,9 +5,14 @@ import {
   Item,
   List,
   User,
+  type weightTypes,
+  type weightUnits,
 } from "@/db/schema";
 import { createInsertSchema, createSelectSchema } from "drizzle-zod";
 import { z } from "zod";
+
+export type WeightUnit = (typeof weightUnits)[number];
+export type WeightType = (typeof weightTypes)[number];
 
 export type Unit = {
   symbol: string;
