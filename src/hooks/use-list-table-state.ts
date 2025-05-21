@@ -6,6 +6,7 @@ const defaultColumnVisibility: VisibilityState = {
   packed: false,
   image: false,
   weight: false,
+  weightType: false,
 };
 
 export default function useListTableState(list: ListSelect | undefined): {
@@ -18,6 +19,7 @@ export default function useListTableState(list: ListSelect | undefined): {
             packed: list.showPacked,
             image: list.showImages,
             weight: list.showWeights,
+            weightType: list.showWeights,
           }
         : defaultColumnVisibility,
     [list],
