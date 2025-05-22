@@ -12,7 +12,7 @@ import useCurrentList from "./use-current-list";
 import useMutationHelpers from "./use-mutation-helpers";
 import { useNavigate } from "@tanstack/react-router";
 import { listLinkOptions } from "@/lib/client/links";
-import type { CategorySelect, ExpandedList } from "@/lib/types";
+import type { CategorySelect, ExpandedList, ListSelect } from "@/lib/types";
 
 export default function useMutations() {
   const { listId } = useCurrentList();
@@ -136,9 +136,7 @@ export default function useMutations() {
 
   const updateCategory = useMutation({
     mutationFn: actions.categories.update.orThrow,
-    onSuccess: (data) => {
-      updateCategoryCache(data);
-    },
+    onSuccess: (data) => updateCategoryCache(data),
   });
 
   const addCategoryItem = useMutation({
@@ -227,34 +225,49 @@ export default function useMutations() {
     },
   });
 
+  const updateListCache = (data: Partial<ListSelect>, listId: string) => {
+    const { queryKey: listQK } = listQueryOptions(listId);
+    const { queryKey: listsQK } = listsQueryOptions;
+
+    queryClient.setQueryData(listQK, (prev) => {
+      if (!prev) return prev;
+      return { ...prev, ...data };
+    });
+
+    queryClient.setQueryData(listsQK, (prev) => {
+      if (!prev) return prev;
+      return prev.map((list) =>
+        list.id === listId ? { ...list, ...data } : list,
+      );
+    });
+  };
+
   const updateList = useMutation({
     mutationFn: actions.lists.update.orThrow,
-    onMutate: ({ data }) => {
-      const { queryKey } = listQueryOptions(listId);
-      return optimisticUpdate<ExpandedList>(queryKey, (prev) => ({
-        ...prev,
-        ...data,
-      }));
+    onMutate: async ({ data, listId }) => {
+      await Promise.all([
+        queryClient.cancelQueries(listQueryOptions(listId)),
+        queryClient.cancelQueries(listsQueryOptions),
+      ]);
+      const previousData = {
+        previousLists: queryClient.getQueryData(listsQueryOptions.queryKey),
+        previousList: queryClient.getQueryData(
+          listQueryOptions(listId).queryKey,
+        ),
+      };
+      updateListCache(data, listId);
+      return previousData;
     },
-    onSuccess: (data) => {
-      const { queryKey: listQK } = listQueryOptions(data.id);
-      const { queryKey: listsQK } = listsQueryOptions;
-
-      queryClient.setQueryData(listQK, (prev) => {
-        if (!prev) return prev;
-        return { ...prev, ...data };
-      });
-
-      queryClient.setQueryData(listsQK, (prev) => {
-        if (!prev) return prev;
-        return prev.map((list) =>
-          list.id === data.id ? { ...list, ...data } : list,
-        );
-      });
-    },
-    onError: (error, __, context) => {
-      const { queryKey } = listQueryOptions(listId);
-      onErrorOptimistic(queryKey, context);
+    onSuccess: (data) => updateListCache(data, data.id),
+    onError: (error, { listId }, context) => {
+      queryClient.setQueryData(
+        listsQueryOptions.queryKey,
+        context?.previousLists,
+      );
+      queryClient.setQueryData(
+        listQueryOptions(listId).queryKey,
+        context?.previousList,
+      );
       onError(error);
     },
   });
