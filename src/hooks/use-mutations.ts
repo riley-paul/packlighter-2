@@ -12,7 +12,7 @@ import useCurrentList from "./use-current-list";
 import useMutationHelpers from "./use-mutation-helpers";
 import { useNavigate } from "@tanstack/react-router";
 import { listLinkOptions } from "@/lib/client/links";
-import type { ExpandedList } from "@/lib/types";
+import type { CategorySelect, ExpandedList } from "@/lib/types";
 
 export default function useMutations() {
   const { listId } = useCurrentList();
@@ -119,13 +119,25 @@ export default function useMutations() {
     },
   });
 
+  const updateCategoryCache = (data: CategorySelect) => {
+    const { queryKey } = listQueryOptions(data.listId);
+    queryClient.setQueryData(queryKey, (prev) =>
+      produce(prev, (draft) => {
+        if (!draft) return draft;
+        const categoryIdx = draft.categories.findIndex((i) => i.id === data.id);
+        if (categoryIdx === -1) return draft;
+        draft.categories[categoryIdx] = {
+          ...draft.categories[categoryIdx],
+          ...data,
+        };
+      }),
+    );
+  };
+
   const updateCategory = useMutation({
     mutationFn: actions.categories.update.orThrow,
-    onSuccess: () => {
-      invalidateQueries([
-        listQueryOptions(listId).queryKey,
-        otherListCategoriesQueryOptions(listId).queryKey,
-      ]);
+    onSuccess: (data) => {
+      updateCategoryCache(data);
     },
   });
 

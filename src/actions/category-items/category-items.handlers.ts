@@ -1,21 +1,17 @@
 import { idAndUserIdFilter } from "@/actions/filters";
 import { ActionError, type ActionHandler } from "astro:actions";
-import {
-  getExpandedCategoryItem,
-  getListItemIds,
-  isAuthorized,
-} from "@/actions/helpers";
+import { getListItemIds, isAuthorized } from "@/actions/helpers";
 import { CategoryItem, Item, Category } from "@/db/schema";
 import { and, eq, max } from "drizzle-orm";
 import { v4 as uuid } from "uuid";
-import type { ExpandedCategoryItem } from "@/lib/types";
+import type { CategoryItemSelect } from "@/lib/types";
 import type categoryItemInputs from "./category-items.inputs";
 import { createDb } from "@/db";
 import { reorder } from "@atlaskit/pragmatic-drag-and-drop/reorder";
 
 const create: ActionHandler<
   typeof categoryItemInputs.create,
-  ExpandedCategoryItem
+  CategoryItemSelect
 > = async ({ data }, c) => {
   const db = createDb(c.locals.runtime.env);
   const userId = isAuthorized(c).id;
@@ -96,12 +92,12 @@ const create: ActionHandler<
     );
   }
 
-  return getExpandedCategoryItem(c, created.id);
+  return created;
 };
 
 const createAndAddToCategory: ActionHandler<
   typeof categoryItemInputs.createAndAddToCategory,
-  ExpandedCategoryItem
+  CategoryItemSelect
 > = async ({ categoryId, itemData, categoryItemData }, c) => {
   const db = createDb(c.locals.runtime.env);
   const userId = isAuthorized(c).id;
@@ -118,7 +114,7 @@ const createAndAddToCategory: ActionHandler<
     .where(eq(CategoryItem.categoryId, categoryId))
     .then((rows) => rows[0]);
 
-  const [{ id: categoryItemId }] = await db
+  const [created] = await db
     .insert(CategoryItem)
     .values({
       id: uuid(),
@@ -130,12 +126,12 @@ const createAndAddToCategory: ActionHandler<
     })
     .returning();
 
-  return getExpandedCategoryItem(c, categoryItemId);
+  return created;
 };
 
 const update: ActionHandler<
   typeof categoryItemInputs.update,
-  ExpandedCategoryItem
+  CategoryItemSelect
 > = async ({ categoryItemId, data }, c) => {
   const db = createDb(c.locals.runtime.env);
   const userId = isAuthorized(c).id;
@@ -179,7 +175,7 @@ const update: ActionHandler<
     );
   }
 
-  return getExpandedCategoryItem(c, categoryItemId);
+  return updated;
 };
 
 const remove: ActionHandler<typeof categoryItemInputs.remove, null> = async (
