@@ -224,12 +224,21 @@ export default function useMutations() {
         ...data,
       }));
     },
-    onSuccess: () => {
-      invalidateQueries([
-        listQueryOptions(listId).queryKey,
-        otherListCategoriesQueryOptions(listId).queryKey,
-        listsQueryOptions.queryKey,
-      ]);
+    onSuccess: (data) => {
+      const { queryKey: listQK } = listQueryOptions(data.id);
+      const { queryKey: listsQK } = listsQueryOptions;
+
+      queryClient.setQueryData(listQK, (prev) => {
+        if (!prev) return prev;
+        return { ...prev, ...data };
+      });
+
+      queryClient.setQueryData(listsQK, (prev) => {
+        if (!prev) return prev;
+        return prev.map((list) =>
+          list.id === data.id ? { ...list, ...data } : list,
+        );
+      });
     },
     onError: (error, __, context) => {
       const { queryKey } = listQueryOptions(listId);
