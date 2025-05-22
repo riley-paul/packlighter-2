@@ -1,4 +1,4 @@
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import {
   itemsQueryOptions,
   listQueryOptions,
@@ -17,6 +17,8 @@ import type { ExpandedList } from "@/lib/types";
 export default function useMutations() {
   const { listId } = useCurrentList();
   const navigate = useNavigate();
+
+  const queryClient = useQueryClient();
 
   const {
     onError,
@@ -260,8 +262,9 @@ export default function useMutations() {
 
   const unpackList = useMutation({
     mutationFn: actions.lists.unpack.orThrow,
-    onSuccess: () => {
-      invalidateQueries([listQueryOptions(listId).queryKey]);
+    onSuccess: (data) => {
+      const { queryKey } = listQueryOptions(data.id);
+      queryClient.setQueryData(queryKey, data);
     },
   });
 

@@ -73,7 +73,7 @@ const create: ActionHandler<typeof listInputs.create, ListSelect> = async (
   return newList;
 };
 
-const update: ActionHandler<typeof listInputs.update, ExpandedList> = async (
+const update: ActionHandler<typeof listInputs.update, ListSelect> = async (
   { listId, data },
   c,
 ) => {
@@ -81,10 +81,11 @@ const update: ActionHandler<typeof listInputs.update, ExpandedList> = async (
   const userId = isAuthorized(c).id;
   const { sortOrder } = data;
 
-  await db
+  const [updated] = await db
     .update(List)
     .set(data)
-    .where(idAndUserIdFilter(List, { userId, id: listId }));
+    .where(idAndUserIdFilter(List, { userId, id: listId }))
+    .returning();
 
   if (sortOrder !== undefined) {
     const lists = await db
@@ -113,7 +114,7 @@ const update: ActionHandler<typeof listInputs.update, ExpandedList> = async (
     );
   }
 
-  return getExpandedList(c, listId);
+  return updated;
 };
 
 const remove: ActionHandler<typeof listInputs.remove, null> = async (
