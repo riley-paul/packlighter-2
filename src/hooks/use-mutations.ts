@@ -1,4 +1,4 @@
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useMutation } from "@tanstack/react-query";
 import {
   itemsQueryOptions,
   listQueryOptions,
@@ -6,26 +6,17 @@ import {
   otherListCategoriesQueryOptions,
 } from "@/lib/client/queries";
 import { produce } from "immer";
-import { initCategoryItem, initItem } from "@/lib/init";
+import { initCategory, initCategoryItem, initItem } from "@/lib/init";
 import { actions } from "astro:actions";
 import useCurrentList from "./use-current-list";
 import useMutationHelpers from "./use-mutation-helpers";
 import { useNavigate } from "@tanstack/react-router";
 import { listLinkOptions } from "@/lib/client/links";
-
 import type { ExpandedList } from "@/lib/types";
-import {
-  addCachedCategory,
-  addCachedList,
-  updateCachedCategory,
-  updateCachedCategoryItem,
-  updateCachedList,
-} from "@/lib/client/cache-updaters";
 
 export default function useMutations() {
   const { listId } = useCurrentList();
   const navigate = useNavigate();
-  const queryClient = useQueryClient();
 
   const {
     onError,
@@ -104,23 +95,35 @@ export default function useMutations() {
 
   const updateCategoryItem = useMutation({
     mutationFn: actions.categoryItems.update.orThrow,
-    onSuccess: (data) =>
-      updateCachedCategoryItem({ queryClient, data, listId }),
+    onSuccess: () => {
+      invalidateQueries([listQueryOptions(listId).queryKey]);
+    },
     onMutate: ({ categoryItemId, data }) => {
       const { queryKey } = listQueryOptions(listId);
-      queryClient.cancelQueries({ queryKey });
-      const previous = queryClient.getQueryData(queryKey);
-      updateCachedCategoryItem({
-        queryClient,
-        data: { id: categoryItemId, ...data },
-        listId,
-      });
-      return { previous };
+      return optimisticUpdate<ExpandedList>(queryKey, (prev) => ({
+        ...prev,
+        categories: prev.categories.map((category) => ({
+          ...category,
+          items: category.items.map((item) =>
+            item.id === categoryItemId ? { ...item, ...data } : item,
+          ),
+        })),
+      }));
     },
     onError: (error, __, context) => {
       const { queryKey } = listQueryOptions(listId);
-      queryClient.setQueryData(queryKey, context?.previous);
+      onErrorOptimistic(queryKey, context);
       onError(error);
+    },
+  });
+
+  const updateCategory = useMutation({
+    mutationFn: actions.categories.update.orThrow,
+    onSuccess: () => {
+      invalidateQueries([
+        listQueryOptions(listId).queryKey,
+        otherListCategoriesQueryOptions(listId).queryKey,
+      ]);
     },
   });
 
@@ -169,24 +172,45 @@ export default function useMutations() {
     },
   });
 
-  const updateCategory = useMutation({
-    mutationFn: actions.categories.update.orThrow,
-    onSuccess: (data) => updateCachedCategory({ queryClient, data, listId }),
+  const addCategory = useMutation({
+    mutationFn: actions.categories.create.orThrow,
+    onMutate: ({ data }) => {
+      const { queryKey } = listQueryOptions(listId);
+      return optimisticUpdate<ExpandedList>(queryKey, (prev) =>
+        produce(prev, (draft) => {
+          const newCategory = initCategory(data);
+          draft.categories.push(newCategory);
+        }),
+      );
+    },
+    onSuccess: () => {
+      invalidateQueries([
+        listQueryOptions(listId).queryKey,
+        otherListCategoriesQueryOptions(listId).queryKey,
+      ]);
+    },
+    onError: (error, __, context) => {
+      const { queryKey } = listQueryOptions(listId);
+      onErrorOptimistic(queryKey, context);
+      onError(error);
+    },
   });
 
   const toggleCategoryPacked = useMutation({
     mutationFn: actions.categories.togglePacked.orThrow,
-    onSuccess: (data) => updateCachedCategory({ queryClient, data, listId }),
-  });
-
-  const addCategory = useMutation({
-    mutationFn: actions.categories.create.orThrow,
-    onSuccess: (data) => addCachedCategory({ queryClient, data, listId }),
+    onSuccess: () => {
+      invalidateQueries([listQueryOptions(listId).queryKey]);
+    },
   });
 
   const copyCategoryToList = useMutation({
     mutationFn: actions.categories.copyToList.orThrow,
-    onSuccess: (data) => addCachedCategory({ queryClient, data, listId }),
+    onSuccess: () => {
+      invalidateQueries([
+        listQueryOptions(listId).queryKey,
+        otherListCategoriesQueryOptions(listId).queryKey,
+      ]);
+    },
   });
 
   const updateList = useMutation({
@@ -198,7 +222,13 @@ export default function useMutations() {
         ...data,
       }));
     },
-    onSuccess: (data) => updateCachedList({ queryClient, data, listId }),
+    onSuccess: () => {
+      invalidateQueries([
+        listQueryOptions(listId).queryKey,
+        otherListCategoriesQueryOptions(listId).queryKey,
+        listsQueryOptions.queryKey,
+      ]);
+    },
     onError: (error, __, context) => {
       const { queryKey } = listQueryOptions(listId);
       onErrorOptimistic(queryKey, context);
@@ -209,7 +239,10 @@ export default function useMutations() {
   const addList = useMutation({
     mutationFn: actions.lists.create.orThrow,
     onSuccess: (data) => {
-      addCachedList({ queryClient, data, listId });
+      invalidateQueries([
+        listsQueryOptions.queryKey,
+        otherListCategoriesQueryOptions(listId).queryKey,
+      ]);
       navigate(listLinkOptions(data.id));
     },
   });
@@ -217,14 +250,19 @@ export default function useMutations() {
   const duplicateList = useMutation({
     mutationFn: actions.lists.duplicate.orThrow,
     onSuccess: (data) => {
-      addCachedList({ queryClient, data, listId });
+      invalidateQueries([
+        listsQueryOptions.queryKey,
+        otherListCategoriesQueryOptions(listId).queryKey,
+      ]);
       navigate(listLinkOptions(data.id));
     },
   });
 
   const unpackList = useMutation({
     mutationFn: actions.lists.unpack.orThrow,
-    onSuccess: (data) => updateCachedList({ queryClient, data, listId }),
+    onSuccess: () => {
+      invalidateQueries([listQueryOptions(listId).queryKey]);
+    },
   });
 
   return {
