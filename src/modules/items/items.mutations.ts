@@ -1,7 +1,7 @@
 import useMutationHelpers from "@/hooks/use-mutation-helpers";
 import { useMutation } from "@tanstack/react-query";
-import { itemsQueryOptions } from "../sidebar/sidebar.queries";
 import {
+  itemsQueryOptions,
   listQueryOptions,
   otherListCategoriesQueryOptions,
 } from "@/lib/client/queries";

@@ -2,7 +2,11 @@ import type { ActionAPIContext } from "astro/actions/runtime/utils.js";
 import { ActionError } from "astro:actions";
 import { Category, CategoryItem, Item, List, User } from "@/db/schema";
 import { eq, sql, inArray } from "drizzle-orm";
-import type { ExpandedList, ExpandedCategory } from "@/lib/types";
+import type {
+  ExpandedList,
+  ExpandedCategory,
+  ExpandedCategoryItem,
+} from "@/lib/types";
 import { createDb } from "@/db";
 
 export const isAuthorized = (context: ActionAPIContext) => {
@@ -59,7 +63,63 @@ export const getExpandedList = async (
   return result;
 };
 
-export const getListItemIds = async (context: ActionAPIContext, listId: string) => {
+export const getExpandedCategory = async (
+  context: ActionAPIContext,
+  categoryId: string,
+): Promise<ExpandedCategory> => {
+  const db = createDb(context.locals.runtime.env);
+  const [category] = await db
+    .select()
+    .from(Category)
+    .where(eq(Category.id, categoryId));
+
+  if (!category) {
+    throw new ActionError({
+      code: "NOT_FOUND",
+      message: "Category not found",
+    });
+  }
+
+  const categoryItems = await db
+    .select()
+    .from(CategoryItem)
+    .where(eq(CategoryItem.categoryId, categoryId))
+    .leftJoin(Item, eq(CategoryItem.itemId, Item.id))
+    .orderBy(CategoryItem.sortOrder);
+
+  return {
+    ...category,
+    items: categoryItems
+      .filter((ci) => ci.item !== null)
+      .map((ci) => ({ ...ci.categoryItem, itemData: ci.item! })),
+    packed: categoryItems.every((ci) => ci.categoryItem.packed),
+  };
+};
+
+export const getExpandedCategoryItem = async (
+  context: ActionAPIContext,
+  categoryItemId: string,
+): Promise<ExpandedCategoryItem> => {
+  const db = createDb(context.locals.runtime.env);
+  const [categoryItem] = await db
+    .select()
+    .from(CategoryItem)
+    .where(eq(CategoryItem.id, categoryItemId))
+    .innerJoin(Item, eq(CategoryItem.itemId, Item.id));
+
+  if (!categoryItem) {
+    throw new ActionError({
+      code: "NOT_FOUND",
+      message: "Category item not found",
+    });
+  }
+  return { ...categoryItem.categoryItem, itemData: categoryItem.item };
+};
+
+export const getListItemIds = async (
+  context: ActionAPIContext,
+  listId: string,
+) => {
   const db = createDb(context.locals.runtime.env);
   const categoryIds = await db
     .select({ id: Category.id })

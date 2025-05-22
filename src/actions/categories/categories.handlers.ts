@@ -2,16 +2,12 @@ import { Category, CategoryItem, List } from "@/db/schema";
 import { eq, max, and, ne, desc, notInArray } from "drizzle-orm";
 import { idAndUserIdFilter } from "@/actions/filters";
 import { ActionError, type ActionHandler } from "astro:actions";
-import { isAuthorized } from "@/actions/helpers";
+import { getExpandedCategory, isAuthorized } from "@/actions/helpers";
 import { reorder } from "@atlaskit/pragmatic-drag-and-drop/reorder";
 
 import { v4 as uuid } from "uuid";
 import type categoryInputs from "./categories.inputs";
-import type {
-  CategoryItemSelect,
-  CategorySelect,
-  OtherCategory,
-} from "@/lib/types";
+import type { ExpandedCategory, OtherCategory } from "@/lib/types";
 import { createDb } from "@/db";
 
 const getFromOtherLists: ActionHandler<
@@ -36,7 +32,7 @@ const getFromOtherLists: ActionHandler<
 
 const copyToList: ActionHandler<
   typeof categoryInputs.copyToList,
-  CategorySelect
+  ExpandedCategory
 > = async ({ categoryId, listId }, c) => {
   const db = createDb(c.locals.runtime.env);
   const userId = isAuthorized(c).id;
@@ -112,12 +108,12 @@ const copyToList: ActionHandler<
       }),
     ),
   );
-  return newCategory;
+  return getExpandedCategory(c, newCategory.id);
 };
 
 const create: ActionHandler<
   typeof categoryInputs.create,
-  CategorySelect
+  ExpandedCategory
 > = async ({ listId, data }, c) => {
   const db = createDb(c.locals.runtime.env);
   const userId = isAuthorized(c).id;
@@ -127,18 +123,17 @@ const create: ActionHandler<
     .where(eq(Category.listId, listId))
     .then((rows) => rows[0]);
 
-  const created = await db
+  const [{ id: categoryId }] = await db
     .insert(Category)
     .values({
-      id: uuid(),
       sortOrder: maxSortOrder ? maxSortOrder + 1 : undefined,
       ...data,
       listId,
       userId,
     })
-    .returning()
-    .then((rows) => rows[0]);
-  return created;
+    .returning();
+
+  return getExpandedCategory(c, categoryId);
 };
 
 const remove: ActionHandler<typeof categoryInputs.remove, null> = async (
@@ -156,7 +151,7 @@ const remove: ActionHandler<typeof categoryInputs.remove, null> = async (
 
 const update: ActionHandler<
   typeof categoryInputs.update,
-  CategorySelect
+  ExpandedCategory
 > = async ({ categoryId, data }, c) => {
   const db = createDb(c.locals.runtime.env);
   const userId = isAuthorized(c).id;
@@ -183,11 +178,10 @@ const update: ActionHandler<
   const { listId } = category;
   const { sortOrder } = data;
 
-  const [updated] = await db
+  await db
     .update(Category)
     .set({ ...data, userId })
-    .where(idAndUserIdFilter(Category, { id: categoryId, userId }))
-    .returning();
+    .where(idAndUserIdFilter(Category, { id: categoryId, userId }));
 
   if (sortOrder !== undefined) {
     const categories = await db
@@ -216,12 +210,12 @@ const update: ActionHandler<
     );
   }
 
-  return updated;
+  return getExpandedCategory(c, categoryId);
 };
 
 const togglePacked: ActionHandler<
   typeof categoryInputs.togglePacked,
-  CategoryItemSelect[]
+  ExpandedCategory
 > = async ({ categoryId }, c) => {
   const db = createDb(c.locals.runtime.env);
   const userId = isAuthorized(c).id;
@@ -237,7 +231,7 @@ const togglePacked: ActionHandler<
 
   const fullyPacked = categoryItems.every((item) => item.packed);
 
-  const newCategoryItems = await db
+  await db
     .update(CategoryItem)
     .set({ packed: !fullyPacked })
     .where(
@@ -245,9 +239,9 @@ const togglePacked: ActionHandler<
         eq(CategoryItem.categoryId, categoryId),
         eq(CategoryItem.userId, userId),
       ),
-    )
-    .returning();
-  return newCategoryItems;
+    );
+
+  return getExpandedCategory(c, categoryId);
 };
 
 const categoryHandlers = {

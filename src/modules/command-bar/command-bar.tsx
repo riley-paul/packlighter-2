@@ -18,11 +18,9 @@ import { useAtom, useSetAtom } from "jotai";
 import { openEditorAtom } from "@/modules/items/items.store";
 import { useNavigate } from "@tanstack/react-router";
 import { listLinkOptions } from "@/lib/client/links";
-import {
-  listsQueryOptions,
-  itemsQueryOptions,
-} from "@/modules/sidebar/sidebar.queries";
+
 import { commandBarOpenAtom } from "./command-bar.store";
+import { itemsQueryOptions, listsQueryOptions } from "@/lib/client/queries";
 
 const CommandBar: React.FC = () => {
   const [open, setOpen] = useAtom(commandBarOpenAtom);

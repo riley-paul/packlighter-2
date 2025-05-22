@@ -4,9 +4,9 @@ import { useQuery } from "@tanstack/react-query";
 import useMutations from "@/hooks/use-mutations";
 import useCurrentList from "@/hooks/use-current-list";
 import { usePackingItemsSortFilter } from "../../sidebar/components/packing-items-sort-filter/use-packing-item-sort-filter";
-import { itemsQueryOptions } from "@/modules/sidebar/sidebar.queries";
 import type { ExpandedCategory } from "@/lib/types";
 import AddEntityPopover from "./add-entity-popover";
+import { itemsQueryOptions } from "@/lib/client/queries";
 
 type Props = {
   category: ExpandedCategory;

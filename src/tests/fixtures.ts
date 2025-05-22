@@ -14,6 +14,7 @@ const getRandomArrayItem = <T>(arr: T[]): T => {
 };
 
 export const USER_ID = crypto.randomUUID();
+export const USER_EMAIL = `${crypto.randomUUID()}@example.com`;
 export const LIST_ID = crypto.randomUUID();
 export const LIST_IDS = new Array(5).fill(0).map(() => crypto.randomUUID());
 export const ITEM_IDS = new Array(20).fill(0).map(() => crypto.randomUUID());
@@ -25,7 +26,7 @@ export const seedTestData = async () => {
   await db.insert(User).values({
     id: USER_ID,
     name: "Test User",
-    email: "test-user@example.com",
+    email: USER_EMAIL,
   });
 
   await db.insert(Item).values(

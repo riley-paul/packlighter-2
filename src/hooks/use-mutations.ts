@@ -1,6 +1,8 @@
 import { useMutation } from "@tanstack/react-query";
 import {
+  itemsQueryOptions,
   listQueryOptions,
+  listsQueryOptions,
   otherListCategoriesQueryOptions,
 } from "@/lib/client/queries";
 import { produce } from "immer";
@@ -10,10 +12,6 @@ import useCurrentList from "./use-current-list";
 import useMutationHelpers from "./use-mutation-helpers";
 import { useNavigate } from "@tanstack/react-router";
 import { listLinkOptions } from "@/lib/client/links";
-import {
-  itemsQueryOptions,
-  listsQueryOptions,
-} from "@/modules/sidebar/sidebar.queries";
 import type { ExpandedList } from "@/lib/types";
 
 export default function useMutations() {
@@ -256,7 +254,7 @@ export default function useMutations() {
         listsQueryOptions.queryKey,
         otherListCategoriesQueryOptions(listId).queryKey,
       ]);
-      navigate(listLinkOptions(data.listId));
+      navigate(listLinkOptions(data.id));
     },
   });
 
