@@ -35,8 +35,7 @@ export const initCategoryItem = (
   sortOrder: data.sortOrder ?? 1,
   itemId: data.itemId ?? uuid(),
   packed: data.packed ?? false,
-  wornWeight: data.wornWeight ?? false,
-  consWeight: data.consWeight ?? false,
+  weightType: "base",
   createdAt: data.createdAt ?? currentTime(),
   updatedAt: data.updatedAt ?? currentTime(),
 });

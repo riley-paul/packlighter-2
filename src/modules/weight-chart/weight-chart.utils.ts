@@ -2,12 +2,13 @@ import type {
   ExpandedCategory,
   ExpandedCategoryItem,
   ExpandedList,
+  WeightType,
+  WeightUnit,
 } from "@/lib/types";
-import type { ChartDataNested } from "./weight-chart.types";
 import { WeightConvertible } from "@/lib/convertible";
 import chroma from "chroma-js";
 
-function getMonochromaticScale(baseColor: string, steps = 5) {
+const getMonochromaticScale = (baseColor: string, steps = 5) => {
   return chroma
     .scale([
       chroma(baseColor).brighten(1.5),
@@ -16,41 +17,62 @@ function getMonochromaticScale(baseColor: string, steps = 5) {
     ])
     .mode("lab")
     .colors(steps);
-}
+};
 
-export const parseListToChartData = (list: ExpandedList): ChartDataNested[] => {
-  const colorPalette = chroma.scale("Spectral").colors(list.categories.length);
-
-  const getItemWeight = (item: ExpandedCategoryItem) =>
+export const getItemWeight = (
+  item: ExpandedCategoryItem,
+  weightUnit: WeightUnit,
+  weightType?: WeightType,
+) => {
+  if (weightType && item.weightType !== weightType) return 0;
+  return (
     WeightConvertible.convert(
       item.itemData.weight,
       item.itemData.weightUnit,
-      list.weightUnit,
-    ) * item.quantity;
+      weightUnit,
+    ) * item.quantity
+  );
+};
 
-  const getCategoryWeight = (category: ExpandedCategory) =>
-    category.items.reduce((acc, val) => acc + getItemWeight(val), 0);
+export const getCategoryWeight = (
+  category: ExpandedCategory,
+  weightUnit: WeightUnit,
+  weightType?: WeightType,
+) =>
+  category.items.reduce(
+    (acc, val) => acc + getItemWeight(val, weightUnit, weightType),
+    0,
+  );
 
-  return list.categories.map((category, index1) => ({
-    id: category.id,
-    label: category.name,
-    value: getCategoryWeight(category),
-    unit: list.weightUnit,
-    color: colorPalette[index1],
-    children: category.items
-      .sort((a, b) => getItemWeight(a) - getItemWeight(b))
-      .map((item, index2) => {
-        const colorScale = getMonochromaticScale(
-          colorPalette[index1],
-          category.items.length,
-        );
-        return {
-          id: item.id,
-          label: item.itemData.name,
-          value: getItemWeight(item),
-          unit: list.weightUnit,
-          color: colorScale[index2],
-        };
-      }),
-  }));
+export const getListWeight = (
+  list: ExpandedList,
+  weightUnit: WeightUnit,
+  weightType?: WeightType,
+) =>
+  list.categories.reduce(
+    (acc, val) => acc + getCategoryWeight(val, weightUnit, weightType),
+    0,
+  );
+
+export const getListColorMap = (list: ExpandedList) => {
+  const colorPalette = chroma.scale("Spectral").colors(list.categories.length);
+  const colorMap = new Map<string, string>();
+
+  list.categories.forEach((category, index1) => {
+    colorMap.set(category.id, colorPalette[index1]);
+    const colorScale = getMonochromaticScale(
+      colorPalette[index1],
+      category.items.length,
+    );
+    [...category.items]
+      .sort((a, b) => {
+        const aWeight = getItemWeight(a, list.weightUnit);
+        const bWeight = getItemWeight(b, list.weightUnit);
+        return aWeight - bWeight;
+      })
+      .forEach((item, index2) => {
+        colorMap.set(item.id, colorScale[index2]);
+      });
+  });
+  return colorMap;
 };

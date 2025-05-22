@@ -1,6 +1,7 @@
 import { integer, sqliteTable, text } from "drizzle-orm/sqlite-core";
 
 export const weightUnits = ["g", "kg", "oz", "lb"] as const;
+export const weightTypes = ["base", "consumable", "worn"] as const;
 
 const id = text("id")
   .primaryKey()
@@ -96,8 +97,7 @@ export const CategoryItem = sqliteTable("categoryItem", {
   quantity: integer().notNull().default(1),
 
   packed: integer({ mode: "boolean" }).notNull().default(false),
-  wornWeight: integer({ mode: "boolean" }).notNull().default(false),
-  consWeight: integer({ mode: "boolean" }).notNull().default(false),
+  weightType: text({ enum: weightTypes }).notNull().default("base"),
   ...timeStamps,
 });
 
