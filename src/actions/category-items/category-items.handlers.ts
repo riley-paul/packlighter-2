@@ -1,17 +1,21 @@
 import { idAndUserIdFilter } from "@/actions/filters";
 import { ActionError, type ActionHandler } from "astro:actions";
-import { getListItemIds, isAuthorized } from "@/actions/helpers";
+import {
+  getExpandedCategoryItem,
+  getListItemIds,
+  isAuthorized,
+} from "@/actions/helpers";
 import { CategoryItem, Item, Category } from "@/db/schema";
 import { and, eq, max } from "drizzle-orm";
 import { v4 as uuid } from "uuid";
-import type { CategoryItemSelect } from "@/lib/types";
+import type { CategoryItemSelect, ExpandedCategoryItem } from "@/lib/types";
 import type categoryItemInputs from "./category-items.inputs";
 import { createDb } from "@/db";
 import { reorder } from "@atlaskit/pragmatic-drag-and-drop/reorder";
 
 const create: ActionHandler<
   typeof categoryItemInputs.create,
-  CategoryItemSelect
+  ExpandedCategoryItem
 > = async ({ data }, c) => {
   const db = createDb(c.locals.runtime.env);
   const userId = isAuthorized(c).id;
@@ -92,7 +96,7 @@ const create: ActionHandler<
     );
   }
 
-  return created;
+  return getExpandedCategoryItem(c, created.id);
 };
 
 const createAndAddToCategory: ActionHandler<

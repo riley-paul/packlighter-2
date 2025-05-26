@@ -21,6 +21,7 @@ import {
 import { useQueryClient } from "@tanstack/react-query";
 import { listQueryOptions } from "@/lib/client/queries";
 import useCurrentList from "@/hooks/use-current-list";
+import { FocusManagerProvider } from "@/components/focus-manager-provider";
 
 type Props = {
   categories: ExpandedCategory[];
@@ -277,14 +278,16 @@ const EditorCategories: React.FC<Props> = (props) => {
   }, [categories]);
 
   return (
-    <div className="flex flex-col gap-4">
-      {categories.map((category) => (
-        <EditorCategory key={category.id} category={category} />
-      ))}
-      <div className="pl-2">
-        <AddCategoryPopover />
+    <FocusManagerProvider dependencies={categories}>
+      <div className="flex flex-col gap-4">
+        {categories.map((category) => (
+          <EditorCategory key={category.id} category={category} />
+        ))}
+        <div className="pl-2">
+          <AddCategoryPopover />
+        </div>
       </div>
-    </div>
+    </FocusManagerProvider>
   );
 };
 

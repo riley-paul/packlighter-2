@@ -43,12 +43,6 @@ export default function useMutations() {
         }),
       );
     },
-    onSuccess: () => {
-      invalidateQueries([
-        listQueryOptions(listId).queryKey,
-        itemsQueryOptions.queryKey,
-      ]);
-    },
     onError: (error, __, context) => {
       const { queryKey } = listQueryOptions(listId);
       onErrorOptimistic(queryKey, context);
@@ -175,12 +169,18 @@ export default function useMutations() {
 
   const addItemToCategory = useMutation({
     mutationFn: actions.categoryItems.create.orThrow,
-    onSuccess: () => {
-      invalidateQueries([
-        listQueryOptions(listId).queryKey,
-        otherListCategoriesQueryOptions(listId).queryKey,
-        itemsQueryOptions.queryKey,
-      ]);
+    onSuccess: (data) => {
+      const { queryKey } = listQueryOptions(listId);
+      queryClient.setQueryData(queryKey, (prev) => {
+        if (!prev) return prev;
+        const categoryIdx = prev.categories.findIndex(
+          (c) => c.id === data.categoryId,
+        );
+        return produce(prev, (draft) => {
+          if (categoryIdx === -1) return draft;
+          draft.categories[categoryIdx].items.push(data);
+        });
+      });
     },
   });
 

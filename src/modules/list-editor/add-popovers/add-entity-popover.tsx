@@ -12,6 +12,7 @@ import {
 import { Button, Popover, Spinner } from "@radix-ui/themes";
 import { cn, toTitleCase } from "@/lib/client/utils";
 import { CommandLoading } from "cmdk";
+import { useFocusManager } from "@/components/focus-manager-provider";
 
 const NEW_ENTITY_VALUE = "create-new-category-" + crypto.randomUUID();
 
@@ -41,6 +42,7 @@ function AddEntityPopover<T extends { id: string }>({
   isLoading,
 }: Props<T>) {
   const buttonRef = React.useRef<HTMLButtonElement>(null);
+  const setFocus = useFocusManager();
 
   const [isOpen, setIsOpen] = React.useState(false);
   const [value, setValue] = React.useState<string>("");
@@ -97,7 +99,7 @@ function AddEntityPopover<T extends { id: string }>({
                   onSelect={() => {
                     handleAdd(value);
                     setIsOpen(false);
-                    buttonRef.current?.focus();
+                    setFocus(buttonRef.current);
                   }}
                 >
                   <i className="fa-solid fa-plus mr-2 text-accent-10" />
@@ -117,7 +119,7 @@ function AddEntityPopover<T extends { id: string }>({
                       onSelect={() => {
                         handleEntitySelect(entity.id);
                         setIsOpen(false);
-                        buttonRef.current?.focus();
+                        setFocus(buttonRef.current);
                       }}
                       disabled={getEntityDisabled?.(entity)}
                     >
