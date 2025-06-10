@@ -106,7 +106,7 @@ const WeightChart: React.FC<Props> = ({ list, listColorMap }) => {
                       id: i.id,
                       label: i.itemData.name,
                       value: getItemWeight(i, list.weightUnit),
-                      unit: i.itemData.weightUnit,
+                      unit: list.weightUnit,
                       color: listColorMap.get(i.id),
                     }),
                   )
