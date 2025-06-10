@@ -193,7 +193,7 @@ const PackingList: React.FC<Props> = (props) => {
           title={list.name || "Unnamed List"}
           data-drag-id={list.id}
           className={cn(
-            "flex h-9 items-center gap-2 border-l-4 border-transparent py-0.5 pl-2 pr-4 hover:border-accentA-6",
+            "flex items-center gap-2 border-l-4 border-transparent py-2 pl-2 pr-4 hover:border-accentA-6",
             isOverlay &&
               "border-border w-64 rounded-2 border border-l-4 bg-gray-2",
             isActive &&
@@ -216,7 +216,6 @@ const PackingList: React.FC<Props> = (props) => {
                   asChild
                   size="2"
                   weight={isActive ? "bold" : "medium"}
-                  truncate
                   color={displayValue ? undefined : "gray"}
                   className={cn("w-full flex-1", !displayValue && "italic")}
                 >

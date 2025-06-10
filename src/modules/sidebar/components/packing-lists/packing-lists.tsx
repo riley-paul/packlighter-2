@@ -134,6 +134,7 @@ export default function PackingLists(): ReturnType<React.FC> {
             {rowVirtualizer.getVirtualItems().map((virtualItem) => (
               <div
                 key={virtualItem.key}
+                ref={rowVirtualizer.measureElement}
                 data-index={virtualItem.index}
                 style={{
                   position: "absolute",
