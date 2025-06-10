@@ -169,18 +169,8 @@ export default function useMutations() {
 
   const addItemToCategory = useMutation({
     mutationFn: actions.categoryItems.create.orThrow,
-    onSuccess: (data) => {
-      const { queryKey } = listQueryOptions(listId);
-      queryClient.setQueryData(queryKey, (prev) => {
-        if (!prev) return prev;
-        const categoryIdx = prev.categories.findIndex(
-          (c) => c.id === data.categoryId,
-        );
-        return produce(prev, (draft) => {
-          if (categoryIdx === -1) return draft;
-          draft.categories[categoryIdx].items.push(data);
-        });
-      });
+    onSuccess: () => {
+      invalidateQueries([listQueryOptions(listId).queryKey]);
     },
   });
 
