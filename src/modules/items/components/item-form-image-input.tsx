@@ -3,6 +3,7 @@ import {
   Button,
   Card,
   IconButton,
+  Kbd,
   Tabs,
   Text,
   TextField,
@@ -39,6 +40,12 @@ const ImageWithRemoveButton: React.FC<{
   );
 };
 
+const getContainerStyle = (size: "sm" | "md" | "lg" | null | undefined) => ({
+  "h-16": size === "sm",
+  "h-24": size === "md",
+  "h-40": size === "lg",
+});
+
 const UrlImageInput: React.FC = () => {
   const { control } = useFormContext<ItemForm>();
   const { size } = React.useContext(ItemImageContext);
@@ -55,12 +62,11 @@ const UrlImageInput: React.FC = () => {
             shouldRender={Boolean(field.value)}
           />
           <section
-            className={cn("flex w-full flex-col justify-center gap-2", {
-              "h-16": size === "sm",
-              "h-24": size === "md",
-              "h-40": size === "lg",
-              "px-8": !Boolean(field.value),
-            })}
+            className={cn(
+              "flex w-full flex-col justify-center gap-2",
+              getContainerStyle(size),
+              !Boolean(field.value) && "px-10",
+            )}
           >
             <TextField.Root
               {...field}
@@ -117,11 +123,8 @@ const UploadImageInput: React.FC = () => {
             <section
               className={cn(
                 "flex w-full flex-col items-center justify-center gap-2",
-                {
-                  "h-16": size === "sm",
-                  "h-24": size === "md",
-                  "h-40": size === "lg",
-                },
+                getContainerStyle(size),
+                !Boolean(field.value) && !hasUploadedImage && "px-10",
               )}
             >
               <Button
@@ -132,8 +135,9 @@ const UploadImageInput: React.FC = () => {
                 <i className="fas fa-image"></i>
                 Select Image
               </Button>
-              <Text size="1" color="gray" className="text-center">
-                Drag and drop an image here, or click to select
+              <Text size="1" color="gray" className="text-center leading-2">
+                Drag and drop an image here, click to select, or paste from
+                clipboard using <Kbd>Ctrl+V</Kbd>
               </Text>
             </section>
           </Card>

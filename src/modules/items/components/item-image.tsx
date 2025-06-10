@@ -14,7 +14,7 @@ const itemImageVariants = cva(
       },
       hasImage: {
         true: "bg-[white]",
-        false: "bg-gray-4",
+        false: "bg-gray-4 h-6",
       },
     },
     defaultVariants: {
