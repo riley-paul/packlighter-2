@@ -1,3 +1,4 @@
+import AlertSystem from "@/components/alert-system/alert-system";
 import CommandBar from "@/modules/command-bar/command-bar";
 import FeedbackButton from "@/modules/feedback/feedback-button";
 import ItemEditor from "@/modules/items/components/item-editor";
@@ -13,6 +14,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
 function Component() {
   return (
     <>
+      <AlertSystem />
       <ItemEditor />
       <CommandBar />
       <Outlet />

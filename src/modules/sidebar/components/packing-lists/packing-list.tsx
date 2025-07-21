@@ -18,7 +18,6 @@ import {
 } from "@atlaskit/pragmatic-drag-and-drop-hitbox/closest-edge";
 
 import Gripper from "@/components/drag-and-drop/gripper";
-import useMutations from "@/hooks/use-mutations";
 import useDraggableState from "@/hooks/use-draggable-state";
 import {
   DND_TYPE_KEY,
@@ -26,78 +25,31 @@ import {
   isDndEntityType,
 } from "@/lib/client/constants";
 import useCurrentList from "@/hooks/use-current-list";
-import { DropdownMenu, IconButton, Portal, Text } from "@radix-ui/themes";
-import useConfirmDialog from "@/hooks/use-confirm-dialog";
+import { Portal, Text } from "@radix-ui/themes";
 import { useSetAtom } from "jotai";
 import { mobileSidebarOpenAtom } from "@/modules/sidebar/sidebar.store";
 import { listLinkOptions } from "@/lib/client/links";
 import { Link } from "@tanstack/react-router";
 import type { ListSelect } from "@/lib/types";
 import DropIndicatorWrapper from "@/components/drag-and-drop/drop-indicator-wrapper";
-import ConditionalForm from "@/components/input/conditional-form";
 import RadixProvider from "@/components/ui/radix-provider";
+import PackingListMenu from "./packing-list-menu";
 
 interface Props {
   list: ListSelect;
   isOverlay?: boolean;
 }
 
-const ContextMenu: React.FC<{
-  handleDelete: () => void;
-  handleDuplicate: () => void;
-  handleRename: () => void;
-}> = ({ handleDelete, handleRename, handleDuplicate }) => (
-  <DropdownMenu.Root>
-    <DropdownMenu.Trigger>
-      <IconButton
-        variant="ghost"
-        color="gray"
-        title="List Actions"
-        size="1"
-        radius="full"
-      >
-        <span className="sr-only">Open menu</span>
-        <i className="fa-solid fa-ellipsis" />
-      </IconButton>
-    </DropdownMenu.Trigger>
-    <DropdownMenu.Content align="start" className="z-30">
-      <DropdownMenu.Item onClick={handleRename}>
-        <i className="fa-solid fa-pen w-4 text-center opacity-70" />
-        Rename
-      </DropdownMenu.Item>
-
-      <DropdownMenu.Item onClick={handleDuplicate}>
-        <i className="fa-solid fa-copy w-4 text-center opacity-70" />
-        Duplicate
-      </DropdownMenu.Item>
-
-      <DropdownMenu.Item color="red" onClick={handleDelete}>
-        <i className="fa-solid fa-backspace w-4 text-center opacity-70" />
-        Delete
-      </DropdownMenu.Item>
-    </DropdownMenu.Content>
-  </DropdownMenu.Root>
-);
-
-const PackingList: React.FC<Props> = (props) => {
+const PackingList: React.FC<Props> = ({ list, isOverlay }) => {
   const ref = React.useRef<HTMLDivElement>(null);
   const gripperRef = React.useRef<HTMLButtonElement>(null);
 
   const setMobileSidebarOpen = useSetAtom(mobileSidebarOpenAtom);
   const closeMobileSidebar = () => setMobileSidebarOpen(false);
 
-  const [ConfirmDeleteDialog, confirmDelete] = useConfirmDialog({
-    title: "Delete List",
-    description:
-      "Are you sure you want to delete this list? This cannot be undone.",
-  });
-
-  const { list, isOverlay } = props;
   const { listId } = useCurrentList();
 
   const isActive = listId === list.id;
-
-  const { deleteList, duplicateList, updateList } = useMutations();
 
   const { draggableState, setDraggableState, setDraggableIdle } =
     useDraggableState();
@@ -186,7 +138,6 @@ const PackingList: React.FC<Props> = (props) => {
 
   return (
     <>
-      <ConfirmDeleteDialog />
       <DropIndicatorWrapper draggableState={draggableState}>
         <div
           ref={ref}
@@ -201,44 +152,22 @@ const PackingList: React.FC<Props> = (props) => {
             "transition-colors ease-in",
           )}
         >
-          <ConditionalForm
-            compactButtons
-            formProps={{ className: "flex-1" }}
-            value={list.name}
-            handleSubmit={(value) => {
-              updateList.mutate({ listId: list.id, data: { name: value } });
-            }}
+          <Gripper ref={gripperRef} />
+          <Text
+            asChild
+            size="2"
+            weight={isActive ? "bold" : "medium"}
+            color={list.name ? undefined : "gray"}
+            className={cn("w-full flex-1", !list.name && "italic")}
           >
-            {({ startEditing, displayValue }) => (
-              <>
-                <Gripper ref={gripperRef} />
-                <Text
-                  asChild
-                  size="2"
-                  weight={isActive ? "bold" : "medium"}
-                  color={displayValue ? undefined : "gray"}
-                  className={cn("w-full flex-1", !displayValue && "italic")}
-                >
-                  <Link
-                    {...listLinkOptions(list.id)}
-                    onClick={() => closeMobileSidebar()}
-                  >
-                    {displayValue || "Unnamed List"}
-                  </Link>
-                </Text>
-                <ContextMenu
-                  handleRename={startEditing}
-                  handleDelete={async () => {
-                    const ok = await confirmDelete();
-                    if (ok) deleteList.mutate({ listId: list.id });
-                  }}
-                  handleDuplicate={() =>
-                    duplicateList.mutate({ listId: list.id })
-                  }
-                />
-              </>
-            )}
-          </ConditionalForm>
+            <Link
+              {...listLinkOptions(list.id)}
+              onClick={() => closeMobileSidebar()}
+            >
+              {list.name || "Unnamed List"}
+            </Link>
+          </Text>
+          <PackingListMenu list={list} />
         </div>
       </DropIndicatorWrapper>
 
