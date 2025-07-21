@@ -34,7 +34,6 @@ const AddCategoryPopover: React.FC = () => {
         </Text>
       )}
       isLoading={isLoading}
-      className="w-[320px]"
     />
   );
 };

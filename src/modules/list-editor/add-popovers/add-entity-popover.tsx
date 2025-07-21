@@ -14,8 +14,6 @@ import { cn, toTitleCase } from "@/lib/client/utils";
 import { CommandLoading } from "cmdk";
 import { useFocusManager } from "@/components/focus-manager-provider";
 
-const NEW_ENTITY_VALUE = "create-new-category-" + crypto.randomUUID();
-
 type Props<T extends { id: string }> = {
   entityName: string;
   entities: T[];
@@ -68,18 +66,11 @@ function AddEntityPopover<T extends { id: string }>({
         </Button>
       </Popover.Trigger>
       <Popover.Content
-        className={cn("z-30 p-0", className)}
+        className={cn("min-w-64 p-0", className)}
         align="start"
         side="bottom"
       >
-        <Command
-          loop
-          filter={(value, search) => {
-            if (value === NEW_ENTITY_VALUE) return 1;
-            if (value.toLowerCase().includes(search.toLowerCase())) return 1;
-            return 0;
-          }}
-        >
+        <Command loop>
           <CommandInput
             placeholder="Enter name..."
             value={value}
@@ -92,23 +83,7 @@ function AddEntityPopover<T extends { id: string }>({
               </CommandLoading>
             )}
             <CommandEmpty> No suggestions </CommandEmpty>
-            {value && (
-              <CommandGroup>
-                <CommandItem
-                  value={NEW_ENTITY_VALUE}
-                  onSelect={() => {
-                    handleAdd(value);
-                    setIsOpen(false);
-                    setFocus(buttonRef.current);
-                  }}
-                >
-                  <i className="fa-solid fa-plus mr-2 text-accent-10" />
-                  <span>
-                    Create new {entityName} "{value}"
-                  </span>
-                </CommandItem>
-              </CommandGroup>
-            )}
+
             {entities.length > 0 && (
               <>
                 <CommandGroup heading={groupHeader}>
@@ -128,6 +103,22 @@ function AddEntityPopover<T extends { id: string }>({
                   ))}
                 </CommandGroup>
               </>
+            )}
+            {value && (
+              <CommandGroup>
+                <CommandItem
+                  onSelect={() => {
+                    handleAdd(value);
+                    setIsOpen(false);
+                    setFocus(buttonRef.current);
+                  }}
+                >
+                  <i className="fa-solid fa-plus mr-2 text-accent-10" />
+                  <span>
+                    Create new {entityName} "{value}"
+                  </span>
+                </CommandItem>
+              </CommandGroup>
             )}
           </CommandList>
         </Command>

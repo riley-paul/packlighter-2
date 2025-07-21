@@ -42,7 +42,6 @@ const AddItemPopover = React.forwardRef<HTMLButtonElement, Props>(
         getEntityDisabled={(item) => listItemIds.has(item.id)}
         renderEntity={(item) => item.name}
         isLoading={isLoading}
-        className="w-[250px]"
       />
     );
   },

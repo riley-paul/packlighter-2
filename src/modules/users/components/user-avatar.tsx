@@ -98,7 +98,7 @@ const UserAvatar: React.FC = () => {
           </DropdownMenu.SubContent>
         </DropdownMenu.Sub>
 
-        <DropdownMenu.Item asChild color="amber">
+        <DropdownMenu.Item asChild>
           <a href="/logout">
             <i className="fas fa-arrow-right-from-bracket" />
             <span>Logout</span>
