@@ -7,16 +7,7 @@ import {
   searchStringAtom,
   sortOptionAtom,
 } from "@/modules/sidebar/sidebar.store";
-import {
-  Button,
-  Checkbox,
-  Heading,
-  IconButton,
-  Popover,
-  RadioGroup,
-  Text,
-  TextField,
-} from "@radix-ui/themes";
+import { IconButton, DropdownMenu, TextField } from "@radix-ui/themes";
 
 const PackingItemsSortFilter: React.FC = () => {
   const [searchQuery, setSearchQuery] = useAtom(searchStringAtom);
@@ -50,39 +41,40 @@ const PackingItemsSortFilter: React.FC = () => {
           <i className="fa-solid fa-search" />
         </TextField.Slot>
       </TextField.Root>
-      <Popover.Root>
-        <Popover.Trigger>
+      <DropdownMenu.Root>
+        <DropdownMenu.Trigger>
           <IconButton variant="soft" color="gray">
-            <i className="fa-solid fa-ellipsis" />
+            <i className="fas fa-ellipsis opacity-70" />
           </IconButton>
-        </Popover.Trigger>
-        <Popover.Content className="z-30 grid gap-5">
-          <div className="grid gap-3">
-            <Heading as="h4" size="2" weight="medium">
-              <i className="fa-solid fa-arrow-down-wide-short mr-1.5" />
+        </DropdownMenu.Trigger>
+        <DropdownMenu.Content className="min-w-52">
+          <DropdownMenu.Sub>
+            <DropdownMenu.SubTrigger>
+              <i className="fa-solid fa-arrow-down-wide-short opacity-70" />
               Sort
-            </Heading>
-            <RadioGroup.Root
-              className="grid grid-cols-2 gap-x-2"
-              value={sortOption}
-              onValueChange={(value) => {
-                setSortOption(value as SortOptions);
-              }}
-            >
-              {Object.values(SortOptions).map((option) => (
-                <RadioGroup.Item key={option} value={option}>
-                  {option}
-                </RadioGroup.Item>
-              ))}
-            </RadioGroup.Root>
-          </div>
-          <div className="grid gap-3">
-            <Heading as="h4" size="2" weight="medium">
-              <i className="fa-solid fa-filter mr-1.5" />
+            </DropdownMenu.SubTrigger>
+            <DropdownMenu.SubContent>
+              <DropdownMenu.RadioGroup
+                value={sortOption}
+                onValueChange={(value) => {
+                  setSortOption(value as SortOptions);
+                }}
+              >
+                {Object.values(SortOptions).map((option) => (
+                  <DropdownMenu.RadioItem key={option} value={option}>
+                    {option}
+                  </DropdownMenu.RadioItem>
+                ))}
+              </DropdownMenu.RadioGroup>
+            </DropdownMenu.SubContent>
+          </DropdownMenu.Sub>
+          <DropdownMenu.Sub>
+            <DropdownMenu.SubTrigger>
+              <i className="fas fa-filter opacity-70" />
               Filter
-            </Heading>
-            <Text as="label" size="2" className="flex gap-2">
-              <Checkbox
+            </DropdownMenu.SubTrigger>
+            <DropdownMenu.SubContent>
+              <DropdownMenu.CheckboxItem
                 checked={filterOptions[FilterOptions.NotInList]}
                 onCheckedChange={() =>
                   setFilterOptions((prev) => ({
@@ -90,18 +82,20 @@ const PackingItemsSortFilter: React.FC = () => {
                     [FilterOptions.NotInList]: !prev[FilterOptions.NotInList],
                   }))
                 }
-              />
-              Hide gear in current list
-            </Text>
-          </div>
-          <Button asChild variant="soft">
+              >
+                Hide gear in current list
+              </DropdownMenu.CheckboxItem>
+            </DropdownMenu.SubContent>
+          </DropdownMenu.Sub>
+          <DropdownMenu.Separator />
+          <DropdownMenu.Item asChild>
             <a href="/download/items" download>
-              <i className="fa-solid fa-download" />
+              <i className="fa-solid fa-download opacity-70" />
               <span>Download CSV</span>
             </a>
-          </Button>
-        </Popover.Content>
-      </Popover.Root>
+          </DropdownMenu.Item>
+        </DropdownMenu.Content>
+      </DropdownMenu.Root>
     </div>
   );
 };

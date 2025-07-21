@@ -19,7 +19,7 @@ const PackingListMenu: React.FC<Props> = ({ list: { name, id: listId } }) => {
       type: "open",
       data: {
         type: "input",
-        title: "Rename packing list",
+        title: "Rename List",
         message: "Enter a new name for your list.",
         value: name,
         handleSubmit: (newName) => {
@@ -40,7 +40,7 @@ const PackingListMenu: React.FC<Props> = ({ list: { name, id: listId } }) => {
       type: "open",
       data: {
         type: "delete",
-        title: "Delete packing list",
+        title: "Delete List",
         message: "Are you sure you want to delete this packing list?",
         handleDelete: () => {
           deleteList.mutate({ listId });
