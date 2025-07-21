@@ -7,6 +7,13 @@ export type DeleteAlertProps = {
   handleDelete: () => void;
 };
 
+export type ConfirmAlertProps = {
+  type: "confirm";
+  title: string;
+  message: string;
+  handleConfirm: () => void;
+};
+
 export type ErrorAlertProps = {
   type: "error";
   title: string;
@@ -23,4 +30,8 @@ export type InputAlertProps = {
   handleSubmit: (value: string) => void;
 };
 
-export type AlertProps = DeleteAlertProps | ErrorAlertProps | InputAlertProps;
+export type AlertProps =
+  | DeleteAlertProps
+  | ErrorAlertProps
+  | InputAlertProps
+  | ConfirmAlertProps;

@@ -6,6 +6,7 @@ import { alertSystemAtom } from "./alert-system.store";
 import AlertSystemContentDelete from "./alert-system.delete";
 import AlertSystemContentError from "./alert-system.error";
 import AlertSystemContentInput from "./alert-system.input";
+import AlertSystemContentConfirm from "./alert-system.confirm";
 
 const AlertContent: React.FC<AlertProps> = (props) => {
   switch (props.type) {
@@ -15,6 +16,8 @@ const AlertContent: React.FC<AlertProps> = (props) => {
       return <AlertSystemContentError {...props} />;
     case "input":
       return <AlertSystemContentInput {...props} />;
+    case "confirm":
+      return <AlertSystemContentConfirm {...props} />;
     default:
       throw new Error(`Unsupported alert type`);
   }

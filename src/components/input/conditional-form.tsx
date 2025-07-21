@@ -1,4 +1,3 @@
-import useConfirmDialog from "@/hooks/use-confirm-dialog";
 import { ACCENT_COLOR } from "@/lib/client/constants";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Button, IconButton, Text, TextField, Tooltip } from "@radix-ui/themes";
@@ -6,6 +5,8 @@ import React from "react";
 import { Controller, useForm } from "react-hook-form";
 import { useEventListener, useOnClickOutside } from "usehooks-ts";
 import { z } from "zod";
+import { alertSystemAtom } from "../alert-system/alert-system.store";
+import { useAtom } from "jotai";
 
 type SharedProps = {
   textFieldProps?: React.ComponentProps<typeof TextField.Root>;
@@ -152,37 +153,41 @@ const ConditionalForm: React.FC<ConditionalFormProps> = ({
   const [displayValue, setDisplayValue] = React.useState(value);
   const [isEditing, setIsEditing] = React.useState(false);
 
+  const [, dispatchAlert] = useAtom(alertSystemAtom);
+
   React.useEffect(() => {
     setDisplayValue(value);
   }, [value]);
 
-  const [ConfirmCancelDialog, confirmCancel] = useConfirmDialog({
-    title: "Cancel Editing",
-    description: "Are you sure you want to cancel? You will lose your changes.",
-  });
+  const handleConfirm = () => {
+    dispatchAlert({
+      type: "open",
+      data: {
+        type: "confirm",
+        title: "Cancel Editing",
+        message: "Are you sure you want to cancel? You will lose your changes.",
+        handleConfirm: () => {
+          setIsEditing(false);
+          dispatchAlert({ type: "close" });
+        },
+      },
+    });
+  };
 
   if (isEditing) {
     return (
-      <>
-        <ConfirmCancelDialog />
-        <Form
-          initialValue={value}
-          handleCancel={async (formValue) => {
-            if (formValue !== value) {
-              const ok = await confirmCancel();
-              if (ok) setIsEditing(false);
-            } else {
-              setIsEditing(false);
-            }
-          }}
-          handleSubmit={(value) => {
-            setDisplayValue(value);
-            setIsEditing(false);
-            handleSubmit(value);
-          }}
-          {...rest}
-        />
-      </>
+      <Form
+        initialValue={value}
+        handleCancel={(formValue) =>
+          formValue !== value ? handleConfirm() : setIsEditing(false)
+        }
+        handleSubmit={(value) => {
+          setDisplayValue(value);
+          setIsEditing(false);
+          handleSubmit(value);
+        }}
+        {...rest}
+      />
     );
   }
 
