@@ -1,4 +1,4 @@
-import type { ZodString } from "zod/v4";
+import type { ZodString } from "zod";
 
 export type DeleteAlertProps = {
   type: "delete";
