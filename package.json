@@ -6,7 +6,7 @@
     "dev": "npm-run-all --parallel dev:db dev:server",
     "build": "astro check && astro build --remote",
     "preview": "npm-run-all --parallel dev:db dev:preview",
-    "test:unit": "vitest --exclude \"src/tests/e2e/**\"",
+    "test:unit": "vitest --no-file-parallelism --exclude \"src/tests/e2e/**\"",
     "test:e2e": "NODE_NO_WARNINGS=1 npx playwright test",
     "dev:db": "turso dev --db-file dev.db",
     "dev:server": "astro dev --host",
