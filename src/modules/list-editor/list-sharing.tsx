@@ -15,6 +15,7 @@ import {
   Tooltip,
 } from "@radix-ui/themes";
 import type { ListSelect } from "@/lib/types";
+import { ArrowRightIcon, CheckIcon, CopyIcon, Share2Icon } from "lucide-react";
 
 type Props = {
   list: ListSelect;
@@ -36,7 +37,7 @@ const ListSharing: React.FC<Props> = (props) => {
     <Popover.Root>
       <Popover.Trigger>
         <Button variant="soft" color="gray">
-          <i className="fa-solid fa-share" />
+          <Share2Icon className="size-4" />
           <span>Share</span>
         </Button>
       </Popover.Trigger>
@@ -73,16 +74,18 @@ const ListSharing: React.FC<Props> = (props) => {
                 >
                   <IconButton variant="soft" onClick={handleCopy}>
                     {hasBeenCopied ? (
-                      <i className="fa-solid fa-check" />
+                      <CheckIcon className="size-4" />
                     ) : (
-                      <i className="fa-solid fa-copy" />
+                      <CopyIcon className="size-4" />
                     )}
                   </IconButton>
                 </Tooltip>
               </div>
               <Link size="2" className="mt-1" href={publicUrl} target="_blank">
-                Preview your list
-                <i className="fa-solid fa-arrow-right ml-1" />
+                <span className="flex items-center gap-1">
+                  Preview your list
+                  <ArrowRightIcon className="size-4" />
+                </span>
               </Link>
             </div>
           )}

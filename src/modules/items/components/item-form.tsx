@@ -10,6 +10,7 @@ import ItemFormImageInput from "./item-form-image-input";
 import { toast } from "sonner";
 import { zItemForm, type ItemForm } from "@/lib/types";
 import { ItemImageContext } from "./item-image";
+import { SaveIcon } from "lucide-react";
 
 const ItemFormComponent: React.FC = () => {
   const item = useAtomValue(editorItemAtom);
@@ -139,9 +140,8 @@ const ItemFormComponent: React.FC = () => {
           </ItemImageContext.Provider>
         </div>
 
-        <div className="grid w-full gap-2 pt-8">
+        <div className="flex justify-end gap-2 pt-8">
           <Button
-            className="w-full"
             type="button"
             variant="soft"
             color="gray"
@@ -150,7 +150,7 @@ const ItemFormComponent: React.FC = () => {
             Cancel
           </Button>
           <Button type="submit">
-            <i className="fa-solid fa-save" />
+            <SaveIcon className="size-4" />
             Save
           </Button>
         </div>

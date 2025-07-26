@@ -1,11 +1,14 @@
-import useMutations from '@/hooks/use-mutations'
-import { Button, Heading, Separator, Text } from '@radix-ui/themes'
-import { createFileRoute } from '@tanstack/react-router'
+import useMutations from "@/hooks/use-mutations";
+import { Button, Heading, Separator, Text } from "@radix-ui/themes";
+import { createFileRoute } from "@tanstack/react-router";
+import { PlusIcon } from "lucide-react";
 
-export const Route = createFileRoute('/_withSidebar/')({ component: RouteComponent })
+export const Route = createFileRoute("/_withSidebar/")({
+  component: RouteComponent,
+});
 
 function RouteComponent() {
-  const { addList } = useMutations()
+  const { addList } = useMutations();
   return (
     <div className="h-full">
       <div className="container2 flex h-full items-center justify-center">
@@ -25,11 +28,11 @@ function RouteComponent() {
             <Separator size="4" />
           </div>
           <Button variant="soft" onClick={() => addList.mutate({})}>
-            <i className="fa-solid fa-plus" />
+            <PlusIcon className="size-4" />
             <span>Create a new list</span>
           </Button>
         </div>
       </div>
     </div>
-  )
+  );
 }

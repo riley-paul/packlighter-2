@@ -20,6 +20,7 @@ import { useEventListener } from "usehooks-ts";
 import { useIsMobile } from "@/hooks/use-is-mobile";
 import { IconButton, Kbd, Tooltip } from "@radix-ui/themes";
 import { commandBarOpenAtom } from "@/modules/command-bar/command-bar.store";
+import { SearchIcon } from "lucide-react";
 
 const AppSidebarHeader: React.FC = () => {
   const setCommandBarOpen = useSetAtom(commandBarOpenAtom);
@@ -44,7 +45,7 @@ const AppSidebarHeader: React.FC = () => {
             variant="soft"
             onClick={() => setCommandBarOpen(true)}
           >
-            <i className="fa-solid fa-search text-1" />
+            <SearchIcon className="size-3" />
           </IconButton>
         </Tooltip>
         <UserAvatar />
