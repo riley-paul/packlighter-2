@@ -18,6 +18,7 @@ import useCurrentList from "@/hooks/use-current-list";
 import { ScrollArea } from "@radix-ui/themes";
 import { zListSelect } from "@/lib/types";
 import { listsQueryOptions } from "@/lib/client/queries";
+import { PlusIcon } from "lucide-react";
 
 export default function PackingLists(): ReturnType<React.FC> {
   const listsQuery = useQuery(listsQueryOptions);
@@ -109,7 +110,7 @@ export default function PackingLists(): ReturnType<React.FC> {
           action={{
             children: (
               <>
-                <i className="fa-solid fa-plus" />
+                <PlusIcon className="size-3" />
                 <span>Add List</span>
               </>
             ),

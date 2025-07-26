@@ -13,6 +13,7 @@ import { ScrollArea } from "@radix-ui/themes";
 import { useSetAtom } from "jotai";
 import { openEditorAtom } from "@/modules/items/items.store";
 import { itemsQueryOptions } from "@/lib/client/queries";
+import { PlusIcon } from "lucide-react";
 
 const PackingItems: React.FC = () => {
   const itemsQuery = useQuery(itemsQueryOptions);
@@ -44,7 +45,7 @@ const PackingItems: React.FC = () => {
             onClick: () => openEditor(),
             children: (
               <>
-                <i className="fa-solid fa-plus" />
+                <PlusIcon className="size-3" />
                 <span>Add Gear</span>
               </>
             ),
