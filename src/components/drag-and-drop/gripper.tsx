@@ -1,5 +1,5 @@
 import { cn } from "@/lib/client/utils";
-import { GripVertical } from "lucide-react";
+import { GripVerticalIcon } from "lucide-react";
 import React from "react";
 
 type Props = {
@@ -15,12 +15,12 @@ const Gripper = React.forwardRef<HTMLButtonElement, Props>((props, ref) => {
       ref={ref}
       {...(disabled ? { disabled: true } : rest)}
       className={cn(
-        "flex cursor-grab items-center justify-center text-gray-10 transition-colors hover:text-gray-12",
+        "flex cursor-grab items-center justify-center text-gray-10 transition-colors ease-out hover:text-gray-12",
         isGrabbing && "cursor-grabbing",
         disabled && "cursor-not-allowed opacity-50",
       )}
     >
-      <GripVertical size="1rem" />
+      <GripVerticalIcon className="size-4" />
     </button>
   );
 });
