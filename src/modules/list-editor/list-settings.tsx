@@ -13,6 +13,7 @@ import {
 } from "@radix-ui/themes";
 import { weightUnitsInfo } from "@/lib/client/constants";
 import type { ExpandedList, WeightUnit } from "@/lib/types";
+import { Settings2Icon, SquareMinusIcon } from "lucide-react";
 
 interface Props {
   list: ExpandedList;
@@ -65,7 +66,7 @@ const ListSettings: React.FC<Props> = (props) => {
     <Popover.Root>
       <Popover.Trigger title="List settings">
         <Button variant="soft" color="gray">
-          <i className="fa-solid fa-gear" />
+          <Settings2Icon className="size-4" />
           Settings
         </Button>
       </Popover.Trigger>
@@ -76,7 +77,7 @@ const ListSettings: React.FC<Props> = (props) => {
             onClick={() => unpackList.mutate({ listId })}
             disabled={!isAnyPacked || !list.showPacked}
           >
-            <i className="fa-solid fa-undo" />
+            <SquareMinusIcon className="size-4" />
             Unpack List
           </Button>
         </div>

@@ -13,6 +13,7 @@ import { Button, Popover, Spinner } from "@radix-ui/themes";
 import { cn, toTitleCase } from "@/lib/client/utils";
 import { CommandLoading } from "cmdk";
 import { useFocusManager } from "@/components/focus-manager-provider";
+import { PlusIcon } from "lucide-react";
 
 type Props<T extends { id: string }> = {
   entityName: string;
@@ -61,7 +62,7 @@ function AddEntityPopover<T extends { id: string }>({
           role="combobox"
           aria-expanded={isOpen}
         >
-          <i className="fa-solid fa-plus" />
+          <PlusIcon className="size-3" />
           <span>Add {toTitleCase(entityName)}</span>
         </Button>
       </Popover.Trigger>
@@ -112,8 +113,9 @@ function AddEntityPopover<T extends { id: string }>({
                     setIsOpen(false);
                     setFocus(buttonRef.current);
                   }}
+                  className="flex items-center gap-1.5"
                 >
-                  <i className="fa-solid fa-plus mr-2 text-accent-10" />
+                  <PlusIcon className="size-4 text-accent-10" />
                   <span>
                     Create new {entityName} "{value}"
                   </span>

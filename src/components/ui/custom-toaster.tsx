@@ -1,6 +1,7 @@
 import { themeAtom } from "@/modules/theme/theme.store";
 import { Spinner } from "@radix-ui/themes";
 import { useAtomValue } from "jotai";
+import { CircleCheckIcon, TriangleAlertIcon, InfoIcon } from "lucide-react";
 import React from "react";
 import { Toaster } from "sonner";
 
@@ -14,9 +15,9 @@ const CustomToaster: React.FC = () => {
       }}
       icons={{
         loading: <Spinner />,
-        success: <i className="fa-solid fa-circle-check text-green-10" />,
-        error: <i className="fa-solid fa-exclamation-triangle text-red-10" />,
-        info: <i className="fa-solid fa-circle-info" />,
+        success: <CircleCheckIcon className="size-4 text-green-10" />,
+        error: <TriangleAlertIcon className="size-4 text-red-10" />,
+        info: <InfoIcon className="size-4" />,
       }}
     />
   );

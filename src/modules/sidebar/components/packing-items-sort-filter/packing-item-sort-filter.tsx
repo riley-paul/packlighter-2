@@ -8,6 +8,14 @@ import {
   sortOptionAtom,
 } from "@/modules/sidebar/sidebar.store";
 import { IconButton, DropdownMenu, TextField } from "@radix-ui/themes";
+import {
+  ArrowDownWideNarrowIcon,
+  DownloadIcon,
+  EllipsisIcon,
+  ListFilterIcon,
+  SearchIcon,
+  XIcon,
+} from "lucide-react";
 
 const PackingItemsSortFilter: React.FC = () => {
   const [searchQuery, setSearchQuery] = useAtom(searchStringAtom);
@@ -33,24 +41,24 @@ const PackingItemsSortFilter: React.FC = () => {
               color="red"
               onClick={() => setSearchQuery("")}
             >
-              <i className="fa-solid fa-xmark" />
+              <XIcon className="size-4" />
             </IconButton>
           </TextField.Slot>
         )}
         <TextField.Slot side="left">
-          <i className="fa-solid fa-search" />
+          <SearchIcon className="size-4" />
         </TextField.Slot>
       </TextField.Root>
       <DropdownMenu.Root>
         <DropdownMenu.Trigger>
           <IconButton variant="soft" color="gray">
-            <i className="fas fa-ellipsis opacity-70" />
+            <EllipsisIcon className="size-4 opacity-70" />
           </IconButton>
         </DropdownMenu.Trigger>
         <DropdownMenu.Content className="min-w-52">
           <DropdownMenu.Sub>
             <DropdownMenu.SubTrigger>
-              <i className="fa-solid fa-arrow-down-wide-short opacity-70" />
+              <ArrowDownWideNarrowIcon className="size-4 opacity-70" />
               Sort
             </DropdownMenu.SubTrigger>
             <DropdownMenu.SubContent>
@@ -70,7 +78,7 @@ const PackingItemsSortFilter: React.FC = () => {
           </DropdownMenu.Sub>
           <DropdownMenu.Sub>
             <DropdownMenu.SubTrigger>
-              <i className="fas fa-filter opacity-70" />
+              <ListFilterIcon className="size-4 opacity-70" />
               Filter
             </DropdownMenu.SubTrigger>
             <DropdownMenu.SubContent>
@@ -90,7 +98,7 @@ const PackingItemsSortFilter: React.FC = () => {
           <DropdownMenu.Separator />
           <DropdownMenu.Item asChild>
             <a href="/download/items" download>
-              <i className="fa-solid fa-download opacity-70" />
+              <DownloadIcon className="size-4 opacity-70" />
               <span>Download CSV</span>
             </a>
           </DropdownMenu.Item>

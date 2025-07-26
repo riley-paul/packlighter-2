@@ -10,6 +10,7 @@ import {
   Tooltip,
 } from "@radix-ui/themes";
 import useFeedbackMutations from "./feedback.mutations";
+import { MessageCircleIcon, SendIcon } from "lucide-react";
 
 const FeedbackButton: React.FC = () => {
   const [value, setValue] = React.useState("");
@@ -32,7 +33,7 @@ const FeedbackButton: React.FC = () => {
             size="3"
             className="backdrop-blur"
           >
-            <i className="fa-solid fa-message" />
+            <MessageCircleIcon className="size-4" />
           </IconButton>
         </Popover.Trigger>
         <Popover.Content align="end" className="grid gap-4">
@@ -60,7 +61,7 @@ const FeedbackButton: React.FC = () => {
               placeholder="Let's hear it"
             />
             <Button type="submit" variant="soft">
-              <i className="fa-solid fa-paper-plane" />
+              <SendIcon className="size-4" />
               <span>Submit</span>
             </Button>
           </form>

@@ -13,6 +13,7 @@ import { Controller, useFormContext } from "react-hook-form";
 import ItemImage, { ItemImageContext } from "./item-image";
 import useImageDropzone from "@/hooks/use-image-dropzone";
 import { cn, getItemImageUrl } from "@/lib/client/utils";
+import { FileImageIcon, XIcon } from "lucide-react";
 
 const ImageWithRemoveButton: React.FC<{
   imageUrl: string | undefined;
@@ -34,7 +35,7 @@ const ImageWithRemoveButton: React.FC<{
         size="1"
         onClick={handleRemove}
       >
-        <i className="fas fa-xmark" />
+        <XIcon className="size-4" />
       </IconButton>
     </div>
   );
@@ -132,7 +133,7 @@ const UploadImageInput: React.FC = () => {
                 type="button"
                 onClick={() => onInputTriggerClick()}
               >
-                <i className="fas fa-image"></i>
+                <FileImageIcon className="size-4" />
                 Select Image
               </Button>
               <Text size="1" color="gray" className="text-center leading-2">

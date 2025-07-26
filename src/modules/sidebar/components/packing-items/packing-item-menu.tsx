@@ -9,6 +9,13 @@ import { listLinkOptions } from "@/lib/client/links";
 import useItemsMutations from "@/modules/items/items.mutations";
 import type { ItemSelect } from "@/lib/types";
 import { alertSystemAtom } from "@/components/alert-system/alert-system.store";
+import {
+  CopyIcon,
+  DeleteIcon,
+  Edit2Icon,
+  EllipsisIcon,
+  ListIcon,
+} from "lucide-react";
 
 type Props = {
   item: ItemSelect;
@@ -44,7 +51,6 @@ const ListIncludesSubmenu: React.FC<Props> = ({ item }) => {
           {({ isActive }) => (
             <DropdownMenu.Item disabled={isActive}>
               {list.listName} / {list.categoryName}
-              <i className="fas fa-arrow-right ml-auto pl-2 opacity-70" />
             </DropdownMenu.Item>
           )}
         </Link>
@@ -94,22 +100,22 @@ const PackingItemMenu: React.FC<Props> = ({ item }) => {
           radius="full"
         >
           <span className="sr-only">Open menu</span>
-          <i className="fa-solid fa-ellipsis" />
+          <EllipsisIcon className="size-4 opacity-70" />
         </IconButton>
       </DropdownMenu.Trigger>
       <DropdownMenu.Content align="start" className="z-30">
         <DropdownMenu.Item onClick={handleEdit}>
-          <i className="fa-solid fa-pen w-4 text-center opacity-70" />
+          <Edit2Icon className="size-4 opacity-70" />
           Edit
         </DropdownMenu.Item>
 
         <DropdownMenu.Item onClick={handleDuplicate}>
-          <i className="fa-solid fa-copy w-4 text-center opacity-70" />
+          <CopyIcon className="size-4 opacity-70" />
           Duplicate
         </DropdownMenu.Item>
 
         <DropdownMenu.Item color="red" onClick={handleDelete}>
-          <i className="fa-solid fa-backspace w-4 text-center opacity-70" />
+          <DeleteIcon className="size-4 opacity-70" />
           Delete
         </DropdownMenu.Item>
 
@@ -117,7 +123,7 @@ const PackingItemMenu: React.FC<Props> = ({ item }) => {
 
         <DropdownMenu.Sub>
           <DropdownMenu.SubTrigger>
-            <i className="fas fa-list w-4 text-center opacity-70" />
+            <ListIcon className="size-4 opacity-70" />
             Used in
           </DropdownMenu.SubTrigger>
           <DropdownMenu.SubContent className="z-30">
