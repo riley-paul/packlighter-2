@@ -1,5 +1,6 @@
 import { Button, Heading, Text } from "@radix-ui/themes";
 import { Link } from "@tanstack/react-router";
+import { BugIcon } from "lucide-react";
 import React from "react";
 
 interface Props {
@@ -21,7 +22,7 @@ const ErrorDisplay: React.FC<Props> = (props) => {
     <div className="flex h-full flex-1 items-center justify-center">
       <div className="flex h-full max-h-[50%] w-full max-w-sm flex-col gap-4 p-4">
         <div className="flex flex-row items-center gap-4">
-          <i className="fa-solid fa-bug text-8 text-red-10" />
+          <BugIcon className="size-10 text-red-10" />
           <div className="flex flex-col">
             <Heading size="4">{status} Error</Heading>
             <Text size="2" color="gray">

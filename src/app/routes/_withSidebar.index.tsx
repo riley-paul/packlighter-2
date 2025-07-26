@@ -1,7 +1,7 @@
 import useMutations from "@/hooks/use-mutations";
 import { Button, Heading, Separator, Text } from "@radix-ui/themes";
 import { createFileRoute } from "@tanstack/react-router";
-import { PlusIcon } from "lucide-react";
+import { HomeIcon, PlusIcon } from "lucide-react";
 
 export const Route = createFileRoute("/_withSidebar/")({
   component: RouteComponent,
@@ -13,7 +13,7 @@ function RouteComponent() {
     <div className="h-full">
       <div className="container2 flex h-full items-center justify-center">
         <div className="flex h-full max-h-[50vh] flex-col items-center gap-2">
-          <i className="fa-solid fa-house-chimney mb-4 text-[3rem] text-accent-10" />
+          <HomeIcon className="mb-4 size-12 text-accent-10" />
           <Heading as="h2" size="4">
             Welcome to LighterTravel
           </Heading>
