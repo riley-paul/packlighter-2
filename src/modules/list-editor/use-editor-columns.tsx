@@ -35,6 +35,12 @@ import ConditionalForm from "@/components/input/conditional-form";
 import DeleteButton from "@/components/ui/delete-button";
 import ServerInput from "@/components/input/server-input";
 import { weightTypes } from "@/db/schema";
+import {
+  ChevronDownIcon,
+  ChevronUpIcon,
+  ForkKnifeIcon,
+  ShirtIcon,
+} from "lucide-react";
 
 const columnHelper = createColumnHelper<ExpandedCategoryItem>();
 
@@ -45,6 +51,19 @@ type UseColumnsProps = {
 
 const QTY_WIDTH = "3.5rem";
 const WEIGHT_WIDTH = "5rem";
+
+const WeightTypeIcon: React.FC<{ weightType: WeightType }> = ({
+  weightType,
+}) => {
+  switch (weightType) {
+    case "worn":
+      return <ShirtIcon className="size-3" />;
+    case "consumable":
+      return <ForkKnifeIcon className="size-3" />;
+    default:
+      return null;
+  }
+};
 
 export default function useEditorColumns({
   category,
@@ -198,17 +217,6 @@ export default function useEditorColumns({
         id: "weightType",
         header: () => null,
         cell: (props) => {
-          const getIcon = (weightType: WeightType): string => {
-            switch (weightType) {
-              case "worn":
-                return "fas fa-shirt";
-              case "consumable":
-                return "fas fa-utensils";
-              default:
-                return "fas fa-shirt";
-            }
-          };
-
           return (
             <CellWrapper>
               <div className="flex items-center gap-2">
@@ -238,7 +246,7 @@ export default function useEditorColumns({
                             });
                           }}
                         >
-                          <i className={cn(getIcon(unit), "text-1")} />
+                          <WeightTypeIcon weightType={unit} />
                         </IconButton>
                       </Tooltip>
                     );
@@ -350,7 +358,6 @@ export default function useEditorColumns({
                   <Button
                     size="1"
                     variant="ghost"
-                    className="text-[0.5rem]"
                     onClick={() =>
                       updateCategoryItem.mutate({
                         categoryItemId: props.row.original.id,
@@ -358,12 +365,11 @@ export default function useEditorColumns({
                       })
                     }
                   >
-                    <i className="fa-solid fa-chevron-up" />
+                    <ChevronUpIcon className="size-2.5" />
                   </Button>
                   <Button
                     size="1"
                     variant="ghost"
-                    className="text-[0.5rem]"
                     onClick={() => {
                       const quantity = props.getValue() - 1;
                       if (quantity < 1) return;
@@ -373,7 +379,7 @@ export default function useEditorColumns({
                       });
                     }}
                   >
-                    <i className="fa-solid fa-chevron-down" />
+                    <ChevronDownIcon className="size-2.5" />
                   </Button>
                 </div>
               </TextField.Slot>

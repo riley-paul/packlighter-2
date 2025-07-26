@@ -7,6 +7,7 @@ import { useEventListener, useOnClickOutside } from "usehooks-ts";
 import { z } from "zod";
 import { alertSystemAtom } from "../alert-system/alert-system.store";
 import { useAtom } from "jotai";
+import { AlertCircleIcon, SaveIcon, XIcon } from "lucide-react";
 
 type SharedProps = {
   textFieldProps?: React.ComponentProps<typeof TextField.Root>;
@@ -79,7 +80,7 @@ const Form: React.FC<
               <TextField.Slot side="left">
                 <Tooltip content={error.message} side="top" align="center">
                   <Text size="1" color="red" aria-label="Error">
-                    <i className="fa-solid fa-exclamation-circle cursor-help" />
+                    <AlertCircleIcon className="size-4 cursor-help" />
                   </Text>
                 </Tooltip>
               </TextField.Slot>
@@ -94,7 +95,7 @@ const Form: React.FC<
                     color={ACCENT_COLOR}
                     aria-label="Save changes"
                   >
-                    <i className="fa-solid fa-save" />
+                    <SaveIcon className="size-4" />
                   </IconButton>
                   <IconButton
                     type="button"
@@ -104,7 +105,7 @@ const Form: React.FC<
                     aria-label="Cancel"
                     onClick={() => handleCancel(field.value)}
                   >
-                    <i className="fa-solid fa-xmark" />
+                    <XIcon className="size-4" />
                   </IconButton>
                 </>
               ) : (
