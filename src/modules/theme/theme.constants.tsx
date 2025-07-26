@@ -1,21 +1,23 @@
+import { LaptopIcon, MoonIcon, SunIcon, type LucideIcon } from "lucide-react";
+
 export const themeOptions: {
   value: string;
   name: string;
-  icon: string;
+  icon: LucideIcon;
 }[] = [
   {
     value: "system",
     name: "Auto",
-    icon: "fa-solid fa-laptop",
+    icon: LaptopIcon,
   },
   {
     value: "light",
     name: "Light",
-    icon: "fa-solid fa-sun",
+    icon: SunIcon,
   },
   {
     value: "dark",
     name: "Dark",
-    icon: "fa-solid fa-moon",
+    icon: MoonIcon,
   },
 ];
