@@ -1,0 +1,99 @@
+import React from "react";
+import { cn } from "@/lib/client/utils";
+import { dropTargetForElements } from "@atlaskit/pragmatic-drag-and-drop/element/adapter";
+import { combine } from "@atlaskit/pragmatic-drag-and-drop/combine";
+import invariant from "tiny-invariant";
+import {
+  DND_TYPE_KEY,
+  DndEntityType,
+  isDndEntityType,
+} from "@/lib/client/constants";
+import useCurrentList from "@/app/hooks/use-current-list";
+import { Separator } from "@radix-ui/themes";
+import Placeholder from "@/app/components/ui/placeholder";
+
+interface Props {
+  categoryId: string;
+}
+
+const isPermitted = (
+  data: Record<string, unknown>,
+  listItemIds: Set<string>,
+) => {
+  if (
+    isDndEntityType(data, DndEntityType.Item) &&
+    listItemIds.has(data.id as string)
+  ) {
+    return false;
+  }
+  const entities = [DndEntityType.CategoryItem, DndEntityType.Item];
+  return entities.some((entity) => isDndEntityType(data, entity));
+};
+
+const EditorCategoryPlaceholder: React.FC<Props> = (props) => {
+  const { categoryId } = props;
+  const { list, listItemIds } = useCurrentList();
+
+  const ref = React.useRef<HTMLTableRowElement>(null);
+
+  const [isDraggingOver, setDraggingOver] = React.useState(false);
+
+  React.useEffect(() => {
+    const element = ref.current;
+    invariant(element);
+
+    return combine(
+      dropTargetForElements({
+        element,
+        canDrop({ source }) {
+          return isPermitted(source.data, listItemIds);
+        },
+        getData() {
+          return {
+            [DND_TYPE_KEY]: DndEntityType.CategoryPlaceholder,
+            id: DndEntityType.CategoryPlaceholder,
+            categoryId,
+          };
+        },
+        getIsSticky() {
+          return true;
+        },
+        onDragEnter({ source }) {
+          if (!isPermitted(source.data, listItemIds)) return;
+          setDraggingOver(true);
+        },
+        onDrag({ source }) {
+          if (!isPermitted(source.data, listItemIds)) return;
+          setDraggingOver((current) => {
+            if (current === true) {
+              return current;
+            }
+            return true;
+          });
+        },
+        onDragLeave() {
+          setDraggingOver(false);
+        },
+        onDrop() {
+          setDraggingOver(false);
+        },
+      }),
+    );
+  }, []);
+
+  if (!list) return null;
+
+  return (
+    <>
+      <div
+        ref={ref}
+        className={cn("h-16 hover:bg-gray-2", isDraggingOver && "bg-gray-4")}
+      >
+        <Placeholder message="No gear added yet" />
+      </div>
+      <Separator size="4" />
+    </>
+  );
+};
+
+export default EditorCategoryPlaceholder;

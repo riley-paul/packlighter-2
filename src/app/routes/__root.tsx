@@ -1,7 +1,7 @@
-import AlertSystem from "@/components/alert-system/alert-system";
-import CommandBar from "@/modules/command-bar/command-bar";
-import FeedbackButton from "@/modules/feedback/feedback-button";
-import ItemEditor from "@/modules/items/components/item-editor";
+import AlertSystem from "@/app/components/alert-system/alert-system";
+import CommandBar from "@/app/modules/command-bar/command-bar";
+import FeedbackButton from "@/app/modules/feedback/feedback-button";
+import ItemEditor from "@/app/modules/items/components/item-editor";
 import type { QueryClient } from "@tanstack/react-query";
 import { createRootRouteWithContext, Outlet } from "@tanstack/react-router";
 

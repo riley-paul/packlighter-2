@@ -1,4 +1,4 @@
-import useMutations from "@/hooks/use-mutations";
+import useMutations from "@/app/hooks/use-mutations";
 import { Button, Heading, Separator, Text } from "@radix-ui/themes";
 import { createFileRoute } from "@tanstack/react-router";
 import { HomeIcon, PlusIcon } from "lucide-react";

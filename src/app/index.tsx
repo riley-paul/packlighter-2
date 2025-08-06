@@ -7,11 +7,11 @@ import {
   QueryClient,
   QueryClientProvider,
 } from "@tanstack/react-query";
-import RadixProvider from "@/components/ui/radix-provider";
-import CustomToaster from "@/components/ui/custom-toaster";
+import RadixProvider from "@/app/components/ui/radix-provider";
+import CustomToaster from "@/app/components/ui/custom-toaster";
 import { toast } from "sonner";
-import ErrorDisplay from "@/components/ui/error-display";
-import Loader from "@/components/ui/loader";
+import ErrorDisplay from "@/app/components/ui/error-display";
+import Loader from "@/app/components/ui/loader";
 
 const queryClient = new QueryClient({
   defaultOptions: { queries: { staleTime: 1000 * 60 * 5 } },
