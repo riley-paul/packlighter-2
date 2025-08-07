@@ -1,32 +1,26 @@
 ---
 import RadixProvider from "@/app/components/ui/radix-provider";
-import LoginButton from "@/app/modules/users/components/login-button";
+import LoginCard from "@/app/modules/users/components/login-card";
 import RootLayout from "@/layouts/root-layout.astro";
-import { Heading, Link, Text } from "@radix-ui/themes";
 ---
 
 <RootLayout>
   <RadixProvider>
-    <main class="w-full h-screen bg-gradient-to-b from-gray-1 to-accent-3">
-      <section
-        class="mx-auto flex w-full max-w-md flex-col gap-6 px-4 pt-[10vh]"
+    <main class="w-full h-screen relative flex items-center justify-center">
+      <!-- <div
+        class="absolute inset-0 z-0 bg-accent-12"
+        style={{
+          background: "#020617",
+          backgroundImage: `
+      linear-gradient(to right, rgba(71,85,105,0.3) 1px, transparent 1px),
+      linear-gradient(to bottom, rgba(71,85,105,0.3) 1px, transparent 1px),
+      radial-gradient(circle at 50% 50%, rgba(139,92,246,0.15) 0%, transparent 70%)
+    `,
+          backgroundSize: "32px 32px, 32px 32px, 100% 100%",
+        }}
       >
-        <div class="flex items-center justify-center">
-          <i class="text-accentA-10 fa-solid fa-earth text-[5rem]"></i>
-        </div>
-        <section class="flex flex-col gap-2 items-center">
-          <Heading weight="bold" size="8">LighterTravel</Heading>
-          <Text color="gray">The packing tool of travel champions</Text>
-        </section>
-        <section class="flex flex-col gap-2 items-center">
-          <LoginButton className="w-full" provider="google" />
-          <Text size="1" color="gray"
-            >More login options coming soon!
-            <Link href="/policies"> View application policies </Link>
-          </Text>
-          <!-- <LoginButton className="w-full" provider="github" /> -->
-        </section>
-      </section>
+      </div> -->
+      <LoginCard />
     </main>
   </RadixProvider>
 </RootLayout>

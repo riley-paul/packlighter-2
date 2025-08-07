@@ -67,7 +67,7 @@ const LoginButton: React.FC<Props> = ({ provider, className }) => {
   return (
     <Button asChild size="2" variant="soft" className={className}>
       <a href={url}>
-        <span>Login with {name}</span>
+        <span>Continue with {name}</span>
         <span className="size-4">{icon}</span>
       </a>
     </Button>
